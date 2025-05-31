@@ -1,0 +1,31 @@
+name: Rust Publish
+
+# Controls when the action will run.
+on:
+  release:
+    types: [published]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output rust version for educational purposes
+        run: rustup --version
+
+      - uses: actions/checkout@v4
+
+      - name: Publish API (crates.io)
+        run: cargo publish -p switchbot-api --verbose
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+      - name: Publish CLI (crates.io)
+        run: cargo publish -p switchbot-cli --verbose
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}

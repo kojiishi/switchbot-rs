@@ -1,0 +1,42 @@
+name: Rust CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Output rust version for educational purposes
+        run: rustup --version
+
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: cargo build
+
+      - name: Run tests
+        run: cargo test --verbose
+        env:
+          RUST_BACKTRACE: 1
+
+      - name: Check style
+        run: cargo fmt --all --check
+
+      - name: Check clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+        if: contains(matrix.os, 'ubuntu')
