@@ -43,7 +43,7 @@ Please refer to the [SwitchBot documentation about
 how to obtain the token and secret key][token-secret].
 
 They are saved in your configuration directory
-to save you from entering them each time.
+to avoid entering them every time.
 The `--clear` option clears the saved authentication,
 and the `switchbot` command will prompt for the authentication again.
 The `--token` and the `--secret` options are available
@@ -56,8 +56,8 @@ to specify them explicitly.
 Once the authentication is done, the interactive mode starts.
 ```shell-session
 $ switchbot
-1: My Bedroom Light (DIY Light, ID:111222333)
-2: Hub Mini AF (Hub Mini, ID:444555666)
+1: Hub Mini AF (Hub Mini, ID:111222333)
+2: My Bedroom Light (DIY Light, ID:444555666)
 ...
 Device>
 ```
