@@ -1,6 +1,10 @@
 use super::Device;
 use std::ops::{Deref, DerefMut};
 
+/// A list of [`Device`]s.
+///
+/// This is almost identical to `Vec<Device>`, with a few additional features
+/// such as [`DeviceList::index_by_device_id()`].
 #[derive(Debug, Default, serde::Deserialize)]
 #[serde(transparent)] // This allows DeviceList to be deserialized as if it were just Vec<Device>
 pub struct DeviceList {
