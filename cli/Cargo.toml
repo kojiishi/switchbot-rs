@@ -1,0 +1,25 @@
+[package]
+name = "switchbot-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description = "A command-line interface for controlling SwitchBot devices."
+keywords = ["switchbot", "cli", "command", "command-line-tool"]
+repository.workspace = true
+readme = "README.md"
+license.workspace = true
+
+[[bin]]
+name = "switchbot"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = { version = "1.0.98", features = ["backtrace"] }
+clap = { version = "4.5.39", features = ["derive"] }
+directories = "6.0.0"
+env_logger = "0.11.8"
+log = "0.4.27"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+switchbot-api = { path = "../api" }
+tokio = { version = "1.45.1", features = ["macros", "rt-multi-thread"] }
