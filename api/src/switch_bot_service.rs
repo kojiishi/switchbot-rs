@@ -61,7 +61,18 @@ impl SwitchBotService {
             .await?
             .json()
             .await?;
+
         log::trace!("command.response: {json}");
+        let response: SwitchBotResponse<serde_json::Value> = serde_json::from_value(json)?;
+        // All statusCode other than 100 looks like errors.
+        // https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#errors
+        if response.statusCode != 100 {
+            anyhow::bail!(
+                "Command failed: {} ({})",
+                response.message,
+                response.statusCode
+            );
+        }
         Ok(())
     }
 
