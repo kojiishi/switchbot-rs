@@ -40,12 +40,14 @@ impl Cli {
         self.switch_bot.load_devices().await?;
 
         if !self.args.commands.is_empty() {
-            for command in self.args.commands.clone() {
-                self.execute_command(&command).await?;
-            }
+            self.execute_commands(&self.args.commands.clone()).await?;
             return Ok(());
         }
 
+        self.run_interactive().await
+    }
+
+    async fn run_interactive(&mut self) -> anyhow::Result<()> {
         let mut input = UserInput::new();
         loop {
             if let Some(device) = self.current_device() {
@@ -66,7 +68,11 @@ impl Cli {
                     }
                     break;
                 }
-                _ => self.execute_command(input_text).await?,
+                _ => {
+                    if let Err(error) = self.execute_command(input_text).await {
+                        log::error!("{error}");
+                    }
+                }
             }
         }
         self.args.save()?;
@@ -77,6 +83,13 @@ impl Cli {
         for (i, device) in self.switch_bot.devices().iter().enumerate() {
             println!("{}: {device}", i + 1);
         }
+    }
+
+    async fn execute_commands(&mut self, list: &[String]) -> anyhow::Result<()> {
+        for command in list {
+            self.execute_command(command).await?;
+        }
+        Ok(())
     }
 
     async fn execute_command(&mut self, text: &str) -> anyhow::Result<()> {
@@ -100,12 +113,14 @@ impl Cli {
 
     fn parse_device_index(&self, value: &str) -> anyhow::Result<usize> {
         if let Ok(number) = value.parse::<usize>() {
-            return Ok(number - 1);
+            if number > 0 && number <= self.switch_bot.devices().len() {
+                return Ok(number - 1);
+            }
         }
         self.switch_bot
             .devices()
             .index_by_device_id(value)
-            .ok_or_else(|| anyhow::anyhow!("Not a valid device: {value}"))
+            .ok_or_else(|| anyhow::anyhow!("Not a valid device: \"{value}\""))
     }
 
     fn parse_command(&self, mut text: &str) -> CommandRequest {
