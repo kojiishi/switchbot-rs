@@ -84,8 +84,9 @@ Command>
 
 To control your devices, you can send commands.
 The available commands depend on the device type.
-please find the command you want to send to your devices
-from the [SwitchBot documentation about device control commands][send-device-control-commands].
+Please refer to the
+[SwitchBot API documentation about device control commands][send-device-control-commands]
+to find the command you want to send to your devices.
 
 The following example sends the `turnOn` command to the DIY Light.
 ```shell-session
@@ -118,11 +119,10 @@ Command> customize/button1
 
 Hit the Enter key twice, or enter `q` to quit the `switchbot` command.
 
-## Non-interactive Mode
+## Batch Mode
 
 It is also possible to run the `switchbot` command in non-interactive mode
 by specifying the device number or the device ID and the command as arguments.
-
 This is useful to create your own batch files,
 or to use with launcher applications such as Elgato Stream Deck.
 
@@ -133,3 +133,9 @@ You can also specify multiple devices and commands.
 ```shell-session
 $ switchbot 1 turnOn setMode:101 4 turnOff
 ```
+
+# Change History
+
+Please see [release notes] for the change history.
+
+[release notes]: https://github.com/kojiishi/switchbot-rs/releases

@@ -170,3 +170,25 @@ impl<T> From<SwitchBotResponse<T>> for SwitchBotError {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn error_from_json() -> anyhow::Result<()> {
+        let json_no_body = serde_json::json!(
+            {"message":"unknown command", "statusCode":160});
+        let error: SwitchBotError = serde_json::from_value(json_no_body)?;
+        assert_eq!(error.status_code, 160);
+        assert_eq!(error.message, "unknown command");
+
+        // Some responses have empty `body`. Ensure it's ignored.
+        let json_with_body = serde_json::json!(
+            {"message":"unknown command", "statusCode":160, "body":{}});
+        let error: SwitchBotError = serde_json::from_value(json_with_body)?;
+        assert_eq!(error.status_code, 160);
+        assert_eq!(error.message, "unknown command");
+        Ok(())
+    }
+}
