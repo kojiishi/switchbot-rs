@@ -115,7 +115,24 @@ prepend it with a `/` (slash) as the separator.
 Command> customize/button1
 ```
 
-### Quit
+### Aliases
+
+Some commands have aliases for convenience.
+For example, `on` is an alias for `turnOn`, and `off` is an alias for `turnOff`.
+```shell-session
+Command> on
+```
+
+You can also add your own aliases by the `-a` option.
+```shell-session
+switchbot -a safe=setChildLock:1 -a unsafe=setChildLock:0
+```
+or remove existing aliases by not specifying the value.
+```shell-session
+switchbot -a safe -a unsafe
+```
+
+## Quit
 
 Hit the Enter key twice, or enter `q` to quit the `switchbot` command.
 

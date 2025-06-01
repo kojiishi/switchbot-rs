@@ -13,10 +13,13 @@ pub struct Cli {
 impl Cli {
     pub fn new_from_args() -> Self {
         let mut args = Args::parse();
-        if !args.clear {
-            if let Err(error) = args.load() {
-                log::debug!("Load config error: {error}");
-            }
+        if let Err(error) = args.merge_config() {
+            log::debug!("Load config error: {error}");
+        }
+        args.ensure_default();
+        if !args.alias_updates.is_empty() {
+            args.update_aliases();
+            args.print_aliases();
         }
         Self {
             args,
@@ -123,7 +126,15 @@ impl Cli {
             .ok_or_else(|| anyhow::anyhow!("Not a valid device: \"{value}\""))
     }
 
-    fn parse_command(&self, mut text: &str) -> CommandRequest {
+    fn parse_command(&self, text: &str) -> CommandRequest {
+        if let Some(alias) = self.args.aliases.get(text) {
+            log::debug!(r#"Command alias: "{text}" -> "{alias}""#);
+            return self.parse_command_no_alias(alias);
+        }
+        self.parse_command_no_alias(text)
+    }
+
+    fn parse_command_no_alias(&self, mut text: &str) -> CommandRequest {
         let mut command = CommandRequest::default();
         if let Some((name, parameter)) = text.split_once(':') {
             command.parameter = parameter.into();
