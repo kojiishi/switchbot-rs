@@ -17,6 +17,6 @@ and control your SwitchBot devices programmatically.
 [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
 
 Please see the [API documentation at docs.rs][docs] for more details,
-and [release notes] for the change history.
+and the [release notes] for the change history.
 
 [release notes]: https://github.com/kojiishi/switchbot-rs/releases

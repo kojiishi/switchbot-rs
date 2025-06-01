@@ -47,7 +47,7 @@ to avoid entering them every time.
 The `--clear` option clears the saved authentication,
 and the `switchbot` command will prompt for the authentication again.
 The `--token` and the `--secret` options are available
-to specify them explicitly.
+to specify them as command line arguments.
 
 [token-secret]: https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#open-token-and-secret-key
 
@@ -88,7 +88,7 @@ Please refer to the
 [SwitchBot API documentation about device control commands][send-device-control-commands]
 to find the command you want to send to your devices.
 
-The following example sends the `turnOn` command to the DIY Light.
+The following example sends the `turnOn` command to the device number 2.
 ```shell-session
 Device> 2
 Name: My Bedroom Light
