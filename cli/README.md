@@ -11,7 +11,7 @@
 
 # switchbot-cli
 
-A command-line interface for controlling SwitchBot devices
+A command-line tool for controlling SwitchBot devices
 using the [SwitchBot API].
 
 [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
