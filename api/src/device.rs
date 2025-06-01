@@ -9,15 +9,15 @@ use super::*;
 ///
 /// [devices]: https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#devices
 #[derive(Debug, serde::Deserialize)]
-#[allow(non_snake_case)]
+#[serde(rename_all = "camelCase")]
 pub struct Device {
-    deviceId: String,
-    deviceName: String,
+    device_id: String,
+    device_name: String,
     #[serde(default)]
-    deviceType: String,
+    device_type: String,
     #[serde(default)]
-    remoteType: String,
-    hubDeviceId: String,
+    remote_type: String,
+    hub_device_id: String,
 
     #[serde(skip)]
     service: Rc<SwitchBotService>,
@@ -26,34 +26,34 @@ pub struct Device {
 impl Device {
     /// The device ID>
     pub fn device_id(&self) -> &str {
-        &self.deviceId
+        &self.device_id
     }
 
     /// The device name.
     /// This is the name configured in the SwitchBot app.
     pub fn device_name(&self) -> &str {
-        &self.deviceName
+        &self.device_name
     }
 
     /// True if this device is an infrared remote device.
     pub fn is_remote(&self) -> bool {
-        !self.remoteType.is_empty()
+        !self.remote_type.is_empty()
     }
 
     /// The device type.
     /// This is empty if this is an infrared remote device.
     pub fn device_type(&self) -> &str {
-        &self.deviceType
+        &self.device_type
     }
 
     /// The device type for an infrared remote device.
     pub fn remote_type(&self) -> &str {
-        &self.remoteType
+        &self.remote_type
     }
 
     /// The parent Hub ID.
     pub fn hub_device_id(&self) -> &str {
-        &self.hubDeviceId
+        &self.hub_device_id
     }
 
     pub(crate) fn set_service(&mut self, service: Rc<SwitchBotService>) {
@@ -83,13 +83,13 @@ impl Display for Device {
         write!(
             f,
             "{} ({}, ID:{})",
-            self.deviceName,
+            self.device_name,
             if self.is_remote() {
                 self.remote_type()
             } else {
                 self.device_type()
             },
-            self.deviceId
+            self.device_id
         )
     }
 }
