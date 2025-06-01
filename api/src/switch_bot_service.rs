@@ -63,15 +63,11 @@ impl SwitchBotService {
             .await?;
 
         log::trace!("command.response: {json}");
-        let response: SwitchBotResponse<serde_json::Value> = serde_json::from_value(json)?;
+        let response: SwitchBotError = serde_json::from_value(json)?;
         // All statusCode other than 100 looks like errors.
         // https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#errors
-        if response.statusCode != 100 {
-            anyhow::bail!(
-                "Command failed: {} ({})",
-                response.message,
-                response.statusCode
-            );
+        if response.status_code != 100 {
+            return Err(response.into());
         }
         Ok(())
     }
@@ -151,6 +147,26 @@ impl Default for CommandRequest {
             command: String::default(),
             parameter: "default".into(),
             command_type: "command".into(),
+        }
+    }
+}
+
+/// Error from the [SwitchBot API].
+///
+/// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
+#[derive(Debug, thiserror::Error, serde::Deserialize)]
+#[error("SwitchBot API error: {message} ({status_code})")]
+pub struct SwitchBotError {
+    #[serde(rename = "statusCode")]
+    status_code: u16,
+    message: String,
+}
+
+impl<T> From<SwitchBotResponse<T>> for SwitchBotError {
+    fn from(response: SwitchBotResponse<T>) -> Self {
+        Self {
+            status_code: response.statusCode,
+            message: response.message,
         }
     }
 }
