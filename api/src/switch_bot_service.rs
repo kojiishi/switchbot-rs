@@ -37,8 +37,8 @@ impl SwitchBotService {
         log::trace!("devices.json: {json:#?}");
         let response: SwitchBotResponse<DeviceListResponse> = serde_json::from_value(json)?;
         // log::trace!("devices: {response:#?}");
-        let mut devices = response.body.deviceList;
-        devices.extend(response.body.infraredRemoteList);
+        let mut devices = response.body.device_list;
+        devices.extend(response.body.infrared_remote_list);
         for device in devices.iter_mut() {
             device.set_service(Rc::clone(self));
         }
@@ -96,20 +96,20 @@ impl SwitchBotService {
 }
 
 #[derive(Debug, serde::Deserialize)]
-#[allow(non_snake_case)]
+#[serde(rename_all = "camelCase")]
 pub struct SwitchBotResponse<T> {
     #[allow(dead_code)]
-    pub statusCode: u16,
+    pub status_code: u16,
     #[allow(dead_code)]
     pub message: String,
     pub body: T,
 }
 
 #[derive(Debug, serde::Deserialize)]
-#[allow(non_snake_case)]
+#[serde(rename_all = "camelCase")]
 pub struct DeviceListResponse {
-    pub deviceList: DeviceList,
-    pub infraredRemoteList: DeviceList,
+    pub device_list: DeviceList,
+    pub infrared_remote_list: DeviceList,
 }
 
 /// A command request to send to the [SwitchBot API].
@@ -129,6 +129,7 @@ pub struct DeviceListResponse {
 /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
 /// [send-device-control-commands]: https://github.com/OpenWonderLabs/SwitchBotAPI/blob/main/README.md#send-device-control-commands
 #[derive(Debug, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CommandRequest {
     /// The command.
     pub command: String,
@@ -137,7 +138,6 @@ pub struct CommandRequest {
     pub parameter: String,
     /// The command type.
     /// The default value is `command`.
-    #[serde(rename = "commandType")]
     pub command_type: String,
 }
 
@@ -156,8 +156,8 @@ impl Default for CommandRequest {
 /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
 #[derive(Debug, thiserror::Error, serde::Deserialize)]
 #[error("SwitchBot API error: {message} ({status_code})")]
+#[serde(rename_all = "camelCase")]
 pub struct SwitchBotError {
-    #[serde(rename = "statusCode")]
     status_code: u16,
     message: String,
 }
@@ -165,7 +165,7 @@ pub struct SwitchBotError {
 impl<T> From<SwitchBotResponse<T>> for SwitchBotError {
     fn from(response: SwitchBotResponse<T>) -> Self {
         Self {
-            status_code: response.statusCode,
+            status_code: response.status_code,
             message: response.message,
         }
     }
