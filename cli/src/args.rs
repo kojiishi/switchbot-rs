@@ -187,6 +187,18 @@ mod tests {
         assert_eq!(args.aliases.len(), 1);
         assert_eq!(args.aliases.get("a").unwrap(), "b");
 
+        // Removing non-existent alias is allowed.
+        args.alias_updates = vec!["z".into()];
+        args.update_aliases();
+        assert_eq!(args.aliases.len(), 1);
+        assert_eq!(args.aliases.get("a").unwrap(), "b");
+
+        // Update existing alias.
+        args.alias_updates = vec!["a=x".into()];
+        args.update_aliases();
+        assert_eq!(args.aliases.len(), 1);
+        assert_eq!(args.aliases.get("a").unwrap(), "x");
+
         // Empty value also removes the alias.
         args.alias_updates = vec!["a=".into()];
         args.update_aliases();

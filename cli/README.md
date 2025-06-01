@@ -127,9 +127,9 @@ You can also add your own aliases by the `-a` option.
 ```shell-session
 switchbot -a safe=setChildLock:1 -a unsafe=setChildLock:0
 ```
-or remove existing aliases by not specifying the value.
+To remove existing aliases, omit the value.
 ```shell-session
-switchbot -a safe -a unsafe
+switchbot -a safe
 ```
 
 ## Quit
@@ -144,15 +144,17 @@ This is useful to create your own batch files,
 or to use with launcher applications such as Elgato Stream Deck.
 
 ```shell-session
-$ switchbot 1 turnOn
+switchbot 1 turnOn
 ```
 You can also specify multiple devices and commands.
 ```shell-session
-$ switchbot 1 turnOn setMode:101 4 turnOff
+switchbot 1 turnOn setMode:101 4 turnOff
 ```
+This example turns on the device 1 and set its mode to 101,
+and turns off the device 4.
 
 # Change History
 
-Please see [release notes] for the change history.
+Please see the [release notes] for the change history.
 
 [release notes]: https://github.com/kojiishi/switchbot-rs/releases
