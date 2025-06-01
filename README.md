@@ -1,6 +1,6 @@
-[![CI-badge]][CI]
+[![CI-badge]][CI]  
 [![cli-crate-badge]][cli-crate]
-[![cli-docs-badge]][cli-docs]
+[![cli-docs-badge]][cli-docs]  
 [![api-crate-badge]][api-crate]
 [![api-docs-badge]][api-docs]
 
@@ -18,8 +18,9 @@
 # switchbot-rs
 
 This repository contains two Rust crates:
-* [`switchbot-api`]: A Rust library for interacting with [SwitchBot API].
-* [`switchbot-cli`]: A command-line interface for the `switchbot-api` library.
+* [`switchbot-api`]: A Rust library to interact with [SwitchBot API]
+  and control your SwitchBot devices programmatically.
+* [`switchbot-cli`]: A command-line tool for the `switchbot-api` library.
 
 Please see the README in each crate for more details.
 
