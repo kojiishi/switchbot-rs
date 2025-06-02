@@ -41,6 +41,7 @@ impl SwitchBot {
     /// [token-secret]: https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#open-token-and-secret-key
     pub fn set_authentication(&mut self, token: &str, secret: &str) {
         self.service = SwitchBotService::new(token, secret);
+        self.devices.clear();
     }
 
     /// Returns a list of [`Device`]s.

@@ -1,4 +1,7 @@
-use std::{fmt::Display, rc::Rc};
+use std::{
+    fmt::Display,
+    rc::{Rc, Weak},
+};
 
 use super::*;
 
@@ -20,11 +23,11 @@ pub struct Device {
     hub_device_id: String,
 
     #[serde(skip)]
-    service: Rc<SwitchBotService>,
+    service: Weak<SwitchBotService>,
 }
 
 impl Device {
-    /// The device ID>
+    /// The device ID.
     pub fn device_id(&self) -> &str {
         &self.device_id
     }
@@ -56,15 +59,21 @@ impl Device {
         &self.hub_device_id
     }
 
-    pub(crate) fn set_service(&mut self, service: Rc<SwitchBotService>) {
-        self.service = service;
+    fn service(&self) -> anyhow::Result<Rc<SwitchBotService>> {
+        self.service
+            .upgrade()
+            .ok_or_else(|| anyhow::anyhow!("The service is dropped"))
+    }
+
+    pub(crate) fn set_service(&mut self, service: &Rc<SwitchBotService>) {
+        self.service = Rc::downgrade(service);
     }
 
     /// Send the `command` to the [SwitchBot API].
     ///
     /// Please also see the [`CommandRequest`].
     pub async fn command(&self, command: &CommandRequest) -> anyhow::Result<()> {
-        self.service.command(self.device_id(), command).await
+        self.service()?.command(self.device_id(), command).await
     }
 }
 
