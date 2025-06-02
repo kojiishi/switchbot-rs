@@ -29,7 +29,6 @@ impl SwitchBotService {
         // let url = format!("https://www.google.com");
         let json: serde_json::Value = self
             .add_headers(self.client.get(url))?
-            // .header("Content-Type", "application/json")
             .send()
             .await?
             .json()
@@ -55,7 +54,6 @@ impl SwitchBotService {
         log::debug!("command.request: {body}");
         let json: serde_json::Value = self
             .add_headers(self.client.post(url))?
-            .header("Content-Type", "application/json")
             .json(&body)
             .send()
             .await?
