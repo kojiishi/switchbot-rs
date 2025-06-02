@@ -139,16 +139,16 @@ Hit the Enter key twice, or enter `q` to quit the `switchbot` command.
 ## Batch Mode
 
 It is also possible to run the `switchbot` command in non-interactive mode
-by specifying the device number or the device ID and the command as arguments.
+by specifying the device number or the device ID and the commands as arguments.
 This is useful to create your own batch files,
 or to use with launcher applications such as Elgato Stream Deck.
 
 ```shell-session
-switchbot 1 turnOn
+switchbot 1 on
 ```
 You can also specify multiple devices and commands.
 ```shell-session
-switchbot 1 turnOn setMode:101 4 turnOff
+switchbot 1 on setMode:101 4 off
 ```
 This example turns on the device 1 and set its mode to 101,
 and turns off the device 4.

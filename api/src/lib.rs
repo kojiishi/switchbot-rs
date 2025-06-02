@@ -1,7 +1,11 @@
 //! This is a Rust library to interact with the [SwitchBot API]
 //! and control your SwitchBot devices programmatically.
 //!
+//! For a command line tool,
+//! please see the [`switchbot-cli`][cli-crate] crate.
+//!
 //! [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
+//! [cli-crate]: https://crates.io/crates/switchbot-cli
 //!
 //! # Examples
 //! ```no_run
@@ -20,5 +24,4 @@ pub use device_list::*;
 mod switch_bot;
 pub use switch_bot::*;
 mod switch_bot_service;
-pub(crate) use switch_bot_service::*;
-pub use switch_bot_service::{CommandRequest, SwitchBotError};
+pub use switch_bot_service::*;

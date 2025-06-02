@@ -19,4 +19,10 @@ and control your SwitchBot devices programmatically.
 Please see the [API documentation at docs.rs][docs] for more details,
 and the [release notes] for the change history.
 
+If you are looking for a command line tool,
+please see the [`switchbot-cli`][cli-crate].
+
+
 [release notes]: https://github.com/kojiishi/switchbot-rs/releases
+[`switchbot-cli`]: https://github.com/kojiishi/switchbot-rs/tree/main/cli
+[cli-crate]: https://crates.io/crates/switchbot-cli

@@ -7,7 +7,7 @@ use uuid::Uuid;
 use super::*;
 
 #[derive(Debug, Default)]
-pub struct SwitchBotService {
+pub(crate) struct SwitchBotService {
     client: reqwest::Client,
     token: String,
     secret: String,

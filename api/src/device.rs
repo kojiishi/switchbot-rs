@@ -72,6 +72,8 @@ impl Device {
     /// Send the `command` to the [SwitchBot API].
     ///
     /// Please also see the [`CommandRequest`].
+    ///
+    /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
     pub async fn command(&self, command: &CommandRequest) -> anyhow::Result<()> {
         self.service()?.command(self.device_id(), command).await
     }
