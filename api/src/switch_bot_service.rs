@@ -36,10 +36,13 @@ impl SwitchBotService {
         log::trace!("devices.json: {json:#?}");
         let response: SwitchBotResponse<DeviceListResponse> = serde_json::from_value(json)?;
         // log::trace!("devices: {response:#?}");
-        let mut devices = response.body.device_list;
+        let mut devices = DeviceList::with_capacity(
+            response.body.device_list.len() + response.body.infrared_remote_list.len(),
+        );
+        devices.extend(response.body.device_list);
         devices.extend(response.body.infrared_remote_list);
         for device in devices.iter_mut() {
-            device.set_service(Rc::clone(self));
+            device.set_service(self);
         }
         Ok(devices)
     }
@@ -95,7 +98,7 @@ impl SwitchBotService {
 
 #[derive(Debug, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct SwitchBotResponse<T> {
+struct SwitchBotResponse<T> {
     #[allow(dead_code)]
     pub status_code: u16,
     #[allow(dead_code)]
@@ -105,9 +108,9 @@ pub struct SwitchBotResponse<T> {
 
 #[derive(Debug, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct DeviceListResponse {
-    pub device_list: DeviceList,
-    pub infrared_remote_list: DeviceList,
+struct DeviceListResponse {
+    device_list: Vec<Device>,
+    infrared_remote_list: Vec<Device>,
 }
 
 /// A command request to send to the [SwitchBot API].
