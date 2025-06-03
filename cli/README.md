@@ -87,6 +87,16 @@ Type: DIY Light
 Command>
 ```
 
+### Multiple Devices
+
+It is possible to select multiple devices at once
+by specifying multiple numbers or device IDs separated by `,` (comma).
+This is handy when you want to send the same command to multiple devices at once,
+such as turning off all devices.
+```shell-session
+Device> 2,3
+```
+
 ## Command
 
 To control your devices, you can send commands.
@@ -133,8 +143,8 @@ Command> on
 You can also add your own aliases by the `-a` option.
 Both commands and devices can be aliased.
 ```shell-session
-switchbot -a fan=777888999 -a hot=fanSpeed:100
-switchbot fan hot
+switchbot -a fan=777888999 -a hot=fanSpeed:100 -a lights=2,5,6
+switchbot fan hot lights on
 ```
 To remove existing aliases, omit the value.
 ```shell-session
@@ -157,10 +167,10 @@ switchbot 1 on
 ```
 You can also specify multiple devices and commands.
 ```shell-session
-switchbot 1 on setMode:101 4 off
+switchbot 1 on setMode:101 4,6 off
 ```
 This example turns on the device 1 and set its mode to 101,
-and turns off the device 4.
+and turns off the device 4 and the device 6.
 
 # Change History
 
