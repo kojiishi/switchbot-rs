@@ -39,7 +39,7 @@ impl Cli {
         self.switch_bot.load_devices().await?;
 
         if !self.args.commands.is_empty() {
-            self.execute_commands(&self.args.commands.clone()).await?;
+            self.execute_args(&self.args.commands.clone()).await?;
             self.args.save()?;
             return Ok(());
         }
@@ -72,7 +72,7 @@ impl Cli {
                     break;
                 }
                 _ => {
-                    if let Err(error) = self.execute_command(input_text).await {
+                    if let Err(error) = self.execute(input_text).await {
                         log::error!("{error}");
                     }
                 }
@@ -87,14 +87,21 @@ impl Cli {
         }
     }
 
-    async fn execute_commands(&mut self, list: &[String]) -> anyhow::Result<()> {
+    async fn execute_args(&mut self, list: &[String]) -> anyhow::Result<()> {
         for command in list {
-            self.execute_command(command).await?;
+            self.execute(command).await?;
         }
         Ok(())
     }
 
-    async fn execute_command(&mut self, text: &str) -> anyhow::Result<()> {
+    async fn execute(&mut self, mut text: &str) -> anyhow::Result<()> {
+        let alias_result: String;
+        if let Some(alias) = self.args.aliases.get(text) {
+            log::debug!(r#"alias: "{text}" -> "{alias}""#);
+            alias_result = alias.clone();
+            text = &alias_result;
+        }
+
         if self.set_current_device(text).is_ok() {
             return Ok(());
         }
@@ -125,15 +132,7 @@ impl Cli {
             .ok_or_else(|| anyhow::anyhow!("Not a valid device: \"{value}\""))
     }
 
-    fn parse_command(&self, text: &str) -> CommandRequest {
-        if let Some(alias) = self.args.aliases.get(text) {
-            log::debug!(r#"Command alias: "{text}" -> "{alias}""#);
-            return self.parse_command_no_alias(alias);
-        }
-        self.parse_command_no_alias(text)
-    }
-
-    fn parse_command_no_alias(&self, mut text: &str) -> CommandRequest {
+    fn parse_command(&self, mut text: &str) -> CommandRequest {
         let mut command = CommandRequest::default();
         if let Some((name, parameter)) = text.split_once(':') {
             command.parameter = parameter.into();
