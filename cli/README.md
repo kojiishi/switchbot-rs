@@ -58,7 +58,8 @@ Once the authentication is done, the interactive mode starts.
 ```shell-session
 $ switchbot
 1: Hub Mini AF (Hub Mini, ID:111222333)
-2: My Bedroom Light (DIY Light, ID:444555666)
+2: Bedroom Light (DIY Light, ID:444555666)
+3: Living Fan (Fan, ID:777888999)
 ...
 Device>
 ```
@@ -72,10 +73,11 @@ To select the device to interact with,
 enter either the number or the device ID.
 ```shell-session
 1: Hub Mini AF (Hub Mini, ID:111222333)
-2: My Bedroom Light (DIY Light, ID:444555666)
+2: Bedroom Light (DIY Light, ID:444555666)
+3: Living Fan (Fan, ID:777888999)
 ...
 Device> 2
-Name: My Bedroom Light
+Name: Bedroom Light
 ID: 444555666
 Type: DIY Light
 Command>
@@ -92,7 +94,7 @@ to find the command you want to send to your devices.
 The following example sends the `turnOn` command to the device number 2.
 ```shell-session
 Device> 2
-Name: My Bedroom Light
+Name: Bedroom Light
 ID: 444555666
 Type: DIY Light
 Command> turnOn
@@ -116,7 +118,7 @@ prepend it with a `/` (slash) as the separator.
 Command> customize/button1
 ```
 
-### Aliases
+## Aliases
 
 Some commands have aliases for convenience.
 For example, `on` is an alias for `turnOn`, and `off` is an alias for `turnOff`.
@@ -125,12 +127,14 @@ Command> on
 ```
 
 You can also add your own aliases by the `-a` option.
+Both commands and devices can be aliased.
 ```shell-session
-switchbot -a safe=setChildLock:1 -a unsafe=setChildLock:0
+switchbot -a fan=777888999 -a hot=fanSpeed:100
+switchbot fan hot
 ```
 To remove existing aliases, omit the value.
 ```shell-session
-switchbot -a safe
+switchbot -a hot
 ```
 
 ## Quit
