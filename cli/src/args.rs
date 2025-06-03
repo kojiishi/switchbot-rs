@@ -38,6 +38,18 @@ pub struct Args {
 }
 
 impl Args {
+    pub fn new_from_args() -> Self {
+        let mut args = Args::parse();
+        if let Err(error) = args.merge_config() {
+            log::debug!("Load config error: {error}");
+        }
+        args.ensure_default();
+        if !args.alias_updates.is_empty() {
+            args.update_aliases();
+        }
+        args
+    }
+
     pub fn create_switch_bot(&mut self) -> anyhow::Result<SwitchBot> {
         self.ensure_auth()?;
         Ok(SwitchBot::new_with_authentication(

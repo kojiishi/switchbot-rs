@@ -1,4 +1,3 @@
-use clap::Parser;
 use switchbot_api::{CommandRequest, Device, SwitchBot};
 
 use crate::{Args, UserInput};
@@ -12,17 +11,8 @@ pub struct Cli {
 
 impl Cli {
     pub fn new_from_args() -> Self {
-        let mut args = Args::parse();
-        if let Err(error) = args.merge_config() {
-            log::debug!("Load config error: {error}");
-        }
-        args.ensure_default();
-        if !args.alias_updates.is_empty() {
-            args.update_aliases();
-            args.print_aliases();
-        }
         Self {
-            args,
+            args: Args::new_from_args(),
             ..Default::default()
         }
     }
@@ -39,15 +29,25 @@ impl Cli {
     }
 
     pub async fn run(&mut self) -> anyhow::Result<()> {
+        if !self.args.alias_updates.is_empty() {
+            self.args.print_aliases();
+            self.args.save()?;
+            return Ok(());
+        }
+
         self.switch_bot = self.args.create_switch_bot()?;
         self.switch_bot.load_devices().await?;
 
         if !self.args.commands.is_empty() {
             self.execute_commands(&self.args.commands.clone()).await?;
+            self.args.save()?;
             return Ok(());
         }
 
-        self.run_interactive().await
+        self.run_interactive().await?;
+
+        self.args.save()?;
+        Ok(())
     }
 
     async fn run_interactive(&mut self) -> anyhow::Result<()> {
@@ -78,7 +78,6 @@ impl Cli {
                 }
             }
         }
-        self.args.save()?;
         Ok(())
     }
 
