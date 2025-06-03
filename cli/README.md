@@ -47,7 +47,8 @@ to avoid entering them every time.
 The `--clear` option clears the saved authentication,
 and the `switchbot` command will prompt for the authentication again.
 The `--token` and the `--secret` options are available
-to specify them as command line arguments.
+to specify them as command line arguments,
+as well as environment variables `SWITCHBOT_TOKEN` and `SWITCHBOT_SECRET`.
 
 [token-secret]: https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#open-token-and-secret-key
 

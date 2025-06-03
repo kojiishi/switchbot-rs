@@ -9,10 +9,10 @@ use crate::UserInput;
 #[command(version, about)]
 pub struct Args {
     /// The token for the authentication.
-    #[arg(long, default_value_t = String::default())]
+    #[arg(long, default_value_t = String::default(), env = "SWITCHBOT_TOKEN")]
     pub token: String,
     /// The secret for the authentication.
-    #[arg(long, default_value_t = String::default())]
+    #[arg(long, default_value_t = String::default(), env = "SWITCHBOT_SECRET")]
     pub secret: String,
 
     /// Clear the saved authentication.
