@@ -17,6 +17,8 @@
 //! # }
 //! ```
 
+mod command_request;
+pub use command_request::*;
 mod device;
 pub use device::*;
 mod device_list;
