@@ -9,7 +9,7 @@
 //!
 //! # Examples
 //! ```no_run
-//! # use switchbot_api::SwitchBot;
+//! # use switchbot_api::{CommandRequest, SwitchBot};
 //! # async fn test(token: &str, secret: &str) -> anyhow::Result<()> {
 //! let mut switch_bot = SwitchBot::new_with_authentication(token, secret);
 //! switch_bot.load_devices().await?;
@@ -19,7 +19,7 @@
 //!     ..Default::default()
 //! };
 //! device.command(&command).await?;
-//! //! # Ok(())
+//! # Ok(())
 //! # }
 //! ```
 
