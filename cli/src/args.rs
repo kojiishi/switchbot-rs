@@ -1,6 +1,7 @@
 use std::{collections::HashMap, fs, path::PathBuf};
 
 use clap::Parser;
+use itertools::Itertools;
 use switchbot_api::SwitchBot;
 
 use crate::UserInput;
@@ -104,7 +105,7 @@ impl Args {
     }
 
     pub fn print_aliases(&self) {
-        for (alias, to) in &self.aliases {
+        for (alias, to) in self.aliases.iter().sorted() {
             println!("{alias}={to}");
         }
     }
