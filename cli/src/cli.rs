@@ -106,7 +106,7 @@ impl Cli {
             return Ok(());
         }
         if let Some(device) = self.current_device() {
-            let command = self.parse_command(text);
+            let command = CommandRequest::from(text);
             device.command(&command).await?;
             return Ok(());
         }
@@ -130,19 +130,5 @@ impl Cli {
             .devices()
             .index_by_device_id(value)
             .ok_or_else(|| anyhow::anyhow!("Not a valid device: \"{value}\""))
-    }
-
-    fn parse_command(&self, mut text: &str) -> CommandRequest {
-        let mut command = CommandRequest::default();
-        if let Some((name, parameter)) = text.split_once(':') {
-            command.parameter = parameter.into();
-            text = name;
-        }
-        if let Some((command_type, name)) = text.split_once('/') {
-            command.command_type = command_type.into();
-            text = name;
-        }
-        command.command = text.into();
-        command
     }
 }

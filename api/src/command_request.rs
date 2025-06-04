@@ -14,7 +14,7 @@
 ///
 /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
 /// [send-device-control-commands]: https://github.com/OpenWonderLabs/SwitchBotAPI/blob/main/README.md#send-device-control-commands
-#[derive(Debug, serde::Serialize)]
+#[derive(Debug, PartialEq, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CommandRequest {
     /// The command.
@@ -34,5 +34,56 @@ impl Default for CommandRequest {
             parameter: "default".into(),
             command_type: "command".into(),
         }
+    }
+}
+
+impl From<&str> for CommandRequest {
+    /// Parse a string into a [`CommandRequest`].
+    /// ```
+    /// # use switchbot_api::CommandRequest;
+    /// assert_eq!(
+    ///     CommandRequest::from("turnOn"),
+    ///     CommandRequest {
+    ///         command: "turnOn".into(),
+    ///         ..Default::default()
+    ///     }
+    /// );
+    /// assert_eq!(
+    ///     CommandRequest::from("turnOn:parameter:colon/slash"),
+    ///     CommandRequest {
+    ///         command: "turnOn".into(),
+    ///         parameter: "parameter:colon/slash".into(),
+    ///         ..Default::default()
+    ///     }
+    /// );
+    /// assert_eq!(
+    ///     CommandRequest::from("customize/turnOn"),
+    ///     CommandRequest {
+    ///         command: "turnOn".into(),
+    ///         command_type: "customize".into(),
+    ///         ..Default::default()
+    ///     }
+    /// );
+    /// assert_eq!(
+    ///     CommandRequest::from("customize/turnOn:parameter:colon/slash"),
+    ///     CommandRequest {
+    ///         command: "turnOn".into(),
+    ///         command_type: "customize".into(),
+    ///         parameter: "parameter:colon/slash".into(),
+    ///     }
+    /// );
+    /// ```
+    fn from(mut text: &str) -> Self {
+        let mut command = CommandRequest::default();
+        if let Some((name, parameter)) = text.split_once(':') {
+            command.parameter = parameter.into();
+            text = name;
+        }
+        if let Some((command_type, name)) = text.split_once('/') {
+            command.command_type = command_type.into();
+            text = name;
+        }
+        command.command = text.into();
+        command
     }
 }
