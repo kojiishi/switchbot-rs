@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::sync::Arc;
 
 use super::*;
 
@@ -7,7 +7,7 @@ use super::*;
 /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
 #[derive(Debug, Default)]
 pub struct SwitchBot {
-    service: Rc<SwitchBotService>,
+    service: Arc<SwitchBotService>,
     devices: DeviceList,
 }
 
