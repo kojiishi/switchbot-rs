@@ -51,7 +51,7 @@ impl SwitchBot {
     /// Please refer to the [SwitchBot documentation about
     /// how to obtain the token and secret key][token-secret].
     ///
-    /// [token-secret]: https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#open-token-and-secret-key
+    /// [token-secret]: https://github.com/OpenWonderLabs/SwitchBotAPI#open-token-and-secret-key
     pub fn set_authentication(&mut self, token: &str, secret: &str) {
         self.service = SwitchBotService::new(token, secret);
         self.devices.clear();

@@ -50,7 +50,7 @@ The `--token` and the `--secret` options are available
 to specify them as command line arguments,
 as well as environment variables `SWITCHBOT_TOKEN` and `SWITCHBOT_SECRET`.
 
-[token-secret]: https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#open-token-and-secret-key
+[token-secret]: https://github.com/OpenWonderLabs/SwitchBotAPI#open-token-and-secret-key
 
 ## Interactive Mode
 
@@ -114,7 +114,7 @@ Type: DIY Light
 Command> turnOn
 ```
 
-[send-device-control-commands]: https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#send-device-control-commands
+[send-device-control-commands]: https://github.com/OpenWonderLabs/SwitchBotAPI#send-device-control-commands
 
 ### Parameters
 

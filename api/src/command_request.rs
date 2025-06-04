@@ -39,6 +39,9 @@ impl Default for CommandRequest {
 
 impl From<&str> for CommandRequest {
     /// Parse a string into a [`CommandRequest`].
+    /// Please see the [`switchbot-cli` document] for the syntax.
+    ///
+    /// [`switchbot-cli` document]: https://github.com/kojiishi/switchbot-rs/tree/main/cli#command
     /// ```
     /// # use switchbot_api::CommandRequest;
     /// assert_eq!(

@@ -10,7 +10,7 @@ use super::*;
 /// For the details of fields, please refer to the [devices] section
 /// of the API documentation.
 ///
-/// [devices]: https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#devices
+/// [devices]: https://github.com/OpenWonderLabs/SwitchBotAPI#devices
 #[derive(Debug, Default, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Device {

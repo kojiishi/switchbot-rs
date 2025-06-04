@@ -75,9 +75,9 @@ impl SwitchBotService {
             start_time.elapsed()
         );
 
-        let response: SwitchBotError = serde_json::from_value(json)?;
         // All statusCode other than 100 looks like errors.
-        // https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#errors
+        // https://github.com/OpenWonderLabs/SwitchBotAPI#errors
+        let response: SwitchBotError = serde_json::from_value(json)?;
         if response.status_code != 100 {
             return Err(response.into());
         }
