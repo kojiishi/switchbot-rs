@@ -54,7 +54,12 @@ as well as environment variables `SWITCHBOT_TOKEN` and `SWITCHBOT_SECRET`.
 
 ## Interactive Mode
 
-Once the authentication is done, the interactive mode starts.
+The `switchbot` command enters the interactive mode
+when no arguments are specified.
+
+Please see the [Batch Mode](#batch-mode) section
+if you are looking for non-interactive usage.
+
 ```shell-session
 $ switchbot
 1: Hub Mini AF (Hub Mini, ID:111222333)
