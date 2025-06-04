@@ -1,6 +1,6 @@
 use std::{
     fmt::Display,
-    rc::{Rc, Weak},
+    sync::{Arc, Weak},
 };
 
 use super::*;
@@ -68,14 +68,14 @@ impl Device {
         &self.hub_device_id
     }
 
-    fn service(&self) -> anyhow::Result<Rc<SwitchBotService>> {
+    fn service(&self) -> anyhow::Result<Arc<SwitchBotService>> {
         self.service
             .upgrade()
             .ok_or_else(|| anyhow::anyhow!("The service is dropped"))
     }
 
-    pub(crate) fn set_service(&mut self, service: &Rc<SwitchBotService>) {
-        self.service = Rc::downgrade(service);
+    pub(crate) fn set_service(&mut self, service: &Arc<SwitchBotService>) {
+        self.service = Arc::downgrade(service);
     }
 
     /// Send the `command` to the [SwitchBot API].

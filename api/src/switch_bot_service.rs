@@ -2,7 +2,7 @@ use base64::{Engine as _, engine::general_purpose::STANDARD};
 use hmac::{Hmac, Mac};
 use sha2::Sha256;
 use std::{
-    rc::Rc,
+    sync::Arc,
     time::{Instant, SystemTime},
 };
 use uuid::Uuid;
@@ -19,15 +19,15 @@ pub(crate) struct SwitchBotService {
 impl SwitchBotService {
     const HOST: &str = "https://api.switch-bot.com";
 
-    pub fn new(token: &str, secret: &str) -> Rc<Self> {
-        Rc::new(SwitchBotService {
+    pub fn new(token: &str, secret: &str) -> Arc<Self> {
+        Arc::new(SwitchBotService {
             client: reqwest::Client::new(),
             token: token.to_string(),
             secret: secret.to_string(),
         })
     }
 
-    pub async fn load_devices(self: &Rc<SwitchBotService>) -> anyhow::Result<DeviceList> {
+    pub async fn load_devices(self: &Arc<SwitchBotService>) -> anyhow::Result<DeviceList> {
         let start_time = Instant::now();
         let url = format!("{}/v1.1/devices", Self::HOST);
         let json: serde_json::Value = self
