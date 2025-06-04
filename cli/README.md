@@ -56,7 +56,6 @@ as well as environment variables `SWITCHBOT_TOKEN` and `SWITCHBOT_SECRET`.
 
 The `switchbot` command enters the interactive mode
 when no arguments are specified.
-
 Please see the [Batch Mode](#batch-mode) section
 if you are looking for non-interactive usage.
 
