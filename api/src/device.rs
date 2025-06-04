@@ -11,7 +11,7 @@ use super::*;
 /// of the API documentation.
 ///
 /// [devices]: https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#devices
-#[derive(Debug, serde::Deserialize)]
+#[derive(Debug, Default, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Device {
     device_id: String,
@@ -27,6 +27,15 @@ pub struct Device {
 }
 
 impl Device {
+    pub(crate) fn new_for_test(index: usize) -> Self {
+        Self {
+            device_id: format!("device{}", index),
+            device_name: format!("Device {}", index),
+            device_type: "test".into(),
+            ..Default::default()
+        }
+    }
+
     /// The device ID.
     pub fn device_id(&self) -> &str {
         &self.device_id

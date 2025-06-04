@@ -33,6 +33,19 @@ impl SwitchBot {
         }
     }
 
+    /// Construct an instance for testing.
+    /// The instance has the specified number of devices for testing.
+    pub fn new_for_test(num_devices: usize) -> Self {
+        let mut devices = DeviceList::new();
+        for i in 0..num_devices {
+            devices.push(Device::new_for_test(i + 1));
+        }
+        Self {
+            devices,
+            ..Default::default()
+        }
+    }
+
     /// Set the authentication information.
     ///
     /// Please refer to the [SwitchBot documentation about
