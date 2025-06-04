@@ -1,7 +1,10 @@
 use base64::{Engine as _, engine::general_purpose::STANDARD};
 use hmac::{Hmac, Mac};
 use sha2::Sha256;
-use std::{rc::Rc, time::SystemTime};
+use std::{
+    rc::Rc,
+    time::{Instant, SystemTime},
+};
 use uuid::Uuid;
 
 use super::*;
@@ -25,15 +28,19 @@ impl SwitchBotService {
     }
 
     pub async fn load_devices(self: &Rc<SwitchBotService>) -> anyhow::Result<DeviceList> {
+        let start_time = Instant::now();
         let url = format!("{}/v1.1/devices", Self::HOST);
-        // let url = format!("https://www.google.com");
         let json: serde_json::Value = self
             .add_headers(self.client.get(url))?
             .send()
             .await?
             .json()
             .await?;
-        log::trace!("devices.json: {json:#?}");
+        log::trace!(
+            "devices.json: {json:#?}: elapsed {:?}",
+            start_time.elapsed()
+        );
+
         let response: SwitchBotResponse<DeviceListResponse> = serde_json::from_value(json)?;
         // log::trace!("devices: {response:#?}");
         let mut devices = DeviceList::with_capacity(
@@ -52,6 +59,7 @@ impl SwitchBotService {
         device_id: &str,
         command: &CommandRequest,
     ) -> anyhow::Result<()> {
+        let start_time = Instant::now();
         let url = format!("{}/v1.1/devices/{device_id}/commands", Self::HOST);
         let body = serde_json::to_value(command)?;
         log::debug!("command.request: {body}");
@@ -62,8 +70,11 @@ impl SwitchBotService {
             .await?
             .json()
             .await?;
+        log::trace!(
+            "command.response: {json}: elapsed {:?}",
+            start_time.elapsed()
+        );
 
-        log::trace!("command.response: {json}");
         let response: SwitchBotError = serde_json::from_value(json)?;
         // All statusCode other than 100 looks like errors.
         // https://github.com/OpenWonderLabs/SwitchBotAPI?tab=readme-ov-file#errors
