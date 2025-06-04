@@ -13,7 +13,13 @@
 //! # async fn test(token: &str, secret: &str) -> anyhow::Result<()> {
 //! let mut switch_bot = SwitchBot::new_with_authentication(token, secret);
 //! switch_bot.load_devices().await?;
-//! # Ok(())
+//! let device = &switch_bot.devices()[0];
+//! let command = CommandRequest {
+//!     command: "turnOn".into(),
+//!     ..Default::default()
+//! };
+//! device.command(&command).await?;
+//! //! # Ok(())
 //! # }
 //! ```
 
