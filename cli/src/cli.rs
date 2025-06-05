@@ -176,7 +176,7 @@ impl Cli {
     async fn execute_command(&self, command: &CommandRequest) -> anyhow::Result<()> {
         let devices = self.current_devices();
         for device in devices {
-            device.command(&command).await?;
+            device.command(command).await?;
         }
         Ok(())
     }

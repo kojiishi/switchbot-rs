@@ -86,19 +86,23 @@ impl Device {
     pub async fn command(&self, command: &CommandRequest) -> anyhow::Result<()> {
         self.service()?.command(self.device_id(), command).await
     }
+
+    fn fmt_multi_line(&self, buf: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(buf, "Name: {}", self.device_name())?;
+        writeln!(buf, "ID: {}", self.device_id())?;
+        if self.is_remote() {
+            write!(buf, "Remote Type: {}", self.remote_type())?;
+        } else {
+            write!(buf, "Type: {}", self.device_type())?;
+        }
+        Ok(())
+    }
 }
 
 impl Display for Device {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if f.alternate() {
-            writeln!(f, "Name: {}", self.device_name())?;
-            writeln!(f, "ID: {}", self.device_id())?;
-            if self.is_remote() {
-                write!(f, "Remote Type: {}", self.remote_type())?;
-            } else {
-                write!(f, "Type: {}", self.device_type())?;
-            }
-            return Ok(());
+            return self.fmt_multi_line(f);
         }
         write!(
             f,
