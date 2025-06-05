@@ -1,6 +1,8 @@
 use std::{
+    collections::HashMap,
     fmt::Display,
-    sync::{Arc, Weak},
+    io,
+    sync::{Arc, RwLock, RwLockReadGuard, Weak},
 };
 
 use super::*;
@@ -15,12 +17,19 @@ use super::*;
 #[serde(rename_all = "camelCase")]
 pub struct Device {
     device_id: String,
+    #[serde(default)] // Missing in the status response.
     device_name: String,
     #[serde(default)]
     device_type: String,
     #[serde(default)]
     remote_type: String,
     hub_device_id: String,
+
+    #[serde(flatten)]
+    extra: HashMap<String, serde_json::Value>,
+
+    #[serde(skip)]
+    status: RwLock<HashMap<String, serde_json::Value>>,
 
     #[serde(skip)]
     service: Weak<SwitchBotService>,
@@ -87,6 +96,65 @@ impl Device {
         self.service()?.command(self.device_id(), command).await
     }
 
+    /// Get the [device status] from the [SwitchBot API].
+    ///
+    /// Please see [`Device::status_by_key()`] and some other functions
+    /// to retrieve the status captured by this function.
+    ///
+    /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
+    /// [device status]: https://github.com/OpenWonderLabs/SwitchBotAPI#get-device-status
+    pub async fn update_status(&self) -> anyhow::Result<()> {
+        let status = self.service()?.status(self.device_id()).await?;
+        assert_eq!(self.device_id, status.device_id);
+        let mut writer = self.status.write().unwrap();
+        *writer = status.extra;
+        Ok(())
+    }
+
+    fn status(&self) -> RwLockReadGuard<'_, HashMap<String, serde_json::Value>> {
+        self.status.read().unwrap()
+    }
+
+    /// Get the value of a key from the [device status].
+    ///
+    /// The [`Device::update_status()`] must be called prior to this function.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use switchbot_api::Device;
+    /// async fn print_power_status(device: &Device) -> anyhow::Result<()> {
+    ///   device.update_status().await?;
+    ///   println!("Power = {}", device.status_by_key("power").unwrap());
+    ///   Ok(())
+    /// }
+    /// ```
+    /// [device status]: https://github.com/OpenWonderLabs/SwitchBotAPI#get-device-status
+    pub fn status_by_key(&self, key: &str) -> Option<serde_json::Value> {
+        self.status().get(key).cloned()
+    }
+
+    /// Write the list of the [device status] to the `writer`.
+    ///
+    /// The [`Device::update_status()`] must be called prior to this function.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use switchbot_api::Device;
+    /// async fn print_status(device: &Device) -> anyhow::Result<()> {
+    ///   device.update_status().await?;
+    ///   device.write_status_to(std::io::stdout());
+    ///   Ok(())
+    /// }
+    /// ```
+    /// [device status]: https://github.com/OpenWonderLabs/SwitchBotAPI#get-device-status
+    pub fn write_status_to(&self, mut writer: impl io::Write) -> io::Result<()> {
+        let status = self.status();
+        for (key, value) in status.iter() {
+            writeln!(writer, "{key}: {value}")?;
+        }
+        Ok(())
+    }
+
     fn fmt_multi_line(&self, buf: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(buf, "Name: {}", self.device_name())?;
         writeln!(buf, "ID: {}", self.device_id())?;
@@ -94,6 +162,13 @@ impl Device {
             writeln!(buf, "Remote Type: {}", self.remote_type())?;
         } else {
             writeln!(buf, "Type: {}", self.device_type())?;
+        }
+        let status = self.status();
+        if !status.is_empty() {
+            writeln!(buf, "Status:")?;
+            for (key, value) in status.iter() {
+                writeln!(buf, "  {key}: {value}")?;
+            }
         }
         Ok(())
     }

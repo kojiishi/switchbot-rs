@@ -56,6 +56,13 @@ impl SwitchBotService {
         Ok(())
     }
 
+    pub(crate) async fn status(&self, device_id: &str) -> anyhow::Result<Device> {
+        let url = format!("{}/v1.1/devices/{device_id}/status", Self::HOST);
+        let request = self.client.get(url);
+        let device = self.send::<Device>(request).await?;
+        Ok(device)
+    }
+
     async fn send<T: serde::de::DeserializeOwned>(
         &self,
         request: reqwest::RequestBuilder,

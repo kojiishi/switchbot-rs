@@ -1,3 +1,5 @@
+use std::io::stdout;
+
 use switchbot_api::{CommandRequest, Device, DeviceList, SwitchBot};
 
 use crate::{Args, UserInput};
@@ -136,6 +138,14 @@ impl Cli {
             return Ok(true);
         }
         if self.has_current_device() {
+            if text == "status" {
+                self.update_status("").await?;
+                return Ok(false);
+            }
+            if let Some(key) = text.strip_prefix("status.") {
+                self.update_status(key).await?;
+                return Ok(false);
+            }
             self.execute_command(&CommandRequest::from(text)).await?;
             return Ok(false);
         }
@@ -178,6 +188,21 @@ impl Cli {
         let devices = self.current_devices();
         for device in devices {
             device.command(command).await?;
+        }
+        Ok(())
+    }
+
+    async fn update_status(&mut self, key: &str) -> anyhow::Result<()> {
+        for device in self.current_devices() {
+            device.update_status().await?;
+
+            if key.is_empty() {
+                device.write_status_to(stdout())?;
+            } else if let Some(value) = device.status_by_key(key) {
+                println!("{}", value);
+            } else {
+                log::error!(r#"No status key "{key}" for {device}"#);
+            }
         }
         Ok(())
     }
