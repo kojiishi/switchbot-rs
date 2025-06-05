@@ -112,7 +112,7 @@ impl Cli {
         }
 
         let device = self.current_devices()[0];
-        println!("{device:#}");
+        print!("{device:#}");
     }
 
     async fn execute_args(&mut self, list: &[String]) -> anyhow::Result<()> {

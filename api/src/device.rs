@@ -91,9 +91,9 @@ impl Device {
         writeln!(buf, "Name: {}", self.device_name())?;
         writeln!(buf, "ID: {}", self.device_id())?;
         if self.is_remote() {
-            write!(buf, "Remote Type: {}", self.remote_type())?;
+            writeln!(buf, "Remote Type: {}", self.remote_type())?;
         } else {
-            write!(buf, "Type: {}", self.device_type())?;
+            writeln!(buf, "Type: {}", self.device_type())?;
         }
         Ok(())
     }
