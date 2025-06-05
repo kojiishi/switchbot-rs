@@ -28,26 +28,15 @@ impl SwitchBotService {
     }
 
     pub async fn load_devices(self: &Arc<SwitchBotService>) -> anyhow::Result<DeviceList> {
-        let start_time = Instant::now();
         let url = format!("{}/v1.1/devices", Self::HOST);
-        let json: serde_json::Value = self
-            .add_headers(self.client.get(url))?
-            .send()
-            .await?
-            .json()
-            .await?;
-        log::trace!(
-            "devices.json: {json:#?}: elapsed {:?}",
-            start_time.elapsed()
-        );
+        let request = self.client.get(url);
+        let device_list = self.send::<DeviceListResponse>(request).await?;
 
-        let response: SwitchBotResponse<DeviceListResponse> = serde_json::from_value(json)?;
-        // log::trace!("devices: {response:#?}");
         let mut devices = DeviceList::with_capacity(
-            response.body.device_list.len() + response.body.infrared_remote_list.len(),
+            device_list.device_list.len() + device_list.infrared_remote_list.len(),
         );
-        devices.extend(response.body.device_list);
-        devices.extend(response.body.infrared_remote_list);
+        devices.extend(device_list.device_list);
+        devices.extend(device_list.infrared_remote_list);
         for device in devices.iter_mut() {
             device.set_service(self);
         }
@@ -59,29 +48,27 @@ impl SwitchBotService {
         device_id: &str,
         command: &CommandRequest,
     ) -> anyhow::Result<()> {
-        let start_time = Instant::now();
         let url = format!("{}/v1.1/devices/{device_id}/commands", Self::HOST);
         let body = serde_json::to_value(command)?;
         log::debug!("command.request: {body}");
-        let json: serde_json::Value = self
-            .add_headers(self.client.post(url))?
-            .json(&body)
-            .send()
-            .await?
-            .json()
-            .await?;
-        log::trace!(
-            "command.response: {json}: elapsed {:?}",
-            start_time.elapsed()
-        );
-
-        // All statusCode other than 100 looks like errors.
-        // https://github.com/OpenWonderLabs/SwitchBotAPI#errors
-        let response: SwitchBotError = serde_json::from_value(json)?;
-        if response.status_code != 100 {
-            return Err(response.into());
-        }
+        let request = self.client.post(url).json(&body);
+        self.send::<Option<serde_json::Value>>(request).await?;
         Ok(())
+    }
+
+    async fn send<T: serde::de::DeserializeOwned>(
+        &self,
+        request: reqwest::RequestBuilder,
+    ) -> anyhow::Result<T> {
+        let start_time = Instant::now();
+        let response = self.add_headers(request)?.send().await?;
+        log::trace!("response: {response:?}");
+        response.error_for_status_ref()?;
+
+        let json: serde_json::Value = response.json().await?;
+        log::trace!("response.json: {json}: elapsed {:?}", start_time.elapsed());
+        let data: SwitchBotResponse<T> = json.try_into()?;
+        Ok(data.body)
     }
 
     fn add_headers(
@@ -117,6 +104,24 @@ struct SwitchBotResponse<T> {
     pub body: T,
 }
 
+impl<T: serde::de::DeserializeOwned> TryFrom<serde_json::Value> for SwitchBotResponse<T> {
+    type Error = anyhow::Error;
+
+    /// Try to deserialize a JSON to a `SwitchBotResponse`.
+    ///
+    /// This function returns [`SwitchBotError`] if the `status_code` is not 100,
+    /// in addition to other errors such as the [`serde_json::Error`].
+    fn try_from(value: serde_json::Value) -> Result<Self, Self::Error> {
+        // All statusCode other than 100 looks like errors.
+        // https://github.com/OpenWonderLabs/SwitchBotAPI#errors
+        let response: SwitchBotResponse<T> = serde_json::from_value(value)?;
+        if response.status_code != 100 {
+            return Err(SwitchBotError::from(response).into());
+        }
+        Ok(response)
+    }
+}
+
 #[derive(Debug, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct DeviceListResponse {
@@ -147,6 +152,33 @@ impl<T> From<SwitchBotResponse<T>> for SwitchBotError {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn response_from_json() {
+        let result: anyhow::Result<SwitchBotResponse<serde_json::Value>> =
+            serde_json::json!({"message":"OK", "statusCode":100, "body":{}}).try_into();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().status_code, 100);
+    }
+
+    #[test]
+    fn response_from_json_error() {
+        let result: anyhow::Result<SwitchBotResponse<serde_json::Value>> =
+            serde_json::json!({"message":"error", "statusCode":500, "body":{}}).try_into();
+        assert!(result.is_err());
+        let error = result.unwrap_err();
+        let switch_bot_error = error.downcast_ref::<SwitchBotError>();
+        assert!(switch_bot_error.is_some());
+        assert_eq!(switch_bot_error.unwrap().status_code, 500);
+    }
+
+    #[test]
+    fn response_from_json_no_body() {
+        let result: anyhow::Result<SwitchBotResponse<Option<serde_json::Value>>> =
+            serde_json::json!({"message":"OK", "statusCode":100}).try_into();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().status_code, 100);
+    }
 
     #[test]
     fn error_from_json() -> anyhow::Result<()> {

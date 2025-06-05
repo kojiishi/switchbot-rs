@@ -3,12 +3,13 @@ use std::io::Write;
 use switchbot_cli::Cli;
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn main() {
     init_logger();
 
     let mut cli = Cli::new_from_args();
-    cli.run().await?;
-    Ok(())
+    if let Err(error) = cli.run().await {
+        log::error!("{}", error);
+    }
 }
 
 fn init_logger() {
