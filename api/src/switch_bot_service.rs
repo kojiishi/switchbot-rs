@@ -52,7 +52,7 @@ impl SwitchBotService {
         let body = serde_json::to_value(command)?;
         log::debug!("command.request: {body}");
         let request = self.client.post(url).json(&body);
-        self.send::<Option<serde_json::Value>>(request).await?;
+        self.send_opt(request).await?;
         Ok(())
     }
 
@@ -60,6 +60,18 @@ impl SwitchBotService {
         &self,
         request: reqwest::RequestBuilder,
     ) -> anyhow::Result<T> {
+        let body_json = self
+            .send_opt(request)
+            .await?
+            .ok_or_else(|| anyhow::anyhow!("Missing `body`"))?;
+        let body: T = serde_json::from_value(body_json)?;
+        Ok(body)
+    }
+
+    async fn send_opt(
+        &self,
+        request: reqwest::RequestBuilder,
+    ) -> anyhow::Result<Option<serde_json::Value>> {
         let start_time = Instant::now();
         let response = self.add_headers(request)?.send().await?;
         log::trace!("response: {response:?}");
@@ -67,8 +79,22 @@ impl SwitchBotService {
 
         let json: serde_json::Value = response.json().await?;
         log::trace!("response.json: {json}: elapsed {:?}", start_time.elapsed());
-        let data: SwitchBotResponse<T> = json.try_into()?;
-        Ok(data.body)
+        Self::body_from_json(json)
+    }
+
+    fn body_from_json(json: serde_json::Value) -> anyhow::Result<Option<serde_json::Value>> {
+        // First, parse to `Option<serde_json::Value>` because the `body` may be
+        // missing, or doesn't contain required fields.
+        // The `SwitchBotError` should be raised even when the `body` failed to
+        // deserialize.
+        let response: SwitchBotResponse<Option<serde_json::Value>> = serde_json::from_value(json)?;
+
+        // All statusCode other than 100 looks like errors.
+        // https://github.com/OpenWonderLabs/SwitchBotAPI#errors
+        if response.status_code != 100 {
+            return Err(SwitchBotError::from(response).into());
+        }
+        Ok(response.body)
     }
 
     fn add_headers(
@@ -104,24 +130,6 @@ struct SwitchBotResponse<T> {
     pub body: T,
 }
 
-impl<T: serde::de::DeserializeOwned> TryFrom<serde_json::Value> for SwitchBotResponse<T> {
-    type Error = anyhow::Error;
-
-    /// Try to deserialize a JSON to a `SwitchBotResponse`.
-    ///
-    /// This function returns [`SwitchBotError`] if the `status_code` is not 100,
-    /// in addition to other errors such as the [`serde_json::Error`].
-    fn try_from(value: serde_json::Value) -> Result<Self, Self::Error> {
-        // All statusCode other than 100 looks like errors.
-        // https://github.com/OpenWonderLabs/SwitchBotAPI#errors
-        let response: SwitchBotResponse<T> = serde_json::from_value(value)?;
-        if response.status_code != 100 {
-            return Err(SwitchBotError::from(response).into());
-        }
-        Ok(response)
-    }
-}
-
 #[derive(Debug, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct DeviceListResponse {
@@ -154,17 +162,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn response_from_json() {
-        let result: anyhow::Result<SwitchBotResponse<serde_json::Value>> =
-            serde_json::json!({"message":"OK", "statusCode":100, "body":{}}).try_into();
+    fn body_from_json() {
+        let result = SwitchBotService::body_from_json(
+            serde_json::json!({"message":"OK", "statusCode":100, "body":{}}),
+        );
         assert!(result.is_ok());
-        assert_eq!(result.unwrap().status_code, 100);
     }
 
     #[test]
-    fn response_from_json_error() {
-        let result: anyhow::Result<SwitchBotResponse<serde_json::Value>> =
-            serde_json::json!({"message":"error", "statusCode":500, "body":{}}).try_into();
+    fn body_from_json_error() {
+        let result = SwitchBotService::body_from_json(
+            serde_json::json!({"message":"error", "statusCode":500, "body":{}}),
+        );
         assert!(result.is_err());
         let error = result.unwrap_err();
         let switch_bot_error = error.downcast_ref::<SwitchBotError>();
@@ -173,11 +182,12 @@ mod tests {
     }
 
     #[test]
-    fn response_from_json_no_body() {
-        let result: anyhow::Result<SwitchBotResponse<Option<serde_json::Value>>> =
-            serde_json::json!({"message":"OK", "statusCode":100}).try_into();
+    fn body_from_json_no_body() {
+        let result =
+            SwitchBotService::body_from_json(serde_json::json!({"message":"OK", "statusCode":100}));
         assert!(result.is_ok());
-        assert_eq!(result.unwrap().status_code, 100);
+        let body = result.unwrap();
+        assert!(body.is_none());
     }
 
     #[test]
