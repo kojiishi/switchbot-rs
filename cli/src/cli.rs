@@ -135,11 +135,7 @@ impl Cli {
             return Ok(());
         }
         if self.has_current_device() {
-            let devices = self.current_devices();
-            let command = CommandRequest::from(text);
-            for device in devices {
-                device.command(&command).await?;
-            }
+            self.execute_command(&CommandRequest::from(text)).await?;
             return Ok(());
         }
         Err(set_device_result.unwrap_err())
@@ -175,6 +171,14 @@ impl Cli {
         self.devices()
             .index_by_device_id(value)
             .ok_or_else(|| anyhow::anyhow!("Not a valid device: \"{value}\""))
+    }
+
+    async fn execute_command(&self, command: &CommandRequest) -> anyhow::Result<()> {
+        let devices = self.current_devices();
+        for device in devices {
+            device.command(&command).await?;
+        }
+        Ok(())
     }
 }
 
