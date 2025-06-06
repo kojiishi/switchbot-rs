@@ -35,11 +35,21 @@ impl Cli {
         !self.current_device_indexes.is_empty()
     }
 
-    fn current_devices(&self) -> Vec<&Device> {
+    fn current_devices_as<'a, T, F>(&'a self, f: F) -> impl Iterator<Item = T> + 'a
+    where
+        F: Fn(usize) -> T + 'a,
+    {
         self.current_device_indexes
             .iter()
-            .map(|&index| &self.devices()[index])
-            .collect() // Collect the iterator into a Vec
+            .map(move |&index| f(index))
+    }
+
+    fn current_devices(&self) -> impl Iterator<Item = &Device> {
+        self.current_devices_as(|index| &self.devices()[index])
+    }
+
+    fn current_devices_with_index(&self) -> impl Iterator<Item = (usize, &Device)> {
+        self.current_devices_as(|index| (index, &self.devices()[index]))
     }
 
     pub async fn run(&mut self) -> anyhow::Result<()> {
@@ -96,7 +106,7 @@ impl Cli {
     }
 
     fn print_devices(&self) {
-        if self.current_device_indexes.is_empty() {
+        if !self.has_current_device() {
             for (i, device) in self.devices().iter().enumerate() {
                 println!("{}: {device}", i + 1);
             }
@@ -104,17 +114,13 @@ impl Cli {
         }
 
         if self.current_device_indexes.len() >= 2 {
-            for (i, device) in self
-                .current_device_indexes
-                .iter()
-                .map(|i| (i, &self.devices()[*i]))
-            {
+            for (i, device) in self.current_devices_with_index() {
                 println!("{}: {device}", i + 1);
             }
             return;
         }
 
-        let device = self.current_devices()[0];
+        let device = self.current_devices().nth(0).unwrap();
         print!("{device:#}");
     }
 
@@ -185,8 +191,7 @@ impl Cli {
     }
 
     async fn execute_command(&self, command: &CommandRequest) -> anyhow::Result<()> {
-        let devices = self.current_devices();
-        for device in devices {
+        for device in self.current_devices() {
             device.command(command).await?;
         }
         Ok(())
