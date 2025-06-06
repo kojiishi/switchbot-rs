@@ -132,6 +132,27 @@ prepend it with a `/` (slash) as the separator.
 Command> customize/button1
 ```
 
+## Status
+
+To check the status of your devices, enter `status`.
+The output depends on the device type.
+```shell-session
+Command> status
+power: "off"
+fanSpeed: 23
+```
+
+### Status of a Key
+
+It is also possible to check the status of a specific key
+by specifying `status.` (status dot) followed by the key name.
+For example, the following command shows the power status
+of the selected device.
+```shell-session
+Command> status.power
+"off"
+```
+
 ## Aliases
 
 Some commands have aliases for convenience.
