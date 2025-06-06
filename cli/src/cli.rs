@@ -64,8 +64,8 @@ impl Cli {
 
     async fn run_interactive(&mut self) -> anyhow::Result<()> {
         let mut input = UserInput::new();
+        self.print_devices();
         loop {
-            self.print_devices();
             input.set_prompt(if self.has_current_device() {
                 "Command> "
             } else {
@@ -78,15 +78,16 @@ impl Cli {
                 "" => {
                     if self.has_current_device() {
                         self.current_device_indexes.clear();
+                        self.print_devices();
                         continue;
                     }
                     break;
                 }
-                _ => {
-                    if let Err(error) = self.execute(input_text).await {
-                        log::error!("{error}");
-                    }
-                }
+                _ => match self.execute(input_text).await {
+                    Ok(true) => self.print_devices(),
+                    Ok(false) => {}
+                    Err(error) => log::error!("{error}"),
+                },
             }
         }
         Ok(())
@@ -122,7 +123,7 @@ impl Cli {
         Ok(())
     }
 
-    async fn execute(&mut self, mut text: &str) -> anyhow::Result<()> {
+    async fn execute(&mut self, mut text: &str) -> anyhow::Result<bool> {
         let alias_result: String;
         if let Some(alias) = self.args.aliases.get(text) {
             log::debug!(r#"alias: "{text}" -> "{alias}""#);
@@ -132,11 +133,11 @@ impl Cli {
 
         let set_device_result = self.set_current_devices(text);
         if set_device_result.is_ok() {
-            return Ok(());
+            return Ok(true);
         }
         if self.has_current_device() {
             self.execute_command(&CommandRequest::from(text)).await?;
-            return Ok(());
+            return Ok(false);
         }
         Err(set_device_result.unwrap_err())
     }
