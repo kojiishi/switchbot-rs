@@ -195,9 +195,9 @@ and turns off the device 4 and the device 6.
 
 Getting the [device status](#status) in the batch mode is also possible.
 ```shell-session
-switchbot 4,5,6 status.battery
+switchbot 4,6 status.battery
 ```
-This example prints the battery status of the device 4, 5, and 6.
+This example prints the battery status of the device 4 and 6.
 
 
 # Change History
