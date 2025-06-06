@@ -193,12 +193,9 @@ switchbot 1 on setMode:101 4,6 off
 This example turns on the device 1 and set its mode to 101,
 and turns off the device 4 and the device 6.
 
-Getting the [status](#status) in the batch mode is also possible.
+Getting the [device status](#status) in the batch mode is also possible.
 ```shell-session
 switchbot 4,5,6 status.battery
-95
-50
-100
 ```
 This example prints the battery status of the device 4, 5, and 6.
 
