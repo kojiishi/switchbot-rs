@@ -132,14 +132,15 @@ impl Cli {
         Ok(())
     }
 
-    async fn execute(&mut self, mut text: &str) -> anyhow::Result<bool> {
-        let alias_result: String;
+    async fn execute(&mut self, text: &str) -> anyhow::Result<bool> {
         if let Some(alias) = self.args.aliases.get(text) {
             log::debug!(r#"alias: "{text}" -> "{alias}""#);
-            alias_result = alias.clone();
-            text = &alias_result;
+            return self.execute_no_alias(&alias.clone()).await;
         }
+        self.execute_no_alias(text).await
+    }
 
+    async fn execute_no_alias(&mut self, text: &str) -> anyhow::Result<bool> {
         let set_device_result = self.set_current_devices(text);
         if set_device_result.is_ok() {
             return Ok(true);
