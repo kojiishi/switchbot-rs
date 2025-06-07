@@ -160,7 +160,7 @@ impl Device {
         let condition = ConditionExpression::try_from(condition)?;
         let value = self
             .status_by_key(condition.key)
-            .ok_or_else(|| anyhow::anyhow!(r#"No status key "key" for {self}"#))?;
+            .ok_or_else(|| anyhow::anyhow!(r#"No status key "{}" for {self}"#, condition.key))?;
         condition.evaluate(&value)
     }
 
