@@ -134,14 +134,20 @@ Command> customize/button1
 ```
 
 ## Status
+[status]: #status
 
 To check the status of your devices, enter `status`.
 The output depends on the device type.
+Please refer to the
+[SwitchBot API documentation about device status][get-device-status]
+for the details of the status for each device type.
 ```shell-session
 Command> status
 power: "off"
 fanSpeed: 23
 ```
+
+[get-device-status]: https://github.com/OpenWonderLabs/SwitchBotAPI#get-device-status
 
 ### Status of a Key
 
@@ -177,18 +183,19 @@ switchbot -a hot
 ## If-Command
 
 The conditional "if" command allows you to
-send different commands depending on the device status.
-This capability can create a command to toggle device statuses.
+send different commands depending on the [device status][status].
+This capability allows you to create a command to toggle device statuses.
+The following example
+turns off the device if the power status is on,
+and turns it on otherwise.
 ```shell-session
 Command> if/power=on/off/on
 ```
-The example above turns off the device if the power status is on,
-and turns it on otherwise.
 
 When [multiple devices] are selected,
-the first device is used to compute the condition.
+the first device is used to determine which command to execute.
 Then the command is executed on all selected devices.
-This can make the behaviors consistent across multiple devices.
+This is to make the behaviors consistent across multiple devices.
 ```shell-session
 switchbot 4,2 if/power=on/off/on
 ```
@@ -196,7 +203,7 @@ In the [Batch Mode] example above,
 if the device 4 is on, both the device 2 and 4 are turned off,
 regardless of the power status of the device 2.
 If you want to toggle multiple devices independently,
-specify the if-command for each device.
+you can specify the if-command for each device.
 ```shell-session
 switchbot 4 if/power=on/off/on 2 if/power=on/off/on
 ```
