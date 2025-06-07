@@ -16,7 +16,7 @@ use std::fmt::Display;
 ///
 /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
 /// [send-device-control-commands]: https://github.com/OpenWonderLabs/SwitchBotAPI/blob/main/README.md#send-device-control-commands
-#[derive(Debug, Default, PartialEq, serde::Serialize)]
+#[derive(Clone, Debug, Default, PartialEq, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CommandRequest {
     /// The command.

@@ -181,14 +181,39 @@ Command> customize/button1
 ```
 
 ## Built-in Commands
+[built-in command]: #built-in-commands
 [built-in commands]: #built-in-commands
 
 Following commands are executed by the `switchbot` command itself
 without being sent to the [SwitchBot API].
+* The [`help`][help] command (or `h` as its [alias][aliases]).
 * The `devices` command (or `d` as its [alias][aliases])
   prints the list of all devices.
 * The [`status`][status] and the [`status.key`][status-key] commands.
 * The [`if`-command][if-command].
+
+## Help
+[help]: #help
+
+This [built-in command] prints all available commands for the first selected device.
+Its default [alias][aliases] is `h`.
+
+```
+Command> help
+turnOff
+    Set to OFF state
+turnOn
+    Set to ON state
+...
+```
+
+The content is retrieved from the [SwitchBot API].
+They may not be fully accurate.
+Please file [issues] if you encounter any problems.
+Please also make sure to refer to the
+[original documentations][send-device-control-commands] to verify.
+
+[issues]: https://github.com/kojiishi/switchbot-rs/issues
 
 ## Status
 [status]: #status

@@ -1,7 +1,7 @@
 use std::{future::Future, io::stdout, iter::zip};
 
 use itertools::Itertools;
-use switchbot_api::{CommandRequest, Device, DeviceList, SwitchBot};
+use switchbot_api::{CommandRequest, Device, DeviceList, Help, SwitchBot};
 
 use crate::{Args, UserInput};
 
@@ -10,6 +10,7 @@ pub struct Cli {
     args: Args,
     switch_bot: SwitchBot,
     current_device_indexes: Vec<usize>,
+    help: Option<Help>,
 }
 
 impl Cli {
@@ -147,6 +148,35 @@ impl Cli {
         }
     }
 
+    const COMMAND_URL: &str =
+        "https://github.com/OpenWonderLabs/SwitchBotAPI#send-device-control-commands";
+    const COMMAND_IR_URL: &str = "https://github.com/OpenWonderLabs/SwitchBotAPI#command-set-for-virtual-infrared-remote-devices";
+
+    async fn print_help(&mut self) -> anyhow::Result<()> {
+        if self.help.is_none() {
+            self.help = Some(Help::load().await?);
+        }
+        let device = self.first_current_device();
+        let command_helps = self.help.as_ref().unwrap().command_helps(device);
+        let help_url = if device.is_remote() {
+            Self::COMMAND_IR_URL
+        } else {
+            Self::COMMAND_URL
+        };
+        if command_helps.is_empty() {
+            anyhow::bail!(
+                r#"No help for "{}". Please see {} for more information"#,
+                device.device_type_or_remote_type(),
+                help_url
+            )
+        }
+        for command_help in command_helps {
+            println!("{}", command_help);
+        }
+        println!("Please see {} for more information", help_url);
+        Ok(())
+    }
+
     async fn execute_args(&mut self, list: &[String]) -> anyhow::Result<()> {
         for command in list {
             self.execute(command).await?;
@@ -173,6 +203,10 @@ impl Cli {
         }
         if self.has_current_device() {
             if self.execute_if_expr(text).await? {
+                return Ok(false);
+            }
+            if text == "help" {
+                self.print_help().await?;
                 return Ok(false);
             }
             self.execute_command(text).await?;

@@ -8,7 +8,7 @@ use crate::UserInput;
 
 #[derive(Debug, Default, Parser, serde::Deserialize, serde::Serialize)]
 #[command(version, about)]
-pub struct Args {
+pub(crate) struct Args {
     /// The token for the authentication.
     #[arg(long, default_value_t, env = "SWITCHBOT_TOKEN")]
     pub token: String,
@@ -91,10 +91,18 @@ impl Args {
             self.config_version = 1;
         }
         if self.config_version < 2 {
-            if !self.aliases.contains_key("d") {
-                self.aliases.insert("d".into(), "devices".into());
-            }
+            self.add_alias_if_missing("d", "devices");
             self.config_version = 2;
+        }
+        if self.config_version < 3 {
+            self.add_alias_if_missing("h", "help");
+            self.config_version = 3;
+        }
+    }
+
+    fn add_alias_if_missing(&mut self, alias: &str, command: &str) {
+        if !self.aliases.contains_key(alias) {
+            self.aliases.insert(alias.into(), command.into());
         }
     }
 
@@ -177,8 +185,8 @@ mod tests {
         assert_eq!(args.config_version, 0);
         assert_eq!(args.aliases.len(), 0);
         args.ensure_default();
-        assert_eq!(args.config_version, 2);
-        assert_eq!(args.aliases.len(), 3);
+        assert_eq!(args.config_version, 3);
+        assert_eq!(args.aliases.len(), 4);
     }
 
     #[test]
