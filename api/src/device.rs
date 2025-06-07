@@ -143,6 +143,27 @@ impl Device {
         self.status().get(key).cloned()
     }
 
+    /// Evaluate a condition expression in the form of "key" or "key=value".
+    ///
+    /// The [`Device::update_status()`] must be called prior to this function.
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use switchbot_api::Device;
+    /// # async fn print_power_status(device: &Device) -> anyhow::Result<()> {
+    /// device.update_status().await?;
+    /// println!("Power-on = {}", device.eval_condition("power=on")?);
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn eval_condition(&self, condition: &str) -> anyhow::Result<bool> {
+        let condition = ConditionExpression::try_from(condition)?;
+        let value = self
+            .status_by_key(condition.key)
+            .ok_or_else(|| anyhow::anyhow!(r#"No status key "key" for {self}"#))?;
+        condition.evaluate(&value)
+    }
+
     /// Write the list of the [device status] to the `writer`.
     ///
     /// The [`Device::update_status()`] must be called prior to this function.

@@ -53,6 +53,10 @@ impl Cli {
         self.current_devices_as(|index| (index, &self.devices()[index]))
     }
 
+    fn first_current_device(&self) -> &Device {
+        &self.devices()[self.current_device_indexes[0]]
+    }
+
     pub async fn run(&mut self) -> anyhow::Result<()> {
         self.run_core().await?;
         self.args.save()?;
@@ -125,7 +129,7 @@ impl Cli {
             return;
         }
 
-        let device = self.current_devices().nth(0).unwrap();
+        let device = self.first_current_device();
         print!("{device:#}");
     }
 
@@ -158,7 +162,10 @@ impl Cli {
                 self.update_status(key).await?;
                 return Ok(false);
             }
-            self.execute_command(&CommandRequest::from(text)).await?;
+            if self.execute_if_expr(text).await? {
+                return Ok(false);
+            }
+            self.execute_command(text).await?;
             return Ok(false);
         }
         Err(set_device_result.unwrap_err())
@@ -195,7 +202,46 @@ impl Cli {
             .ok_or_else(|| anyhow::anyhow!("Not a valid device: \"{value}\""))
     }
 
-    async fn execute_command(&self, command: &CommandRequest) -> anyhow::Result<()> {
+    async fn execute_if_expr(&mut self, expr: &str) -> anyhow::Result<bool> {
+        if let Some((condition, then_command, else_command)) = Self::parse_if_expr(expr) {
+            let device = self.first_current_device();
+            device.update_status().await?;
+            let eval_result = device.eval_condition(condition)?;
+            let command = if eval_result {
+                then_command
+            } else {
+                else_command
+            };
+            log::debug!("if: {condition} is {eval_result}, execute {command}");
+            if let Some(alias) = self.args.aliases.get(command) {
+                self.execute_command(alias.as_str()).await?;
+            } else {
+                self.execute_command(command).await?;
+            }
+            return Ok(true);
+        }
+        Ok(false)
+    }
+
+    fn parse_if_expr(text: &str) -> Option<(&str, &str, &str)> {
+        if let Some(text) = text.strip_prefix("if") {
+            if let Some(sep) = text.chars().nth(0) {
+                if sep.is_alphanumeric() {
+                    return None;
+                }
+                let fields: Vec<&str> = text[1..].split_terminator(sep).collect();
+                match fields.len() {
+                    2 => return Some((fields[0], fields[1], "")),
+                    3 => return Some((fields[0], fields[1], fields[2])),
+                    _ => {}
+                }
+            }
+        }
+        None
+    }
+
+    async fn execute_command(&self, text: &str) -> anyhow::Result<()> {
+        let command = &CommandRequest::from(text);
         for device in self.current_devices() {
             device.command(command).await?;
         }
@@ -250,5 +296,21 @@ mod tests {
             vec![0, 1, 2, 4, 3]
         );
         assert_eq!(cli.parse_device_indexes("1,j,5").unwrap(), vec![0, 1, 2, 4]);
+    }
+
+    #[test]
+    fn parse_if_expr() {
+        assert_eq!(Cli::parse_if_expr(""), None);
+        assert_eq!(Cli::parse_if_expr("a"), None);
+        assert_eq!(Cli::parse_if_expr("if"), None);
+        assert_eq!(Cli::parse_if_expr("if/a"), None);
+        assert_eq!(Cli::parse_if_expr("if/a/b"), Some(("a", "b", "")));
+        assert_eq!(Cli::parse_if_expr("if/a/b/c"), Some(("a", "b", "c")));
+        assert_eq!(Cli::parse_if_expr("if/a//c"), Some(("a", "", "c")));
+        // The separator can be any characters as long as they're consistent.
+        assert_eq!(Cli::parse_if_expr("if;a;b;c"), Some(("a", "b", "c")));
+        assert_eq!(Cli::parse_if_expr("if.a.b.c"), Some(("a", "b", "c")));
+        // But non-alphanumeric.
+        assert_eq!(Cli::parse_if_expr("ifXaXbXc"), None);
     }
 }
