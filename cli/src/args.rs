@@ -188,6 +188,12 @@ mod tests {
         args.update_aliases();
         assert_eq!(args.aliases.len(), 0);
 
+        // The alias can contains the `=` character.
+        args.alias_updates = vec!["a=b=c".into()];
+        args.update_aliases();
+        assert_eq!(args.aliases.len(), 1);
+        assert_eq!(args.aliases.get("a").unwrap(), "b=c");
+
         args.alias_updates = vec!["a=b".into(), "c=d".into()];
         args.update_aliases();
         assert_eq!(args.aliases.len(), 2);
