@@ -1,5 +1,6 @@
 use std::io::stdout;
 
+use itertools::Itertools;
 use switchbot_api::{CommandRequest, Device, DeviceList, SwitchBot};
 
 use crate::{Args, UserInput};
@@ -174,8 +175,7 @@ impl Cli {
             }
             indexes.push(self.parse_device_index(s)?);
         }
-        indexes.sort();
-        indexes.dedup();
+        indexes = indexes.into_iter().unique().collect::<Vec<_>>();
         Ok(indexes)
     }
 
@@ -225,11 +225,12 @@ mod tests {
         assert_eq!(cli.parse_device_indexes("device4").unwrap(), vec![3]);
         assert_eq!(cli.parse_device_indexes("2,4").unwrap(), vec![1, 3]);
         assert_eq!(cli.parse_device_indexes("2,device4").unwrap(), vec![1, 3]);
-        // The result should be sorted.
-        assert_eq!(cli.parse_device_indexes("4,2").unwrap(), vec![1, 3]);
-        assert_eq!(cli.parse_device_indexes("device4,2").unwrap(), vec![1, 3]);
-        // The result should be deduped.
+        // The result should not be sorted.
+        assert_eq!(cli.parse_device_indexes("4,2").unwrap(), vec![3, 1]);
+        assert_eq!(cli.parse_device_indexes("device4,2").unwrap(), vec![3, 1]);
+        // The result should be unique.
         assert_eq!(cli.parse_device_indexes("2,4,2").unwrap(), vec![1, 3]);
+        assert_eq!(cli.parse_device_indexes("4,2,4").unwrap(), vec![3, 1]);
     }
 
     #[test]
@@ -237,11 +238,11 @@ mod tests {
         let mut cli = Cli::new_for_test(10);
         cli.args.aliases.insert("k".into(), "3,5".into());
         assert_eq!(cli.parse_device_indexes("k").unwrap(), vec![2, 4]);
-        assert_eq!(cli.parse_device_indexes("1,k,4").unwrap(), vec![0, 2, 3, 4]);
+        assert_eq!(cli.parse_device_indexes("1,k,4").unwrap(), vec![0, 2, 4, 3]);
         cli.args.aliases.insert("j".into(), "2,k".into());
         assert_eq!(
             cli.parse_device_indexes("1,j,4").unwrap(),
-            vec![0, 1, 2, 3, 4]
+            vec![0, 1, 2, 4, 3]
         );
         assert_eq!(cli.parse_device_indexes("1,j,5").unwrap(), vec![0, 1, 2, 4]);
     }
