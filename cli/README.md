@@ -56,7 +56,7 @@ as well as environment variables `SWITCHBOT_TOKEN` and `SWITCHBOT_SECRET`.
 
 The `switchbot` command enters the interactive mode
 when no arguments are specified.
-Please see the [Batch Mode](#batch-mode) section
+Please see the [Batch Mode] section
 if you are looking for non-interactive usage.
 
 ```shell-session
@@ -71,7 +71,12 @@ All your devices are listed with a number,
 the device name you set in the SwitchBot app,
 the device type, and the device ID.
 
+## Quit
+
+Hit the Enter key twice, or enter `q` to quit the interactive mode.
+
 ## Select Device
+[device]: #select-device
 
 To select the device to interact with,
 enter either the number or the device ID.
@@ -99,6 +104,7 @@ Device> 2,3
 ```
 
 ## Command
+[command]: #command
 
 To control your devices, you can send commands.
 The available commands depend on the device type.
@@ -133,6 +139,26 @@ prepend it with a `/` (slash) as the separator.
 Command> customize/button1
 ```
 
+## Aliases
+[aliases]: #aliases
+
+Some commands have aliases for convenience.
+For example, `on` is an alias for `turnOn`, and `off` is an alias for `turnOff`.
+```shell-session
+Command> on
+```
+
+You can also add your own aliases by the `-a` option.
+Both commands and devices can be aliased.
+```shell-session
+switchbot -a fan=777888999 -a hot=fanSpeed:100 -a lights=2,5,6
+switchbot fan hot lights on
+```
+To remove existing aliases, please omit the value.
+```shell-session
+switchbot -a hot
+```
+
 ## Status
 [status]: #status
 
@@ -158,26 +184,6 @@ of the selected device.
 ```shell-session
 Command> status.power
 "off"
-```
-
-## Aliases
-[aliases]: #aliases
-
-Some commands have aliases for convenience.
-For example, `on` is an alias for `turnOn`, and `off` is an alias for `turnOff`.
-```shell-session
-Command> on
-```
-
-You can also add your own aliases by the `-a` option.
-Both commands and devices can be aliased.
-```shell-session
-switchbot -a fan=777888999 -a hot=fanSpeed:100 -a lights=2,5,6
-switchbot fan hot lights on
-```
-To remove existing aliases, omit the value.
-```shell-session
-switchbot -a hot
 ```
 
 ## If-Command
@@ -220,15 +226,12 @@ switchbot -a t=if/power=on/off/on 4 t 2 t
 > switchbot 4 if.power=on.off.on
 > ```
 
-## Quit
-
-Hit the Enter key twice, or enter `q` to quit the `switchbot` command.
-
 ## Batch Mode
 [Batch Mode]: #batch-mode
 
 It is also possible to run the `switchbot` command in non-interactive mode
-by specifying the device number or the device ID and the commands as arguments.
+by specifying the [device number or the device ID][device]
+and the [commands][command] as arguments.
 This is useful to create your own batch files,
 or to use with launcher applications such as Elgato Stream Deck.
 
@@ -247,7 +250,6 @@ Getting the [device status](#status) in the batch mode is also possible.
 switchbot 4,6 status.battery
 ```
 This example prints the battery status of the device 4 and 6.
-
 
 # Change History
 
