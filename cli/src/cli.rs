@@ -241,6 +241,9 @@ impl Cli {
     }
 
     async fn execute_command(&self, text: &str) -> anyhow::Result<()> {
+        if text.is_empty() {
+            return Ok(());
+        }
         let command = &CommandRequest::from(text);
         for device in self.current_devices() {
             device.command(command).await?;
