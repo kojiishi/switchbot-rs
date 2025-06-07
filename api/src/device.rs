@@ -97,8 +97,8 @@ impl Device {
     /// ```no_run
     /// # use switchbot_api::{CommandRequest, Device};
     /// # async fn turn_on(device: &Device) -> anyhow::Result<()> {
-    ///   let command = CommandRequest { command: "turnOn".into(), ..Default::default() };
-    ///   device.command(&command).await?;
+    /// let command = CommandRequest { command: "turnOn".into(), ..Default::default() };
+    /// device.command(&command).await?;
     /// # Ok(())
     /// # }
     /// ```
@@ -133,8 +133,8 @@ impl Device {
     /// ```no_run
     /// # use switchbot_api::Device;
     /// # async fn print_power_status(device: &Device) -> anyhow::Result<()> {
-    ///   device.update_status().await?;
-    ///   println!("Power = {}", device.status_by_key("power").unwrap());
+    /// device.update_status().await?;
+    /// println!("Power = {}", device.status_by_key("power").unwrap());
     /// # Ok(())
     /// # }
     /// ```
@@ -151,8 +151,8 @@ impl Device {
     /// ```no_run
     /// # use switchbot_api::Device;
     /// # async fn print_status(device: &Device) -> anyhow::Result<()> {
-    ///   device.update_status().await?;
-    ///   device.write_status_to(std::io::stdout());
+    /// device.update_status().await?;
+    /// device.write_status_to(std::io::stdout());
     /// # Ok(())
     /// # }
     /// ```
