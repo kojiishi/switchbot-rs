@@ -88,6 +88,7 @@ Command>
 ```
 
 ### Multiple Devices
+[multiple devices]: #multiple-devices
 
 It is possible to select multiple devices at once
 by specifying multiple numbers or device IDs separated by `,` (comma).
@@ -154,6 +155,7 @@ Command> status.power
 ```
 
 ## Aliases
+[aliases]: #aliases
 
 Some commands have aliases for convenience.
 For example, `on` is an alias for `turnOn`, and `off` is an alias for `turnOff`.
@@ -172,11 +174,50 @@ To remove existing aliases, omit the value.
 switchbot -a hot
 ```
 
+## If-Command
+
+The conditional "if" command allows you to
+send different commands depending on the device status.
+This capability can create a command to toggle device statuses.
+```shell-session
+Command> if/power=on/off/on
+```
+The example above turns off the device if the power status is on,
+and turns it on if the power status is off.
+
+When [multiple devices] are selected,
+the first device is used to compute the condition.
+Then the command is executed on all selected devices.
+This can make the behaviors consistent across multiple devices.
+```shell-session
+switchbot 4,2 if/power=on/off/on
+```
+In the [Batch Mode] example above,
+if the device 4 is on, both the device 2 and 4 are turned off.
+If you want to toggle multiple devices independently,
+specify the if-command for each device.
+```shell-session
+switchbot 4 if/power=on/off/on 2 if/power=on/off/on
+```
+[Aliases] can make it easier to type, as shown in the example below.
+```shell-session
+switchbot -a t=if/power=on/off/on 4 t 2 t
+```
+
+> [!NOTE]
+> If the `/` (slash) is used in the device name or the command,
+> other non-alphanumeric characters can be used as the separator,
+> as long as all separators are the same character.
+> ```shell-session
+> switchbot 4 if.power=on.off.on
+> ```
+
 ## Quit
 
 Hit the Enter key twice, or enter `q` to quit the `switchbot` command.
 
 ## Batch Mode
+[Batch Mode]: #batch-mode
 
 It is also possible to run the `switchbot` command in non-interactive mode
 by specifying the device number or the device ID and the commands as arguments.
