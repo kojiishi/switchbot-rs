@@ -92,6 +92,16 @@ impl Device {
     /// Please also see the [`CommandRequest`].
     ///
     /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
+    ///
+    /// # Examples
+    /// ```no_run
+    /// # use switchbot_api::{CommandRequest, Device};
+    /// # async fn turn_on(device: &Device) -> anyhow::Result<()> {
+    ///   let command = CommandRequest { command: "turnOn".into(), ..Default::default() };
+    ///   device.command(&command).await?;
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn command(&self, command: &CommandRequest) -> anyhow::Result<()> {
         self.service()?.command(self.device_id(), command).await
     }
@@ -122,11 +132,11 @@ impl Device {
     /// # Examples
     /// ```no_run
     /// # use switchbot_api::Device;
-    /// async fn print_power_status(device: &Device) -> anyhow::Result<()> {
+    /// # async fn print_power_status(device: &Device) -> anyhow::Result<()> {
     ///   device.update_status().await?;
     ///   println!("Power = {}", device.status_by_key("power").unwrap());
-    ///   Ok(())
-    /// }
+    /// # Ok(())
+    /// # }
     /// ```
     /// [device status]: https://github.com/OpenWonderLabs/SwitchBotAPI#get-device-status
     pub fn status_by_key(&self, key: &str) -> Option<serde_json::Value> {
@@ -140,11 +150,11 @@ impl Device {
     /// # Examples
     /// ```no_run
     /// # use switchbot_api::Device;
-    /// async fn print_status(device: &Device) -> anyhow::Result<()> {
+    /// # async fn print_status(device: &Device) -> anyhow::Result<()> {
     ///   device.update_status().await?;
     ///   device.write_status_to(std::io::stdout());
-    ///   Ok(())
-    /// }
+    /// # Ok(())
+    /// # }
     /// ```
     /// [device status]: https://github.com/OpenWonderLabs/SwitchBotAPI#get-device-status
     pub fn write_status_to(&self, mut writer: impl io::Write) -> io::Result<()> {
