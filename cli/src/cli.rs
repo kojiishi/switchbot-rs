@@ -54,10 +54,17 @@ impl Cli {
     }
 
     pub async fn run(&mut self) -> anyhow::Result<()> {
+        self.run_core().await?;
+        self.args.save()?;
+        Ok(())
+    }
+
+    async fn run_core(&mut self) -> anyhow::Result<()> {
         if !self.args.alias_updates.is_empty() {
             self.args.print_aliases();
-            self.args.save()?;
-            return Ok(());
+            if self.args.commands.is_empty() {
+                return Ok(());
+            }
         }
 
         self.switch_bot = self.args.create_switch_bot()?;
@@ -65,13 +72,10 @@ impl Cli {
 
         if !self.args.commands.is_empty() {
             self.execute_args(&self.args.commands.clone()).await?;
-            self.args.save()?;
             return Ok(());
         }
 
         self.run_interactive().await?;
-
-        self.args.save()?;
         Ok(())
     }
 
