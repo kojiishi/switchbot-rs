@@ -25,8 +25,8 @@
 
 mod command_request;
 pub use command_request::*;
-mod condition_expression;
-pub(crate) use condition_expression::*;
+mod conditional_expression;
+pub(crate) use conditional_expression::*;
 mod device;
 pub use device::*;
 mod device_list;

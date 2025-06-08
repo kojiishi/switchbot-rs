@@ -3,26 +3,26 @@ use std::{borrow::Cow, fmt::Display, sync::LazyLock};
 use regex::Regex;
 
 #[derive(Debug, Default, PartialEq)]
-pub(crate) struct ConditionExpression<'a> {
+pub(crate) struct ConditionalExpression<'a> {
     pub key: &'a str,
     operator: &'a str,
     value: &'a str,
 }
 
-impl Display for ConditionExpression<'_> {
+impl Display for ConditionalExpression<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}{}{}", self.key, self.operator, self.value)
     }
 }
 
-impl<'a> TryFrom<&'a str> for ConditionExpression<'a> {
+impl<'a> TryFrom<&'a str> for ConditionalExpression<'a> {
     type Error = anyhow::Error;
 
     fn try_from(condition: &'a str) -> Result<Self, Self::Error> {
         const RE_PAT: &str = r"^([a-zA-Z]+)(\s*(=)\s*([a-zA-Z0-9]+))?$";
         static RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(RE_PAT).unwrap());
         if let Some(captures) = RE.captures(condition) {
-            return Ok(ConditionExpression {
+            return Ok(ConditionalExpression {
                 key: captures.get(1).map_or_else(|| "", |m| m.as_str()),
                 operator: captures.get(3).map_or_else(|| "", |m| m.as_str()),
                 value: captures.get(4).map_or_else(|| "", |m| m.as_str()),
@@ -32,7 +32,7 @@ impl<'a> TryFrom<&'a str> for ConditionExpression<'a> {
     }
 }
 
-impl ConditionExpression<'_> {
+impl ConditionalExpression<'_> {
     pub fn evaluate(&self, value: &serde_json::Value) -> anyhow::Result<bool> {
         let value_str: Cow<'_, str> = match value {
             serde_json::Value::Bool(b) => {
@@ -58,19 +58,19 @@ impl ConditionExpression<'_> {
 mod tests {
     use super::*;
 
-    fn parse(str: &str) -> anyhow::Result<ConditionExpression> {
-        ConditionExpression::try_from(str)
+    fn parse(str: &str) -> anyhow::Result<ConditionalExpression> {
+        ConditionalExpression::try_from(str)
     }
 
-    fn from_key(key: &str) -> ConditionExpression {
-        ConditionExpression {
+    fn from_key(key: &str) -> ConditionalExpression {
+        ConditionalExpression {
             key,
             ..Default::default()
         }
     }
 
-    fn from_strs<'a>(key: &'a str, operator: &'a str, value: &'a str) -> ConditionExpression<'a> {
-        ConditionExpression {
+    fn from_strs<'a>(key: &'a str, operator: &'a str, value: &'a str) -> ConditionalExpression<'a> {
+        ConditionalExpression {
             key,
             operator,
             value,
@@ -90,7 +90,7 @@ mod tests {
     }
 
     fn evaluate(expr: &str, value: impl serde::Serialize) -> anyhow::Result<bool> {
-        ConditionExpression::try_from(expr)?.evaluate(&serde_json::json!(value))
+        ConditionalExpression::try_from(expr)?.evaluate(&serde_json::json!(value))
     }
 
     #[test]
