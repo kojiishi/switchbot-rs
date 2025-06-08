@@ -40,10 +40,10 @@ impl ConditionExpression<'_> {
                     log::debug!("evaluate: bool {b}");
                     return Ok(*b);
                 }
-                b.to_string().into()
+                Cow::Owned(b.to_string())
             }
-            serde_json::Value::String(str) => str.into(),
-            _ => value.to_string().into(),
+            serde_json::Value::String(str) => Cow::Borrowed(str),
+            _ => Cow::Owned(value.to_string()),
         };
         if self.operator == "=" {
             let result = value_str == self.value;
