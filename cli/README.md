@@ -52,12 +52,16 @@ as well as environment variables `SWITCHBOT_TOKEN` and `SWITCHBOT_SECRET`.
 
 [token-secret]: https://github.com/OpenWonderLabs/SwitchBotAPI#getting-started
 
-## Interactive Mode
+## Interactive Mode and Batch Mode
+
+The `switchbot` command can run either interactively,
+or in the batch mode.
+
+### Interactive Mode
+[interactive mode]: #interactive-mode
 
 The `switchbot` command enters the interactive mode
 when no arguments are specified.
-Please see the [Batch Mode] section
-if you are looking for non-interactive usage.
 
 ```shell-session
 $ switchbot
@@ -71,9 +75,40 @@ All your devices are listed with a number,
 the device name you set in the SwitchBot app,
 the device type, and the device ID.
 
-## Quit
+In this mode, following actions are available:
+* [Select devices][device].
+* [Send commands][command] to the selected devices.
+* [Query status][status] of the selected devices.
+* [Send different commands depending on the device status][if-command].
+* Hit the Enter key twice, or enter `q` to quit the `switchbot` command.
 
-Hit the Enter key twice, or enter `q` to quit the interactive mode.
+### Batch Mode
+[Batch Mode]: #batch-mode
+
+It is also possible to run the `switchbot` command in non-interactive way
+by specifying the [device number or the device ID][device]
+and the [commands][command] as arguments.
+This mode is useful to create your own batch files,
+or to use with launcher applications such as Elgato Stream Deck.
+
+```shell-session
+switchbot 1 on
+```
+The example above selects the device 1,
+and send the "on" command to it.
+
+You can also specify multiple devices and commands.
+```shell-session
+switchbot 1 on setMode:101 4,6 off
+```
+This example turns on the device 1 and set its mode to 101,
+and turns off the device 4 and the device 6.
+
+Getting the [device status](#status) in the batch mode is also possible.
+```shell-session
+switchbot 4,6 status.battery
+```
+This example prints the battery status of the device 4 and 6.
 
 ## Select Device
 [device]: #select-device
@@ -91,6 +126,7 @@ ID: 444555666
 Type: DIY Light
 Command>
 ```
+To unselect devices, just hit the Enter key.
 
 ### Multiple Devices
 [multiple devices]: #multiple-devices
@@ -106,19 +142,23 @@ Device> 2,3
 ## Command
 [command]: #command
 
-To control your devices, you can send commands.
+To control your devices, enter the command name you want to send.
 The available commands depend on the device type.
 Please refer to the
 [SwitchBot API documentation about device control commands][send-device-control-commands]
 to find the command you want to send to your devices.
 
-The following example sends the `turnOn` command to the device number 2.
+The following [interactive mode] example sends the `turnOn` command to the device number 2.
 ```shell-session
 Device> 2
 Name: Bedroom Light
 ID: 444555666
 Type: DIY Light
 Command> turnOn
+```
+The following [batch mode] example does the same thing from the command line.
+```shell-session
+switchbot 2 turnOn
 ```
 
 [send-device-control-commands]: https://github.com/OpenWonderLabs/SwitchBotAPI#send-device-control-commands
@@ -145,8 +185,9 @@ Command> customize/button1
 Some commands have aliases for convenience.
 For example, `on` is an alias for `turnOn`, and `off` is an alias for `turnOff`.
 ```shell-session
-Command> on
+switchbot 2 on
 ```
+The example above sends the `turnOn` command to the device 2.
 
 You can also add your own aliases by the `-a` option.
 Both commands and devices can be aliased.
@@ -162,7 +203,7 @@ switchbot -a hot
 ## Status
 [status]: #status
 
-To check the status of your devices, enter `status`.
+To query the status of your devices, enter `status`.
 The output depends on the device type.
 Please refer to the
 [SwitchBot API documentation about device status][get-device-status]
@@ -171,6 +212,7 @@ for the details of the status for each device type.
 Command> status
 power: "off"
 fanSpeed: 23
+...
 ```
 
 [get-device-status]: https://github.com/OpenWonderLabs/SwitchBotAPI#get-device-status
@@ -187,6 +229,7 @@ Command> status.power
 ```
 
 ## If-Command
+[if-command]: #if-command
 
 The conditional "if" command allows you to
 send different commands depending on the [device status][status].
@@ -208,8 +251,9 @@ switchbot 4,2 if/power=on/off/on
 In the [Batch Mode] example above,
 if the device 4 is on, both the device 2 and 4 are turned off,
 regardless of the power status of the device 2.
+
 If you want to toggle multiple devices independently,
-you can specify the if-command for each device.
+please specify the if-command for each device.
 ```shell-session
 switchbot 4 if/power=on/off/on 2 if/power=on/off/on
 ```
@@ -221,35 +265,10 @@ switchbot -a t=if/power=on/off/on 4 t 2 t
 > [!NOTE]
 > If the `/` (slash) is used in the device name or the command,
 > other non-alphanumeric characters can be used as the separator,
-> as long as all separators are the same character.
+> as long as the same character is used for all separators.
 > ```shell-session
 > switchbot 4 if.power=on.off.on
 > ```
-
-## Batch Mode
-[Batch Mode]: #batch-mode
-
-It is also possible to run the `switchbot` command in non-interactive mode
-by specifying the [device number or the device ID][device]
-and the [commands][command] as arguments.
-This is useful to create your own batch files,
-or to use with launcher applications such as Elgato Stream Deck.
-
-```shell-session
-switchbot 1 on
-```
-You can also specify multiple devices and commands.
-```shell-session
-switchbot 1 on setMode:101 4,6 off
-```
-This example turns on the device 1 and set its mode to 101,
-and turns off the device 4 and the device 6.
-
-Getting the [device status](#status) in the batch mode is also possible.
-```shell-session
-switchbot 4,6 status.battery
-```
-This example prints the battery status of the device 4 and 6.
 
 # Change History
 

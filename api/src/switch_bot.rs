@@ -18,7 +18,13 @@ impl SwitchBot {
     }
 
     /// Construct a new instance with the authentication information.
-    /// This is equivalent to:
+    ///
+    /// Please refer to the [SwitchBot documentation about
+    /// how to obtain the token and secret key][token-secret].
+    ///
+    /// [token-secret]: https://github.com/OpenWonderLabs/SwitchBotAPI#getting-started
+    ///
+    /// This function is equivalent to:
     /// ```
     /// # use switchbot_api::SwitchBot;
     /// # fn test(token: &str, secret: &str) {
