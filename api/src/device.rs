@@ -143,7 +143,13 @@ impl Device {
         self.status().get(key).cloned()
     }
 
-    /// Evaluate a condition expression in the form of "key" or "key=value".
+    /// Evaluate a conditional expression.
+    ///
+    /// The expression should be in the form of `key=value`.
+    /// When the value is a boolean type, `key` is also a valid expression.
+    ///
+    /// Returns an error if the expression is invalid,
+    /// or if the `key` does not exist.
     ///
     /// The [`Device::update_status()`] must be called prior to this function.
     ///

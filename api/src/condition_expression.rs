@@ -47,7 +47,7 @@ impl ConditionExpression<'_> {
         };
         if self.operator == "=" {
             let result = value_str == self.value;
-            log::debug!(r#"evaluate: "{value_str}" == "{}" -> {result}"#, self.value);
+            log::debug!(r#"evaluate: "{value_str}" = "{}" -> {result}"#, self.value);
             return Ok(result);
         }
         anyhow::bail!("Unsupported condition {self} for {value}");
