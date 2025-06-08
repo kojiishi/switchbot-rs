@@ -243,18 +243,18 @@ Command> if/power=on/off/on
 Following operators are supported.
 * `key`, `key=true`, and `key=false` for boolean types.
 * `=`, `<`, `<=`, `>`, and `>=` for numeric types.
-* `=` for other types.
+* `=` for string and other types.
 
 When [multiple devices] are selected,
 the first device is used to determine which command to execute.
 Then the command is executed on all selected devices.
 This is to make the behaviors consistent across multiple devices.
+In the following [Batch Mode] example,
+if the device 4 is on, both the device 2 and 4 are turned off,
+regardless of the power status of the device 2.
 ```shell-session
 switchbot 4,2 if/power=on/off/on
 ```
-In the [Batch Mode] example above,
-if the device 4 is on, both the device 2 and 4 are turned off,
-regardless of the power status of the device 2.
 
 If you want to toggle multiple devices independently,
 please specify the if-command for each device.
