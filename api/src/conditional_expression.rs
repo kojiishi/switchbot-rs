@@ -19,7 +19,7 @@ impl<'a> TryFrom<&'a str> for ConditionalExpression<'a> {
     type Error = anyhow::Error;
 
     fn try_from(condition: &'a str) -> Result<Self, Self::Error> {
-        const RE_PAT: &str = r"^([a-zA-Z]+)(\s*(=)\s*([a-zA-Z0-9]+))?$";
+        const RE_PAT: &str = r"^([a-zA-Z]+)(\s*(=|<=?|>=?)\s*([a-zA-Z0-9]+))?$";
         static RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(RE_PAT).unwrap());
         if let Some(captures) = RE.captures(condition) {
             return Ok(ConditionalExpression {
@@ -42,15 +42,35 @@ impl ConditionalExpression<'_> {
                 }
                 Cow::Owned(b.to_string())
             }
+            serde_json::Value::Number(num) => {
+                if let Some(num_as_f64) = num.as_f64() {
+                    let value_as_f64: f64 = self.value.parse()?;
+                    return Self::eval_op(self.operator, num_as_f64, value_as_f64);
+                }
+                Cow::Owned(value.to_string())
+            }
             serde_json::Value::String(str) => Cow::Borrowed(str),
             _ => Cow::Owned(value.to_string()),
         };
         if self.operator == "=" {
             let result = value_str == self.value;
-            log::debug!(r#"evaluate: "{value_str}" = "{}" -> {result}"#, self.value);
+            log::debug!(r#"evaluate: "{value_str}"="{}" -> {result}"#, self.value);
             return Ok(result);
         }
         anyhow::bail!("Unsupported condition {self} for {value}");
+    }
+
+    fn eval_op<T: Display + PartialOrd>(op: &str, left: T, right: T) -> anyhow::Result<bool> {
+        let result = match op {
+            "=" => left == right,
+            "<" => left < right,
+            "<=" => left <= right,
+            ">" => left > right,
+            ">=" => left >= right,
+            _ => anyhow::bail!("Unsupported operator: {op}"),
+        };
+        log::debug!(r#"evaluate: "{left}"{op}"{right}" -> {result}"#);
+        Ok(result)
     }
 }
 
@@ -86,6 +106,11 @@ mod tests {
         assert!(parse("1=a").is_err());
         assert_eq!(parse("a=12")?, from_strs("a", "=", "12"));
         assert_eq!(parse("aZ=xZ2")?, from_strs("aZ", "=", "xZ2"));
+
+        assert_eq!(parse("a<b")?, from_strs("a", "<", "b"));
+        assert_eq!(parse("a>b")?, from_strs("a", ">", "b"));
+        assert_eq!(parse("a<=b")?, from_strs("a", "<=", "b"));
+        assert_eq!(parse("a>=b")?, from_strs("a", ">=", "b"));
         Ok(())
     }
 
@@ -100,6 +125,7 @@ mod tests {
         assert!(evaluate("a=true", true)?);
         assert!(!(evaluate("a=true", false)?));
         assert!(evaluate("a=false", false)?);
+        assert!(evaluate("a>true", false).is_err());
         Ok(())
     }
 
@@ -108,6 +134,7 @@ mod tests {
         assert!(evaluate("a", "on").is_err());
         assert!(evaluate("a=on", "on")?);
         assert!(!(evaluate("a=on", "off")?));
+        assert!(evaluate("a>on", "off").is_err());
         Ok(())
     }
 
@@ -116,6 +143,15 @@ mod tests {
         assert!(evaluate("a", 123).is_err());
         assert!(evaluate("a=123", 123)?);
         assert!(!(evaluate("a=123", 124)?));
+
+        assert!(evaluate("a<123", 122)?);
+        assert!(!(evaluate("a<123", 123)?));
+        assert!(evaluate("a>123", 124)?);
+        assert!(!(evaluate("a>123", 123)?));
+        assert!(evaluate("a<=123", 123)?);
+        assert!(!(evaluate("a<=123", 124)?));
+        assert!(evaluate("a>=123", 123)?);
+        assert!(!(evaluate("a>=123", 122)?));
         Ok(())
     }
 }
