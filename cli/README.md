@@ -240,6 +240,10 @@ and turns it on otherwise.
 ```shell-session
 Command> if/power=on/off/on
 ```
+Following operators are supported.
+* `key`, `key=true`, and `key=false` for boolean types.
+* `=`, `<`, `<=`, `>`, and `>=` for numeric types.
+* `=` for other types.
 
 When [multiple devices] are selected,
 the first device is used to determine which command to execute.
