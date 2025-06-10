@@ -4,7 +4,7 @@ members = ["api", "cli"]
 exclude = [".github", ".gitignore", "hooks", ".vscode"]
 
 [workspace.package]
-version = "0.1.7"
+version = "0.1.8"
 edition = "2024"
 authors = ["Koji Ishii <kojiishi@gmail.com>"]
 description = "Command line tool and library to interact with the SwitchBot API."
