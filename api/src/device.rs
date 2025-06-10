@@ -150,11 +150,15 @@ impl Device {
 
     /// Evaluate a conditional expression.
     ///
-    /// The expression should be in the form of `key=value`.
-    /// When the value is a boolean type, `key` is also a valid expression.
+    /// Following operators are supported.
+    /// * `key`, `key=true`, and `key=false` for boolean types.
+    /// * `=`, `<`, `<=`, `>`, and `>=` for numeric types.
+    /// * `=` for string and other types.
     ///
     /// Returns an error if the expression is invalid,
     /// or if the `key` does not exist.
+    /// Please also see the [`switchbot-cli` documentation about the
+    /// "if-command"](https://github.com/kojiishi/switchbot-rs/tree/main/cli#if-command).
     ///
     /// The [`Device::update_status()`] must be called prior to this function.
     ///
