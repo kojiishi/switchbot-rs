@@ -115,6 +115,11 @@ impl Device {
     /// [device status]: https://github.com/OpenWonderLabs/SwitchBotAPI#get-device-status
     pub async fn update_status(&self) -> anyhow::Result<()> {
         let status = self.service()?.status(self.device_id()).await?;
+        if status.is_none() {
+            log::warn!("The query succeeded with no status");
+            return Ok(());
+        }
+        let status = status.unwrap();
         assert_eq!(self.device_id, status.device_id);
         let mut writer = self.status.write().unwrap();
         *writer = status.extra;

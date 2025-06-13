@@ -30,7 +30,7 @@ impl SwitchBotService {
     pub async fn load_devices(self: &Arc<SwitchBotService>) -> anyhow::Result<DeviceList> {
         let url = format!("{}/v1.1/devices", Self::HOST);
         let request = self.client.get(url);
-        let device_list = self.send::<DeviceListResponse>(request).await?;
+        let device_list = self.send_as::<DeviceListResponse>(request).await?;
 
         let mut devices = DeviceList::with_capacity(
             device_list.device_list.len() + device_list.infrared_remote_list.len(),
@@ -52,30 +52,45 @@ impl SwitchBotService {
         let body = serde_json::to_value(command)?;
         log::debug!("command.request: {body}");
         let request = self.client.post(url).json(&body);
-        self.send_opt(request).await?;
+        self.send_as_opt(request).await?;
         Ok(())
     }
 
-    pub(crate) async fn status(&self, device_id: &str) -> anyhow::Result<Device> {
+    pub(crate) async fn status(&self, device_id: &str) -> anyhow::Result<Option<Device>> {
         let url = format!("{}/v1.1/devices/{device_id}/status", Self::HOST);
         let request = self.client.get(url);
-        let device = self.send::<Device>(request).await?;
-        Ok(device)
+        let body_json = self.send_as_json(request).await?;
+        if let serde_json::Value::Object(object) = &body_json {
+            // Hub Mini returns `"body":{}`. Make this not an error.
+            if object.is_empty() {
+                return Ok(None);
+            }
+        }
+        let device: Device = serde_json::from_value(body_json)?;
+        Ok(Some(device))
     }
 
-    async fn send<T: serde::de::DeserializeOwned>(
+    async fn send_as<T: serde::de::DeserializeOwned>(
         &self,
         request: reqwest::RequestBuilder,
     ) -> anyhow::Result<T> {
-        let body_json = self
-            .send_opt(request)
-            .await?
-            .ok_or_else(|| anyhow::anyhow!("Missing `body`"))?;
+        let body_json = self.send_as_json(request).await?;
         let body: T = serde_json::from_value(body_json)?;
         Ok(body)
     }
 
-    async fn send_opt(
+    async fn send_as_json(
+        &self,
+        request: reqwest::RequestBuilder,
+    ) -> anyhow::Result<serde_json::Value> {
+        let body_json = self
+            .send_as_opt(request)
+            .await?
+            .ok_or_else(|| anyhow::anyhow!("Missing `body`"))?;
+        Ok(body_json)
+    }
+
+    async fn send_as_opt(
         &self,
         request: reqwest::RequestBuilder,
     ) -> anyhow::Result<Option<serde_json::Value>> {
