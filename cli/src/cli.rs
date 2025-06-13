@@ -1,4 +1,4 @@
-use std::io::stdout;
+use std::{io::stdout, iter::zip};
 
 use itertools::Itertools;
 use switchbot_api::{CommandRequest, Device, DeviceList, SwitchBot};
@@ -244,17 +244,42 @@ impl Cli {
         if text.is_empty() {
             return Ok(());
         }
-        let command = &CommandRequest::from(text);
-        for device in self.current_devices() {
-            device.command(command).await?;
+        let command = CommandRequest::from(text);
+        let (_, results) = async_scoped::TokioScope::scope_and_block(|s| {
+            for device in self.current_devices() {
+                s.spawn(device.command(&command));
+            }
+        });
+
+        let results = Self::merge_join_errors(results);
+        for (result, is_last_error) in results {
+            if is_last_error {
+                return result;
+            }
+            if let Err(error) = result {
+                log::error!("{error}");
+                continue;
+            }
         }
         Ok(())
     }
 
-    async fn update_status(&mut self, key: &str) -> anyhow::Result<()> {
-        for device in self.current_devices() {
-            device.update_status().await?;
+    async fn update_status(&self, key: &str) -> anyhow::Result<()> {
+        let (_, results) = async_scoped::TokioScope::scope_and_block(|s| {
+            for device in self.current_devices() {
+                s.spawn(device.update_status());
+            }
+        });
 
+        let results = Self::merge_join_errors(results);
+        for (device, (result, is_last_error)) in zip(self.current_devices(), results) {
+            if is_last_error {
+                return result;
+            }
+            if let Err(error) = result {
+                log::error!("{error}");
+                continue;
+            }
             if key.is_empty() {
                 device.write_status_to(stdout())?;
             } else if let Some(value) = device.status_by_key(key) {
@@ -264,6 +289,24 @@ impl Cli {
             }
         }
         Ok(())
+    }
+
+    fn merge_join_errors(
+        results: Vec<Result<anyhow::Result<()>, tokio::task::JoinError>>,
+    ) -> Vec<(anyhow::Result<()>, bool)> {
+        let mut output: Vec<(anyhow::Result<()>, bool)> = vec![];
+        let mut last_error_index = None;
+        for result in results {
+            let result = result.unwrap_or_else(|error| Err(error.into()));
+            if result.is_err() {
+                last_error_index = Some(output.len());
+            }
+            output.push((result, false));
+        }
+        if let Some(last_error_index) = last_error_index {
+            output[last_error_index].1 = true;
+        }
+        output
     }
 }
 
