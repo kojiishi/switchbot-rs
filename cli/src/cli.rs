@@ -1,4 +1,4 @@
-use std::{io::stdout, iter::zip};
+use std::{future::Future, io::stdout, iter::zip};
 
 use itertools::Itertools;
 use switchbot_api::{CommandRequest, Device, DeviceList, SwitchBot};
@@ -34,6 +34,10 @@ impl Cli {
 
     fn has_current_device(&self) -> bool {
         !self.current_device_indexes.is_empty()
+    }
+
+    fn num_current_devices(&self) -> usize {
+        self.current_device_indexes.len()
     }
 
     fn current_devices_as<'a, T, F>(&'a self, f: F) -> impl Iterator<Item = T> + 'a
@@ -245,68 +249,73 @@ impl Cli {
             return Ok(());
         }
         let command = CommandRequest::from(text);
-        let (_, results) = async_scoped::TokioScope::scope_and_block(|s| {
-            for device in self.current_devices() {
-                s.spawn(device.command(&command));
-            }
-        });
-
-        let results = Self::merge_join_errors(results);
-        for (result, is_last_error) in results {
-            if is_last_error {
-                return result;
-            }
-            if let Err(error) = result {
-                log::error!("{error}");
-                continue;
-            }
-        }
+        self.for_each_selected_device(|device| device.command(&command), |_| Ok(()))
+            .await?;
         Ok(())
     }
 
     async fn update_status(&self, key: &str) -> anyhow::Result<()> {
-        let (_, results) = async_scoped::TokioScope::scope_and_block(|s| {
-            for device in self.current_devices() {
-                s.spawn(device.update_status());
-            }
-        });
-
-        let results = Self::merge_join_errors(results);
-        for (device, (result, is_last_error)) in zip(self.current_devices(), results) {
-            if is_last_error {
-                return result;
-            }
-            if let Err(error) = result {
-                log::error!("{error}");
-                continue;
-            }
-            if key.is_empty() {
-                device.write_status_to(stdout())?;
-            } else if let Some(value) = device.status_by_key(key) {
-                println!("{}", value);
-            } else {
-                log::error!(r#"No status key "{key}" for {device}"#);
-            }
-        }
+        self.for_each_selected_device(
+            |device: &Device| device.update_status(),
+            |device| {
+                if key.is_empty() {
+                    device.write_status_to(stdout())?;
+                } else if let Some(value) = device.status_by_key(key) {
+                    println!("{}", value);
+                } else {
+                    log::error!(r#"No status key "{key}" for {device}"#);
+                }
+                Ok(())
+            },
+        )
+        .await?;
         Ok(())
     }
 
-    fn merge_join_errors(
-        results: Vec<Result<anyhow::Result<()>, tokio::task::JoinError>>,
-    ) -> Vec<(anyhow::Result<()>, bool)> {
-        let mut output: Vec<(anyhow::Result<()>, bool)> = vec![];
-        let mut last_error_index = None;
-        for result in results {
-            let result = result.unwrap_or_else(|error| Err(error.into()));
-            if result.is_err() {
-                last_error_index = Some(output.len());
+    async fn for_each_selected_device<'a, 'b, FnAsync, Fut>(
+        &'a self,
+        fn_async: FnAsync,
+        fn_post: impl Fn(&Device) -> anyhow::Result<()>,
+    ) -> anyhow::Result<()>
+    where
+        FnAsync: Fn(&'a Device) -> Fut + Send + Sync,
+        Fut: Future<Output = anyhow::Result<()>> + Send + 'b,
+    {
+        assert!(self.has_current_device());
+
+        let results = if self.num_current_devices() < self.args.parallel_threshold {
+            log::debug!("for_each: sequential ({})", self.num_current_devices());
+            let mut results = Vec::with_capacity(self.num_current_devices());
+            for device in self.current_devices() {
+                results.push(fn_async(device).await);
             }
-            output.push((result, false));
+            results
+        } else {
+            log::debug!("for_each: parallel ({})", self.num_current_devices());
+            let (_, join_results) = async_scoped::TokioScope::scope_and_block(|s| {
+                for device in self.current_devices() {
+                    s.spawn(fn_async(device));
+                }
+            });
+            join_results
+                .into_iter()
+                .map(|result| result.unwrap_or_else(|error| Err(error.into())))
+                .collect()
+        };
+
+        let last_error_index = results.iter().rposition(|result| result.is_err());
+        for (i, (device, result)) in zip(self.current_devices(), results).enumerate() {
+            match result {
+                Ok(_) => fn_post(device)?,
+                Err(error) => {
+                    if i == last_error_index.unwrap() {
+                        return Err(error);
+                    }
+                    log::error!("{error}");
+                }
+            }
         }
-        if let Some(last_error_index) = last_error_index {
-            output[last_error_index].1 = true;
-        }
-        output
+        Ok(())
     }
 }
 
