@@ -83,12 +83,6 @@ impl Cli {
             is_interactive = false;
         }
 
-        if self.args.list_devices {
-            self.ensure_devices().await?;
-            self.print_devices();
-            is_interactive = false;
-        }
-
         if !self.args.commands.is_empty() {
             self.ensure_devices().await?;
             self.execute_args(&self.args.commands.clone()).await?;
@@ -132,9 +126,7 @@ impl Cli {
 
     fn print_devices(&self) {
         if !self.has_current_device() {
-            for (i, device) in self.devices().iter().enumerate() {
-                println!("{}: {device}", i + 1);
-            }
+            self.print_all_devices();
             return;
         }
 
@@ -147,6 +139,12 @@ impl Cli {
 
         let device = self.first_current_device();
         print!("{device:#}");
+    }
+
+    fn print_all_devices(&self) {
+        for (i, device) in self.devices().iter().enumerate() {
+            println!("{}: {device}", i + 1);
+        }
     }
 
     async fn execute_args(&mut self, list: &[String]) -> anyhow::Result<()> {
@@ -164,10 +162,14 @@ impl Cli {
         self.execute_no_alias(text).await
     }
 
+    /// Returns `true` if the current devices are changed.
     async fn execute_no_alias(&mut self, text: &str) -> anyhow::Result<bool> {
         let set_device_result = self.set_current_devices(text);
         if set_device_result.is_ok() {
             return Ok(true);
+        }
+        if self.execute_global_builtin_command(text)? {
+            return Ok(false);
         }
         if self.has_current_device() {
             if self.execute_if_expr(text).await? {
@@ -249,7 +251,15 @@ impl Cli {
         None
     }
 
-    async fn execute_builtin_command(&self, text: &str) -> anyhow::Result<bool> {
+    fn execute_global_builtin_command(&self, text: &str) -> anyhow::Result<bool> {
+        if text == "devices" {
+            self.print_all_devices();
+            return Ok(true);
+        }
+        Ok(false)
+    }
+
+    async fn execute_device_builtin_command(&self, text: &str) -> anyhow::Result<bool> {
         assert!(self.has_current_device());
         if text == "status" {
             self.update_status("").await?;
@@ -267,7 +277,7 @@ impl Cli {
         if text.is_empty() {
             return Ok(());
         }
-        if self.execute_builtin_command(text).await? {
+        if self.execute_device_builtin_command(text).await? {
             return Ok(());
         }
         let command = CommandRequest::from(text);

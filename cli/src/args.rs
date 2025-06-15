@@ -26,11 +26,6 @@ pub struct Args {
     #[serde(skip)]
     pub alias_updates: Vec<String>,
 
-    /// List the devices.
-    #[arg(short, long)]
-    #[serde(skip)]
-    pub list_devices: bool,
-
     /// The minimum number of tasks to parallelize.
     #[arg(short = 'P', long, default_value_t = 2)]
     #[serde(skip)]
