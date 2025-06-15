@@ -170,14 +170,6 @@ impl Cli {
             return Ok(true);
         }
         if self.has_current_device() {
-            if text == "status" {
-                self.update_status("").await?;
-                return Ok(false);
-            }
-            if let Some(key) = text.strip_prefix("status.") {
-                self.update_status(key).await?;
-                return Ok(false);
-            }
             if self.execute_if_expr(text).await? {
                 return Ok(false);
             }
@@ -256,8 +248,23 @@ impl Cli {
         None
     }
 
+    async fn execute_builtin_command(&self, text: &str) -> anyhow::Result<bool> {
+        if text == "status" {
+            self.update_status("").await?;
+            return Ok(true);
+        }
+        if let Some(key) = text.strip_prefix("status.") {
+            self.update_status(key).await?;
+            return Ok(true);
+        }
+        Ok(false)
+    }
+
     async fn execute_command(&self, text: &str) -> anyhow::Result<()> {
         if text.is_empty() {
+            return Ok(());
+        }
+        if self.execute_builtin_command(text).await? {
             return Ok(());
         }
         let command = CommandRequest::from(text);
