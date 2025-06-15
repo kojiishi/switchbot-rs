@@ -179,6 +179,13 @@ prepend it with a `/` (slash) as the separator.
 Command> customize/button1
 ```
 
+### Built-in Commands
+
+Following commands are executed by the `switchbot` command itself.
+* The `devices` command prints all devices.
+* The [`status`][status] and the [`status.key`][status-key] commands
+  query the device status.
+
 ## Aliases
 [aliases]: #aliases
 
@@ -218,6 +225,7 @@ fanSpeed: 23
 [get-device-status]: https://github.com/OpenWonderLabs/SwitchBotAPI#get-device-status
 
 ### Status of a Key
+[status-key]: #status-of-a-key
 
 It is also possible to check the status of a specific key
 by specifying `status.` (status dot) followed by the key name.
