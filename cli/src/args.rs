@@ -17,7 +17,7 @@ pub struct Args {
     pub secret: String,
 
     /// Clear the saved authentication.
-    #[arg(long, default_value_t = false)]
+    #[arg(long)]
     #[serde(skip)]
     pub clear: bool,
 
@@ -25,6 +25,11 @@ pub struct Args {
     #[arg(short, long = "alias")]
     #[serde(skip)]
     pub alias_updates: Vec<String>,
+
+    /// List the devices.
+    #[arg(short, long = "list")]
+    #[serde(skip)]
+    pub list_devices: bool,
 
     /// The minimum number of tasks to parallelize.
     #[arg(short = 'P', long, default_value_t = 2)]

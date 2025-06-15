@@ -61,6 +61,15 @@ impl Cli {
         &self.devices()[self.current_device_indexes[0]]
     }
 
+    async fn ensure_devices(&mut self) -> anyhow::Result<()> {
+        if self.devices().is_empty() {
+            self.switch_bot = self.args.create_switch_bot()?;
+            self.switch_bot.load_devices().await?;
+            log::debug!("ensure_devices: {} devices", self.devices().len());
+        }
+        Ok(())
+    }
+
     pub async fn run(&mut self) -> anyhow::Result<()> {
         self.run_core().await?;
         self.args.save()?;
@@ -68,22 +77,25 @@ impl Cli {
     }
 
     async fn run_core(&mut self) -> anyhow::Result<()> {
+        let mut is_interactive = true;
         if !self.args.alias_updates.is_empty() {
             self.args.print_aliases();
-            if self.args.commands.is_empty() {
-                return Ok(());
-            }
+            is_interactive = false;
         }
 
-        self.switch_bot = self.args.create_switch_bot()?;
-        self.switch_bot.load_devices().await?;
+        if self.args.list_devices {
+            self.ensure_devices().await?;
+            self.print_devices();
+            is_interactive = false;
+        }
 
         if !self.args.commands.is_empty() {
+            self.ensure_devices().await?;
             self.execute_args(&self.args.commands.clone()).await?;
-            return Ok(());
+        } else if is_interactive {
+            self.ensure_devices().await?;
+            self.run_interactive().await?;
         }
-
-        self.run_interactive().await?;
         Ok(())
     }
 
