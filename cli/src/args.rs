@@ -27,7 +27,7 @@ pub struct Args {
     pub alias_updates: Vec<String>,
 
     /// List the devices.
-    #[arg(short, long = "list")]
+    #[arg(short, long)]
     #[serde(skip)]
     pub list_devices: bool,
 
