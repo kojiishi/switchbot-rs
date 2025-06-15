@@ -14,26 +14,31 @@
 ///
 /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
 /// [send-device-control-commands]: https://github.com/OpenWonderLabs/SwitchBotAPI/blob/main/README.md#send-device-control-commands
-#[derive(Debug, PartialEq, serde::Serialize)]
+#[derive(Debug, Default, PartialEq, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CommandRequest {
     /// The command.
     pub command: String,
+
     /// The command parameters.
-    /// The default value is `default`.
+    #[serde(skip_serializing_if = "CommandRequest::can_omit_parameter")]
     pub parameter: String,
+
     /// The command type.
-    /// The default value is `command`.
+    #[serde(skip_serializing_if = "CommandRequest::can_omit_command_type")]
     pub command_type: String,
 }
 
-impl Default for CommandRequest {
-    fn default() -> Self {
-        Self {
-            command: String::default(),
-            parameter: "default".into(),
-            command_type: "command".into(),
-        }
+impl CommandRequest {
+    const DEFAULT_PARAMETER: &str = "default";
+    const DEFAULT_COMMAND_TYPE: &str = "command";
+
+    fn can_omit_parameter(str: &str) -> bool {
+        str.is_empty() || str == Self::DEFAULT_PARAMETER
+    }
+
+    fn can_omit_command_type(str: &str) -> bool {
+        str.is_empty() || str == Self::DEFAULT_COMMAND_TYPE
     }
 }
 
@@ -88,5 +93,87 @@ impl From<&str> for CommandRequest {
         }
         command.command = text.into();
         command
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn serialize_all() {
+        let all = CommandRequest {
+            command: "test_command".into(),
+            parameter: "param".into(),
+            command_type: "type".into(),
+        };
+        assert_eq!(
+            serde_json::to_string(&all).unwrap(),
+            r#"{"command":"test_command","parameter":"param","commandType":"type"}"#
+        );
+    }
+
+    #[test]
+    fn serialize_default() {
+        let param_type_default = CommandRequest {
+            command: "test_command".into(),
+            ..Default::default()
+        };
+        assert_eq!(
+            serde_json::to_string(&param_type_default).unwrap(),
+            r#"{"command":"test_command"}"#
+        );
+    }
+
+    #[test]
+    fn serialize_default_str() {
+        let param_type_default = CommandRequest {
+            command: "test_command".into(),
+            parameter: CommandRequest::DEFAULT_PARAMETER.into(),
+            command_type: CommandRequest::DEFAULT_COMMAND_TYPE.into(),
+        };
+        assert_eq!(
+            serde_json::to_string(&param_type_default).unwrap(),
+            r#"{"command":"test_command"}"#
+        );
+    }
+
+    #[test]
+    fn serialize_empty() {
+        let param_type_empty = CommandRequest {
+            command: "test_command".into(),
+            parameter: String::default(),
+            command_type: String::default(),
+        };
+        assert_eq!(
+            serde_json::to_string(&param_type_empty).unwrap(),
+            r#"{"command":"test_command"}"#
+        );
+    }
+
+    #[test]
+    fn serialize_param() {
+        let with_param = CommandRequest {
+            command: "test_command".into(),
+            parameter: "param".into(),
+            ..Default::default()
+        };
+        assert_eq!(
+            serde_json::to_string(&with_param).unwrap(),
+            r#"{"command":"test_command","parameter":"param"}"#
+        );
+    }
+
+    #[test]
+    fn serialize_type() {
+        let with_type = CommandRequest {
+            command: "test_command".into(),
+            command_type: "type".into(),
+            ..Default::default()
+        };
+        assert_eq!(
+            serde_json::to_string(&with_type).unwrap(),
+            r#"{"command":"test_command","commandType":"type"}"#
+        );
     }
 }
