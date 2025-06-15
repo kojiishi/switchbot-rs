@@ -26,6 +26,11 @@ pub struct Args {
     #[serde(skip)]
     pub alias_updates: Vec<String>,
 
+    /// The minimum number of tasks to parallelize.
+    #[arg(short = 'P', long, default_value_t = 2)]
+    #[serde(skip)]
+    pub parallel_threshold: usize,
+
     #[arg(skip)]
     #[serde(default)]
     pub aliases: HashMap<String, String>,
