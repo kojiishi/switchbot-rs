@@ -211,6 +211,7 @@ impl Cli {
     }
 
     async fn execute_if_expr(&mut self, expr: &str) -> anyhow::Result<bool> {
+        assert!(self.has_current_device());
         if let Some((condition, then_command, else_command)) = Self::parse_if_expr(expr) {
             let device = self.first_current_device();
             device.update_status().await?;
@@ -249,6 +250,7 @@ impl Cli {
     }
 
     async fn execute_builtin_command(&self, text: &str) -> anyhow::Result<bool> {
+        assert!(self.has_current_device());
         if text == "status" {
             self.update_status("").await?;
             return Ok(true);
@@ -261,6 +263,7 @@ impl Cli {
     }
 
     async fn execute_command(&self, text: &str) -> anyhow::Result<()> {
+        assert!(self.has_current_device());
         if text.is_empty() {
             return Ok(());
         }
