@@ -90,6 +90,12 @@ impl Args {
             ]);
             self.config_version = 1;
         }
+        if self.config_version < 2 {
+            if !self.aliases.contains_key("d") {
+                self.aliases.insert("d".into(), "devices".into());
+            }
+            self.config_version = 2;
+        }
     }
 
     pub fn update_aliases(&mut self) {
@@ -171,8 +177,8 @@ mod tests {
         assert_eq!(args.config_version, 0);
         assert_eq!(args.aliases.len(), 0);
         args.ensure_default();
-        assert_eq!(args.config_version, 1);
-        assert_eq!(args.aliases.len(), 2);
+        assert_eq!(args.config_version, 2);
+        assert_eq!(args.aliases.len(), 3);
     }
 
     #[test]

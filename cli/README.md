@@ -185,9 +185,9 @@ Command> customize/button1
 
 Following commands are executed by the `switchbot` command itself
 without being sent to the [SwitchBot API].
-* The `devices` command prints all devices.
-* The [`status`][status] and the [`status.key`][status-key] commands
-  query the device status.
+* The `devices` command (or `d` as its [alias][aliases])
+  prints the list of all devices.
+* The [`status`][status] and the [`status.key`][status-key] commands.
 * The [`if`-command][if-command].
 
 ## Status
@@ -273,6 +273,7 @@ Some commands have aliases for convenience.
 By default, following aliases are defined.
 * `on` for `turnOn`.
 * `off` for `turnOff`.
+* `d` for `devices`.
 
 With these aliases,
 the following example sends the `turnOn` command to the device 2.
