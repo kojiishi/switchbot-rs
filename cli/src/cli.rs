@@ -224,11 +224,7 @@ impl Cli {
                 else_command
             };
             log::debug!("if: {condition} is {eval_result}, execute {command}");
-            if let Some(alias) = self.args.aliases.get(command) {
-                self.execute_command(alias.as_str()).await?;
-            } else {
-                self.execute_command(command).await?;
-            }
+            Box::pin(self.execute(command)).await?;
             return Ok(true);
         }
         Ok(false)
