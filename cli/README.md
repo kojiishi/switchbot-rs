@@ -146,6 +146,7 @@ To control your devices, enter the command name you want to send.
 The available commands depend on the device type.
 Please refer to the
 [SwitchBot API documentation about device control commands][send-device-control-commands]
+and the [built-in commands]
 to find the command you want to send to your devices.
 
 The following [interactive mode] example sends the `turnOn` command to the device number 2.
@@ -179,33 +180,15 @@ prepend it with a `/` (slash) as the separator.
 Command> customize/button1
 ```
 
-### Built-in Commands
+## Built-in Commands
+[built-in commands]: #built-in-commands
 
-Following commands are executed by the `switchbot` command itself.
+Following commands are executed by the `switchbot` command itself
+without being sent to the [SwitchBot API].
 * The `devices` command prints all devices.
 * The [`status`][status] and the [`status.key`][status-key] commands
   query the device status.
-
-## Aliases
-[aliases]: #aliases
-
-Some commands have aliases for convenience.
-For example, `on` is an alias for `turnOn`, and `off` is an alias for `turnOff`.
-```shell-session
-switchbot 2 on
-```
-The example above sends the `turnOn` command to the device 2.
-
-You can also add your own aliases by the `-a` option.
-Both commands and devices can be aliased.
-```shell-session
-switchbot -a fan=777888999 -a hot=fanSpeed:100 -a lights=2,5,6
-switchbot fan hot lights on
-```
-To remove existing aliases, please omit the value.
-```shell-session
-switchbot -a hot
-```
+* The [`if`-command][if-command].
 
 ## Status
 [status]: #status
@@ -281,6 +264,32 @@ switchbot -a t=if/power=on/off/on 4 t 2 t
 > ```shell-session
 > switchbot 4 if.power=on.off.on
 > ```
+
+## Aliases
+[aliases]: #aliases
+
+Some commands have aliases for convenience.
+
+By default, following aliases are defined.
+* `on` for `turnOn`.
+* `off` for `turnOff`.
+
+With these aliases,
+the following example sends the `turnOn` command to the device 2.
+```shell-session
+switchbot 2 on
+```
+
+You can also add your own aliases by the `-a` option.
+Both commands and devices can be aliased.
+```shell-session
+switchbot -a fan=777888999 -a hot=fanSpeed:100 -a lights=2,5,6
+switchbot fan hot lights on
+```
+To remove existing aliases, please omit the value.
+```shell-session
+switchbot -a hot
+```
 
 # Change History
 
