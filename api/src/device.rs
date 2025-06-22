@@ -108,7 +108,7 @@ impl Device {
 
     /// Get the [device status] from the [SwitchBot API].
     ///
-    /// Please see [`Device::status_by_key()`] and some other functions
+    /// Please see [`status_by_key()`][Device::status_by_key()] and some other functions
     /// to retrieve the status captured by this function.
     ///
     /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
@@ -132,7 +132,7 @@ impl Device {
 
     /// Get the value of a key from the [device status].
     ///
-    /// The [`Device::update_status()`] must be called prior to this function.
+    /// The [`update_status()`][Device::update_status()] must be called prior to this function.
     ///
     /// # Examples
     /// ```no_run
@@ -160,7 +160,7 @@ impl Device {
     /// Please also see the [`switchbot-cli` documentation about the
     /// "if-command"](https://github.com/kojiishi/switchbot-rs/tree/main/cli#if-command).
     ///
-    /// The [`Device::update_status()`] must be called prior to this function.
+    /// The [`update_status()`][Device::update_status()] must be called prior to this function.
     ///
     /// # Examples
     /// ```no_run
@@ -181,7 +181,7 @@ impl Device {
 
     /// Write the list of the [device status] to the `writer`.
     ///
-    /// The [`Device::update_status()`] must be called prior to this function.
+    /// The [`update_status()`][Device::update_status()] must be called prior to this function.
     ///
     /// # Examples
     /// ```no_run
