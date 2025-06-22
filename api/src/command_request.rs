@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 /// A command request to send to the [SwitchBot API].
 ///
 /// For more details of each field, please refer to the [SwitchBot
@@ -42,11 +44,31 @@ impl CommandRequest {
     }
 }
 
+impl Display for CommandRequest {
+    /// Convert to a string by:
+    /// * Prepend `command_type` with a `/` (slash) if it's not empty nor default.
+    /// * Append `parameter` with a `:` (colon) if it's not empty nor default.
+    ///
+    /// This is the same form as what the [`from(&str)`][CommandRequest::from()] parses.
+    ///
+    /// [cli-command]: https://github.com/kojiishi/switchbot-rs/tree/main/cli#command
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if !Self::can_omit_command_type(&self.command_type) {
+            write!(f, "{}/", self.command_type)?;
+        }
+        write!(f, "{}", self.command)?;
+        if !Self::can_omit_parameter(&self.parameter) {
+            write!(f, ":{}", self.parameter)?;
+        }
+        Ok(())
+    }
+}
+
 impl From<&str> for CommandRequest {
     /// Parse a string into a [`CommandRequest`].
-    /// Please see the [`switchbot-cli` document] for the syntax.
+    /// Please see the [`switchbot-cli` document][cli-command] for the syntax.
     ///
-    /// [`switchbot-cli` document]: https://github.com/kojiishi/switchbot-rs/tree/main/cli#command
+    /// [cli-command]: https://github.com/kojiishi/switchbot-rs/tree/main/cli#command
     /// ```
     /// # use switchbot_api::CommandRequest;
     /// assert_eq!(
