@@ -236,6 +236,27 @@ Following operators are supported.
 * `=`, `<`, `<=`, `>`, and `>=` for numeric types.
 * `=` for string and other types.
 
+> [!NOTE]
+> If the `/` (slash) is used in the device name or the command,
+> other non-alphanumeric characters can be used as the separator,
+> as long as the same character is used for all separators.
+> ```shell-session
+> switchbot 4 if.power=on.off.on
+> ```
+
+### Status of Other Devices
+
+The "if" command can also query the status of
+other devices than the selected devices
+by prefixing the [device ID or number][device] and `.` (dot) to the key name.
+```shell-session
+switchbot 4,5,6 "if/8.lightLevel<5/on/off"
+```
+The example above turns on or turns off device 4, 5, and 6
+depending on the `lightLevel` status of device 8.
+
+### If-Command for Multiple Devices
+
 When [multiple devices] are selected,
 the first device is used to determine which command to execute.
 Then the command is executed on all selected devices.
@@ -256,14 +277,6 @@ switchbot 4 if/power=on/off/on 2 if/power=on/off/on
 ```shell-session
 switchbot -a t=if/power=on/off/on 4 t 2 t
 ```
-
-> [!NOTE]
-> If the `/` (slash) is used in the device name or the command,
-> other non-alphanumeric characters can be used as the separator,
-> as long as the same character is used for all separators.
-> ```shell-session
-> switchbot 4 if.power=on.off.on
-> ```
 
 ## Aliases
 [aliases]: #aliases

@@ -215,9 +215,9 @@ impl Cli {
     async fn execute_if_expr(&mut self, expr: &str) -> anyhow::Result<bool> {
         assert!(self.has_current_device());
         if let Some((condition, then_command, else_command)) = Self::parse_if_expr(expr) {
-            let device = self.first_current_device();
+            let (device, expr) = self.device_expr(condition);
             device.update_status().await?;
-            let eval_result = device.eval_condition(condition)?;
+            let eval_result = device.eval_condition(expr)?;
             let command = if eval_result {
                 then_command
             } else {
@@ -245,6 +245,15 @@ impl Cli {
             }
         }
         None
+    }
+
+    fn device_expr<'a>(&'a self, expr: &'a str) -> (&'a Device, &'a str) {
+        if let Some((device, expr)) = expr.split_once('.') {
+            if let Ok(device_indexes) = self.parse_device_indexes(device) {
+                return (&self.devices()[device_indexes[0]], expr);
+            }
+        }
+        (self.first_current_device(), expr)
     }
 
     fn execute_global_builtin_command(&self, text: &str) -> anyhow::Result<bool> {
