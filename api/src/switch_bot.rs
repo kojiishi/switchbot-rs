@@ -65,7 +65,7 @@ impl SwitchBot {
 
     /// Returns a list of [`Device`]s.
     /// This list is empty initially.
-    /// Call [`SwitchBot::load_devices()`] to populate the list.
+    /// Call [`load_devices()`][SwitchBot::load_devices()] to populate the list.
     pub fn devices(&self) -> &DeviceList {
         &self.devices
     }
