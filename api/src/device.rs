@@ -7,7 +7,7 @@ use std::{
 
 use super::*;
 
-/// Represents a device.
+/// A device in the SwitchBot API.
 ///
 /// For the details of fields, please refer to the [devices] section
 /// of the API documentation.
@@ -72,6 +72,16 @@ impl Device {
         &self.remote_type
     }
 
+    /// [`remote_type()`][Device::remote_type()] if [`is_remote()`][Device::is_remote()],
+    /// otherwise [`device_type()`][Device::device_type()].
+    pub fn device_type_or_remote_type(&self) -> &str {
+        if self.is_remote() {
+            self.remote_type()
+        } else {
+            self.device_type()
+        }
+    }
+
     /// The parent Hub ID.
     pub fn hub_device_id(&self) -> &str {
         &self.hub_device_id
@@ -105,6 +115,17 @@ impl Device {
     pub async fn command(&self, command: &CommandRequest) -> anyhow::Result<()> {
         self.service()?.command(self.device_id(), command).await
     }
+
+    // pub async fn command_helps(&self) -> anyhow::Result<Vec<CommandHelp>> {
+    //     let mut help = CommandHelp::load().await?;
+    //     if let Some(helps) = help.remove(&self.device_type) {
+    //         return Ok(helps);
+    //     }
+    //     for (key, _) in help {
+    //         println!("{key}");
+    //     }
+    //     Ok(vec![])
+    // }
 
     /// Get the [device status] from the [SwitchBot API].
     ///
