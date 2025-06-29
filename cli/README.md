@@ -186,8 +186,8 @@ Command> customize/button1
 
 Following commands are executed by the `switchbot` command itself
 without being sent to the [SwitchBot API].
-* The [`help`][help] command (or `h` as its [alias][aliases]).
-* The `devices` command (or `d` as its [alias][aliases])
+* The [`help`][help] command (or `h` as its [alias]).
+* The `devices` command (or `d` as its [alias])
   prints the list of all devices.
 * The [`status`][status] and the [`status.key`][status-key] commands.
 * The [`if`-command][if-command].
@@ -195,8 +195,9 @@ without being sent to the [SwitchBot API].
 ## Help
 [help]: #help
 
-This [built-in command] prints all available commands for the first selected device.
-Its default [alias][aliases] is `h`.
+This [built-in command] prints all available commands
+for the first [selected device][device].
+Its default [alias] is `h`.
 
 ```
 Command> help
@@ -304,6 +305,7 @@ switchbot -a t=if/power=on/off/on 4 t 2 t
 ```
 
 ## Aliases
+[alias]: #aliases
 [aliases]: #aliases
 
 Some commands have aliases for convenience.
