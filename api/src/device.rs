@@ -38,8 +38,8 @@ pub struct Device {
 impl Device {
     pub(crate) fn new_for_test(index: usize) -> Self {
         Self {
-            device_id: format!("device{}", index),
-            device_name: format!("Device {}", index),
+            device_id: format!("device{index}"),
+            device_name: format!("Device {index}"),
             device_type: "test".into(),
             ..Default::default()
         }

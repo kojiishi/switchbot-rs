@@ -171,9 +171,9 @@ impl Cli {
             )
         }
         for command_help in command_helps {
-            println!("{}", command_help);
+            println!("{command_help}");
         }
-        println!("Please see {} for more information", help_url);
+        println!("Please see {help_url} for more information");
         Ok(())
     }
 
@@ -332,7 +332,7 @@ impl Cli {
                 if key.is_empty() {
                     device.write_status_to(stdout())?;
                 } else if let Some(value) = device.status_by_key(key) {
-                    println!("{}", value);
+                    println!("{value}");
                 } else {
                     log::error!(r#"No status key "{key}" for {device}"#);
                 }

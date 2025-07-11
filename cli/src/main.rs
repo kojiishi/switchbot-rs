@@ -8,7 +8,7 @@ async fn main() {
 
     let mut cli = Cli::new_from_args();
     if let Err(error) = cli.run().await {
-        log::error!("{}", error);
+        log::error!("{error}");
     }
 }
 
