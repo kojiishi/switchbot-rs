@@ -39,7 +39,7 @@ impl Display for CommandHelp {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.command)?;
         for description in self.description.to_string().split('\n') {
-            write!(f, "\n    {}", description)?;
+            write!(f, "\n    {description}")?;
         }
         Ok(())
     }
@@ -159,7 +159,7 @@ impl Help {
         for (device_type, helps) in commands {
             writeln!(f, "* {device_type}")?;
             for help in helps {
-                writeln!(f, "  - {}", help)?;
+                writeln!(f, "  - {help}")?;
             }
         }
         Ok(())
@@ -192,7 +192,7 @@ impl Section {
             ])
         });
         if let Some(s) = SECTIONS.get(line) {
-            log::debug!("section: {:?} -> {:?}", self, s);
+            log::debug!("section: {self:?} -> {s:?}");
             *self = *s;
             return true;
         }
