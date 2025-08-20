@@ -78,11 +78,11 @@ impl ConditionalExpression<'_> {
 mod tests {
     use super::*;
 
-    fn parse(str: &str) -> anyhow::Result<ConditionalExpression> {
+    fn parse(str: &str) -> anyhow::Result<ConditionalExpression<'_>> {
         ConditionalExpression::try_from(str)
     }
 
-    fn from_key(key: &str) -> ConditionalExpression {
+    fn from_key(key: &str) -> ConditionalExpression<'_> {
         ConditionalExpression {
             key,
             ..Default::default()

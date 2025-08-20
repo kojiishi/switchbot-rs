@@ -107,10 +107,10 @@ impl Help {
         if let Some(commands) = self.commands.get(device_type) {
             return commands;
         }
-        if let Some(alias) = self.device_name_by_type.get(device_type) {
-            if let Some(commands) = self.commands.get(alias) {
-                return commands;
-            }
+        if let Some(alias) = self.device_name_by_type.get(device_type)
+            && let Some(commands) = self.commands.get(alias)
+        {
+            return commands;
         }
         CommandHelp::empty_vec()
     }
@@ -120,10 +120,10 @@ impl Help {
             return commands;
         }
         // Some remotes have a "DIY " prefix. Try by removing it.
-        if let Some(remote_type) = remote_type.strip_prefix("DIY ") {
-            if let Some(commands) = self.commands_ir.get(remote_type) {
-                return commands;
-            }
+        if let Some(remote_type) = remote_type.strip_prefix("DIY ")
+            && let Some(commands) = self.commands_ir.get(remote_type)
+        {
+            return commands;
         }
         CommandHelp::empty_vec()
     }
@@ -247,14 +247,12 @@ impl HelpLoader {
                 if self.update_device_type(line) {
                     return Ok(());
                 }
-                if !self.device_name.is_empty() {
-                    if let Some(columns) = Markdown::table_columns(line) {
-                        if columns[0] == "deviceType" {
-                            if let Some(device_type) = Markdown::em(columns[2]) {
-                                self.add_device_alias(device_type);
-                            }
-                        }
-                    }
+                if !self.device_name.is_empty()
+                    && let Some(columns) = Markdown::table_columns(line)
+                    && columns[0] == "deviceType"
+                    && let Some(device_type) = Markdown::em(columns[2])
+                {
+                    self.add_device_alias(device_type);
                 }
             }
             Section::Commands | Section::CommandsIR => {

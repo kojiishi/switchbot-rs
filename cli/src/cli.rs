@@ -236,10 +236,11 @@ impl Cli {
     }
 
     fn parse_device_index(&self, value: &str) -> anyhow::Result<usize> {
-        if let Ok(number) = value.parse::<usize>() {
-            if number > 0 && number <= self.devices().len() {
-                return Ok(number - 1);
-            }
+        if let Ok(number) = value.parse::<usize>()
+            && number > 0
+            && number <= self.devices().len()
+        {
+            return Ok(number - 1);
         }
         self.devices()
             .index_by_device_id(value)
@@ -265,27 +266,27 @@ impl Cli {
     }
 
     fn parse_if_expr(text: &str) -> Option<(&str, &str, &str)> {
-        if let Some(text) = text.strip_prefix("if") {
-            if let Some(sep) = text.chars().nth(0) {
-                if sep.is_alphanumeric() {
-                    return None;
-                }
-                let fields: Vec<&str> = text[1..].split_terminator(sep).collect();
-                match fields.len() {
-                    2 => return Some((fields[0], fields[1], "")),
-                    3 => return Some((fields[0], fields[1], fields[2])),
-                    _ => {}
-                }
+        if let Some(text) = text.strip_prefix("if")
+            && let Some(sep) = text.chars().nth(0)
+        {
+            if sep.is_alphanumeric() {
+                return None;
+            }
+            let fields: Vec<&str> = text[1..].split_terminator(sep).collect();
+            match fields.len() {
+                2 => return Some((fields[0], fields[1], "")),
+                3 => return Some((fields[0], fields[1], fields[2])),
+                _ => {}
             }
         }
         None
     }
 
     fn device_expr<'a>(&'a self, expr: &'a str) -> (&'a Device, &'a str) {
-        if let Some((device, expr)) = expr.split_once('.') {
-            if let Ok(device_indexes) = self.parse_device_indexes(device) {
-                return (&self.devices()[device_indexes[0]], expr);
-            }
+        if let Some((device, expr)) = expr.split_once('.')
+            && let Ok(device_indexes) = self.parse_device_indexes(device)
+        {
+            return (&self.devices()[device_indexes[0]], expr);
         }
         (self.first_current_device(), expr)
     }
