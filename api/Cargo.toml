@@ -12,7 +12,7 @@ readme = "README.md"
 license.workspace = true
 
 [dependencies]
-anyhow = { version = "1.0.99", features = ["backtrace"] }
+anyhow = { version = "1.0.100", features = ["backtrace"] }
 base64 = "0.22.1"
 hmac = "0.12"
 log = "0.4.28"
