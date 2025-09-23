@@ -23,7 +23,7 @@ directories = "6.0.0"
 env_logger = "0.11.8"
 itertools = "0.14.0"
 log = "0.4.28"
-serde = { version = "1.0.225", features = ["derive"] }
+serde = { version = "1.0.226", features = ["derive"] }
 serde_json = "1.0.145"
 switchbot-api = { version = "0.1.6", path = "../api" }
 tokio = { version = "1.47.1", features = ["macros", "rt-multi-thread"] }
