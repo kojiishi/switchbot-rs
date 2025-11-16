@@ -3,6 +3,8 @@ use std::{
     fmt::Display,
     io,
     sync::{Arc, RwLock, RwLockReadGuard, Weak},
+    thread,
+    time::{Duration, Instant},
 };
 
 use super::*;
@@ -33,6 +35,9 @@ pub struct Device {
 
     #[serde(skip)]
     service: Weak<SwitchBotService>,
+
+    #[serde(skip)]
+    last_command_time: RwLock<Option<Instant>>,
 }
 
 impl Device {
@@ -113,6 +118,20 @@ impl Device {
     /// # }
     /// ```
     pub async fn command(&self, command: &CommandRequest) -> anyhow::Result<()> {
+        if self.is_remote() {
+            // For remote devices, give some delays between commands.
+            const MIN_INTERVAL: Duration = Duration::from_millis(500);
+            let mut last_command_time = self.last_command_time.write().unwrap();
+            if let Some(last_time) = *last_command_time {
+                let elapsed = last_time.elapsed();
+                if elapsed < MIN_INTERVAL {
+                    let duration = MIN_INTERVAL - elapsed;
+                    log::debug!("command: sleep {duration:?} for {self}");
+                    thread::sleep(duration);
+                }
+            }
+            *last_command_time = Some(Instant::now());
+        }
         self.service()?.command(self.device_id(), command).await
     }
 
