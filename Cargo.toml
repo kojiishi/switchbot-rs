@@ -6,6 +6,7 @@ exclude = [".github", ".gitignore", "hooks", ".vscode"]
 [workspace.package]
 version = "0.1.12"
 edition = "2024"
+rust-version = "1.89"
 authors = ["Koji Ishii <kojiishi@gmail.com>"]
 description = "Command line tool and library to interact with the SwitchBot API."
 keywords = ["switchbot"]
