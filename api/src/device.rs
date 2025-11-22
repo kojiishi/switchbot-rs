@@ -126,25 +126,33 @@ impl Device {
     pub async fn command(&self, command: &CommandRequest) -> anyhow::Result<()> {
         if self.is_remote() {
             // For remote devices, give some delays between commands.
-            let min_interval = *MIN_INTERVAL_FOR_REMOTE_DEVICES.read().unwrap();
-            let last_command_time = self.last_command_time.read().unwrap();
-            if let Some(last_time) = *last_command_time {
-                let elapsed = last_time.elapsed();
-                if elapsed < min_interval {
-                    let duration = min_interval - elapsed;
-                    log::debug!("command: sleep {duration:?} for {self}");
-                    thread::sleep(duration);
-                }
-            }
+            self.sleep_for_interval();
         }
 
         self.service()?.command(self.device_id(), command).await?;
 
         if self.is_remote() {
-            let mut last_command_time = self.last_command_time.write().unwrap();
-            *last_command_time = Some(Instant::now());
+            self.update_interval();
         }
         Ok(())
+    }
+
+    fn sleep_for_interval(&self) {
+        let min_interval = *MIN_INTERVAL_FOR_REMOTE_DEVICES.read().unwrap();
+        let last_command_time = self.last_command_time.read().unwrap();
+        if let Some(last_time) = *last_command_time {
+            let elapsed = last_time.elapsed();
+            if elapsed < min_interval {
+                let duration = min_interval - elapsed;
+                log::debug!("command: sleep {duration:?} for {self}");
+                thread::sleep(duration);
+            }
+        }
+    }
+
+    fn update_interval(&self) {
+        let mut last_command_time = self.last_command_time.write().unwrap();
+        *last_command_time = Some(Instant::now());
     }
 
     // pub async fn command_helps(&self) -> anyhow::Result<Vec<CommandHelp>> {
