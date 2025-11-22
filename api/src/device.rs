@@ -121,7 +121,7 @@ impl Device {
         if self.is_remote() {
             // For remote devices, give some delays between commands.
             const MIN_INTERVAL: Duration = Duration::from_millis(500);
-            let mut last_command_time = self.last_command_time.write().unwrap();
+            let last_command_time = self.last_command_time.read().unwrap();
             if let Some(last_time) = *last_command_time {
                 let elapsed = last_time.elapsed();
                 if elapsed < MIN_INTERVAL {
@@ -130,9 +130,15 @@ impl Device {
                     thread::sleep(duration);
                 }
             }
+        }
+
+        self.service()?.command(self.device_id(), command).await?;
+
+        if self.is_remote() {
+            let mut last_command_time = self.last_command_time.write().unwrap();
             *last_command_time = Some(Instant::now());
         }
-        self.service()?.command(self.device_id(), command).await
+        Ok(())
     }
 
     // pub async fn command_helps(&self) -> anyhow::Result<Vec<CommandHelp>> {
