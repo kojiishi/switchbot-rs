@@ -1,8 +1,8 @@
-use std::{collections::HashMap, fs, path::PathBuf};
+use std::{collections::HashMap, fs, path::PathBuf, time::Duration};
 
 use clap::Parser;
 use itertools::Itertools;
-use switchbot_api::SwitchBot;
+use switchbot_api::{Device, SwitchBot};
 
 use crate::UserInput;
 
@@ -25,6 +25,11 @@ pub(crate) struct Args {
     #[arg(short, long = "alias")]
     #[serde(skip)]
     pub alias_updates: Vec<String>,
+
+    /// The interval for remote devices in seconds [default: 0.5].
+    #[arg(long)]
+    #[serde(skip)]
+    pub pause: Option<f64>,
 
     /// The minimum number of tasks to parallelize.
     #[arg(short = 'P', long, default_value_t = 2)]
@@ -50,10 +55,17 @@ impl Args {
             log::debug!("Load config error: {error}");
         }
         args.ensure_default();
-        if !args.alias_updates.is_empty() {
-            args.update_aliases();
-        }
         args
+    }
+
+    pub fn process(&mut self) -> anyhow::Result<()> {
+        if let Some(seconds) = self.pause {
+            Device::set_default_min_internal_for_remote_devices(Duration::from_secs_f64(seconds));
+        }
+        if !self.alias_updates.is_empty() {
+            self.update_aliases();
+        }
+        Ok(())
     }
 
     pub fn create_switch_bot(&mut self) -> anyhow::Result<SwitchBot> {

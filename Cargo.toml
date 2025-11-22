@@ -4,7 +4,7 @@ members = ["api", "cli"]
 exclude = [".github", ".gitignore", "hooks", ".vscode"]
 
 [workspace.package]
-version = "0.1.12"
+version = "0.1.13"
 edition = "2024"
 rust-version = "1.89"
 authors = ["Koji Ishii <kojiishi@gmail.com>"]

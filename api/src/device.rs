@@ -40,7 +40,13 @@ pub struct Device {
     last_command_time: RwLock<Option<Instant>>,
 }
 
+static MIN_INTERVAL_FOR_REMOTE_DEVICES: RwLock<Duration> = RwLock::new(Duration::from_millis(500));
+
 impl Device {
+    pub fn set_default_min_internal_for_remote_devices(min_interval: Duration) {
+        *MIN_INTERVAL_FOR_REMOTE_DEVICES.write().unwrap() = min_interval;
+    }
+
     pub(crate) fn new_for_test(index: usize) -> Self {
         Self {
             device_id: format!("device{index}"),
@@ -120,12 +126,12 @@ impl Device {
     pub async fn command(&self, command: &CommandRequest) -> anyhow::Result<()> {
         if self.is_remote() {
             // For remote devices, give some delays between commands.
-            const MIN_INTERVAL: Duration = Duration::from_millis(500);
+            let min_interval = *MIN_INTERVAL_FOR_REMOTE_DEVICES.read().unwrap();
             let last_command_time = self.last_command_time.read().unwrap();
             if let Some(last_time) = *last_command_time {
                 let elapsed = last_time.elapsed();
-                if elapsed < MIN_INTERVAL {
-                    let duration = MIN_INTERVAL - elapsed;
+                if elapsed < min_interval {
+                    let duration = min_interval - elapsed;
                     log::debug!("command: sleep {duration:?} for {self}");
                     thread::sleep(duration);
                 }

@@ -72,6 +72,7 @@ impl Cli {
     }
 
     pub async fn run(&mut self) -> anyhow::Result<()> {
+        self.args.process()?;
         self.run_core().await?;
         self.args.save()?;
         Ok(())
