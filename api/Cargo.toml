@@ -15,7 +15,7 @@ license.workspace = true
 anyhow = { version = "1.0.100", features = ["backtrace"] }
 base64 = "0.22.1"
 hmac = "0.12"
-log = "0.4.28"
+log = "0.4.29"
 regex = "1.12.2"
 reqwest = { version = "0.12.24", features = ["json"] }
 serde = { version = "1.0.228", features = ["derive"] }
