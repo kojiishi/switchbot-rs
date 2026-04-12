@@ -11,5 +11,3 @@ updates:
       dependencies:
         patterns:
           - '*'
-        exclude-patterns:
-          - 'sha2' # https://github.com/RustCrypto/hashes/issues/811
