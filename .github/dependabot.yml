@@ -11,3 +11,6 @@ updates:
       dependencies:
         patterns:
           - '*'
+        exclude-patterns:
+          - 'hmac'
+          - 'sha2'
