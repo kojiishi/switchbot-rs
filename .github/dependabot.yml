@@ -14,3 +14,16 @@ updates:
         exclude-patterns:
           - 'hmac'
           - 'sha2'
+      RustCrypto:
+        patterns:
+          - 'hmac'
+          - 'sha2'
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns:
+          - '*'
