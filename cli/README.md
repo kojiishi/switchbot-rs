@@ -319,15 +319,28 @@ the following example sends the `turnOn` command to the device 2.
 switchbot 2 on
 ```
 
-You can also add your own aliases by the `-a` option.
+You can also add your own aliases by the `alias` command.
 Both commands and devices can be aliased.
+```
+Device> alias fan=777888999
+Device> alias hot=fanSpeed:100
+Device> fan hot
+Device> alias lights=2,5,6
+Device> lights on
+```
+To remove existing aliases, please omit the value.
+```
+Device> alias hot
+```
+To print current aliases, type `alias` without arguments.
+```
+Device> alias
+```
+
+You can also add or remove aliases from the command line by the `-a` option.
 ```shell-session
 switchbot -a fan=777888999 -a hot=fanSpeed:100 -a lights=2,5,6
 switchbot fan hot lights on
-```
-To remove existing aliases, please omit the value.
-```shell-session
-switchbot -a hot
 ```
 
 # Change History

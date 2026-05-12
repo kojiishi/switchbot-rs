@@ -292,9 +292,22 @@ impl Cli {
         (self.first_current_device(), expr)
     }
 
-    fn execute_global_builtin_command(&self, text: &str) -> anyhow::Result<bool> {
+    fn execute_global_builtin_command(&mut self, text: &str) -> anyhow::Result<bool> {
         if text == "devices" {
             self.print_all_devices();
+            return Ok(true);
+        }
+        if text == "alias" {
+            self.args.print_aliases();
+            return Ok(true);
+        }
+        if let Some(rest) = text.strip_prefix("alias ") {
+            let rest = rest.trim();
+            if rest.is_empty() {
+                self.args.print_aliases();
+            } else {
+                self.args.update_alias(rest);
+            }
             return Ok(true);
         }
         Ok(false)
@@ -440,5 +453,38 @@ mod tests {
         assert_eq!(Cli::parse_if_expr("if.a.b.c"), Some(("a", "b", "c")));
         // But non-alphanumeric.
         assert_eq!(Cli::parse_if_expr("ifXaXbXc"), None);
+    }
+
+    #[test]
+    fn command_alias() {
+        let mut cli = Cli::new_for_test(10);
+        assert_eq!(cli.args.aliases.len(), 0);
+
+        // Add alias
+        assert!(cli.execute_global_builtin_command("alias a=b").unwrap());
+        assert_eq!(cli.args.aliases.len(), 1);
+        assert_eq!(cli.args.aliases.get("a").unwrap(), "b");
+
+        // Update alias
+        assert!(cli.execute_global_builtin_command("alias a=c").unwrap());
+        assert_eq!(cli.args.aliases.len(), 1);
+        assert_eq!(cli.args.aliases.get("a").unwrap(), "c");
+
+        // Remove alias
+        assert!(cli.execute_global_builtin_command("alias a=").unwrap());
+        assert_eq!(cli.args.aliases.len(), 0);
+
+        // Print aliases (should return true but not change aliases)
+        assert!(cli.execute_global_builtin_command("alias").unwrap());
+        assert_eq!(cli.args.aliases.len(), 0);
+
+        // Remove non-existent alias
+        assert!(cli.execute_global_builtin_command("alias a=").unwrap());
+        assert_eq!(cli.args.aliases.len(), 0);
+
+        // Alias without '=' removes it (consistent with Args::update_alias)
+        cli.args.aliases.insert("a".into(), "b".into());
+        assert!(cli.execute_global_builtin_command("alias a").unwrap());
+        assert_eq!(cli.args.aliases.len(), 0);
     }
 }
