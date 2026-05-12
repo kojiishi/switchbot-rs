@@ -118,21 +118,27 @@ impl Args {
         }
     }
 
-    pub fn update_aliases(&mut self) {
-        for alias in &self.alias_updates {
-            if alias.is_empty() {
-                continue;
-            }
-            if let Some((alias, command)) = alias.split_once('=') {
-                if !command.is_empty() {
-                    self.aliases.insert(alias.into(), command.into());
-                } else {
-                    self.aliases.remove(alias);
-                }
+    pub fn update_alias(&mut self, alias_update: &str) {
+        if alias_update.is_empty() {
+            return;
+        }
+        if let Some((alias, command)) = alias_update.split_once('=') {
+            if !command.is_empty() {
+                self.aliases.insert(alias.into(), command.into());
             } else {
                 self.aliases.remove(alias);
             }
+        } else {
+            self.aliases.remove(alias_update);
         }
+    }
+
+    pub fn update_aliases(&mut self) {
+        let updates = std::mem::take(&mut self.alias_updates);
+        for update in &updates {
+            self.update_alias(update);
+        }
+        self.alias_updates = updates;
     }
 
     pub fn print_aliases(&self) {
@@ -210,48 +216,64 @@ mod tests {
     }
 
     #[test]
+    fn update_alias_add_remove() {
+        let mut args = Args::default();
+        assert_eq!(args.aliases.len(), 0);
+        args.update_alias("a=b");
+        assert_eq!(args.aliases.len(), 1);
+        assert_eq!(args.aliases.get("a").unwrap(), "b");
+
+        args.update_alias("c=d");
+        assert_eq!(args.aliases.len(), 2);
+        assert_eq!(args.aliases.get("c").unwrap(), "d");
+
+        // No value removes the alias.
+        args.update_alias("c");
+        assert_eq!(args.aliases.len(), 1);
+        assert_eq!(args.aliases.get("a").unwrap(), "b");
+
+        // Removing non-existent alias is allowed.
+        args.update_alias("z");
+        assert_eq!(args.aliases.len(), 1);
+        assert_eq!(args.aliases.get("a").unwrap(), "b");
+
+        // Update existing alias.
+        args.update_alias("a=x");
+        assert_eq!(args.aliases.len(), 1);
+        assert_eq!(args.aliases.get("a").unwrap(), "x");
+
+        // Empty value also removes the alias.
+        args.update_alias("a=");
+        assert_eq!(args.aliases.len(), 0);
+    }
+
+    // Empty string is allowed as a no-op.
+    #[test]
+    fn update_alias_empty_str() {
+        let mut args = Args::default();
+        assert_eq!(args.aliases.len(), 0);
+        args.update_alias("");
+        assert_eq!(args.aliases.len(), 0);
+    }
+
+    // The alias can contains the `=` character.
+    #[test]
+    fn update_alias_eq_in_value() {
+        let mut args = Args::default();
+        assert_eq!(args.aliases.len(), 0);
+        args.update_alias("a=b=c");
+        assert_eq!(args.aliases.len(), 1);
+        assert_eq!(args.aliases.get("a").unwrap(), "b=c");
+    }
+
+    #[test]
     fn update_aliases() {
         let mut args = Args::default();
         assert_eq!(args.aliases.len(), 0);
-
-        // Empty string is allowed as a no-op.
-        args.alias_updates = vec!["".into()];
-        args.update_aliases();
-        assert_eq!(args.aliases.len(), 0);
-
-        // The alias can contains the `=` character.
-        args.alias_updates = vec!["a=b=c".into()];
-        args.update_aliases();
-        assert_eq!(args.aliases.len(), 1);
-        assert_eq!(args.aliases.get("a").unwrap(), "b=c");
-
         args.alias_updates = vec!["a=b".into(), "c=d".into()];
         args.update_aliases();
         assert_eq!(args.aliases.len(), 2);
         assert_eq!(args.aliases.get("a").unwrap(), "b");
         assert_eq!(args.aliases.get("c").unwrap(), "d");
-
-        // No value removes the alias.
-        args.alias_updates = vec!["c".into()];
-        args.update_aliases();
-        assert_eq!(args.aliases.len(), 1);
-        assert_eq!(args.aliases.get("a").unwrap(), "b");
-
-        // Removing non-existent alias is allowed.
-        args.alias_updates = vec!["z".into()];
-        args.update_aliases();
-        assert_eq!(args.aliases.len(), 1);
-        assert_eq!(args.aliases.get("a").unwrap(), "b");
-
-        // Update existing alias.
-        args.alias_updates = vec!["a=x".into()];
-        args.update_aliases();
-        assert_eq!(args.aliases.len(), 1);
-        assert_eq!(args.aliases.get("a").unwrap(), "x");
-
-        // Empty value also removes the alias.
-        args.alias_updates = vec!["a=".into()];
-        args.update_aliases();
-        assert_eq!(args.aliases.len(), 0);
     }
 }
