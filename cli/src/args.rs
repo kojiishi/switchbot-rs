@@ -1,10 +1,7 @@
-use std::{collections::HashMap, fs, path::PathBuf, time::Duration};
-
+use crate::{Aliases, UserInput};
 use clap::Parser;
-use itertools::Itertools;
+use std::{fs, path::PathBuf, time::Duration};
 use switchbot_api::{Device, SwitchBot};
-
-use crate::UserInput;
 
 #[derive(Debug, Default, Parser, serde::Deserialize, serde::Serialize)]
 #[command(version, about)]
@@ -38,7 +35,7 @@ pub(crate) struct Args {
 
     #[arg(skip)]
     #[serde(default)]
-    pub aliases: HashMap<String, String>,
+    pub aliases: Aliases,
 
     #[serde(skip)]
     pub commands: Vec<String>,
@@ -103,48 +100,21 @@ impl Args {
             self.config_version = 1;
         }
         if self.config_version < 2 {
-            self.add_alias_if_missing("d", "devices");
+            self.aliases.insert_if_missing("d", "devices");
             self.config_version = 2;
         }
         if self.config_version < 3 {
-            self.add_alias_if_missing("h", "help");
+            self.aliases.insert_if_missing("h", "help");
             self.config_version = 3;
-        }
-    }
-
-    fn add_alias_if_missing(&mut self, alias: &str, command: &str) {
-        if !self.aliases.contains_key(alias) {
-            self.aliases.insert(alias.into(), command.into());
-        }
-    }
-
-    pub fn update_alias(&mut self, alias_update: &str) {
-        if alias_update.is_empty() {
-            return;
-        }
-        if let Some((alias, command)) = alias_update.split_once('=') {
-            if !command.is_empty() {
-                self.aliases.insert(alias.into(), command.into());
-            } else {
-                self.aliases.remove(alias);
-            }
-        } else {
-            self.aliases.remove(alias_update);
         }
     }
 
     pub fn update_aliases(&mut self) {
         let updates = std::mem::take(&mut self.alias_updates);
         for update in &updates {
-            self.update_alias(update);
+            self.aliases.update(update);
         }
         self.alias_updates = updates;
-    }
-
-    pub fn print_aliases(&self) {
-        for (alias, to) in self.aliases.iter().sorted() {
-            println!("{alias}={to}");
-        }
     }
 
     pub fn merge_config(&mut self) -> anyhow::Result<()> {
@@ -213,57 +183,6 @@ mod tests {
         assert_eq!(args.token, "test_token");
         assert!(args.aliases.is_empty());
         Ok(())
-    }
-
-    #[test]
-    fn update_alias_add_remove() {
-        let mut args = Args::default();
-        assert_eq!(args.aliases.len(), 0);
-        args.update_alias("a=b");
-        assert_eq!(args.aliases.len(), 1);
-        assert_eq!(args.aliases.get("a").unwrap(), "b");
-
-        args.update_alias("c=d");
-        assert_eq!(args.aliases.len(), 2);
-        assert_eq!(args.aliases.get("c").unwrap(), "d");
-
-        // No value removes the alias.
-        args.update_alias("c");
-        assert_eq!(args.aliases.len(), 1);
-        assert_eq!(args.aliases.get("a").unwrap(), "b");
-
-        // Removing non-existent alias is allowed.
-        args.update_alias("z");
-        assert_eq!(args.aliases.len(), 1);
-        assert_eq!(args.aliases.get("a").unwrap(), "b");
-
-        // Update existing alias.
-        args.update_alias("a=x");
-        assert_eq!(args.aliases.len(), 1);
-        assert_eq!(args.aliases.get("a").unwrap(), "x");
-
-        // Empty value also removes the alias.
-        args.update_alias("a=");
-        assert_eq!(args.aliases.len(), 0);
-    }
-
-    // Empty string is allowed as a no-op.
-    #[test]
-    fn update_alias_empty_str() {
-        let mut args = Args::default();
-        assert_eq!(args.aliases.len(), 0);
-        args.update_alias("");
-        assert_eq!(args.aliases.len(), 0);
-    }
-
-    // The alias can contains the `=` character.
-    #[test]
-    fn update_alias_eq_in_value() {
-        let mut args = Args::default();
-        assert_eq!(args.aliases.len(), 0);
-        args.update_alias("a=b=c");
-        assert_eq!(args.aliases.len(), 1);
-        assert_eq!(args.aliases.get("a").unwrap(), "b=c");
     }
 
     #[test]

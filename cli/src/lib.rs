@@ -11,6 +11,8 @@
 //! [cli-crate]: https://crates.io/crates/switchbot-cli
 //! [api-docs]: https://docs.rs/switchbot-api/
 
+mod aliases;
+pub(crate) use aliases::Aliases;
 mod args;
 pub(crate) use args::Args;
 mod cli;
