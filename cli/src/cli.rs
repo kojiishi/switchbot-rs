@@ -81,7 +81,7 @@ impl Cli {
     async fn run_core(&mut self) -> anyhow::Result<()> {
         let mut is_interactive = true;
         if !self.args.alias_updates.is_empty() {
-            self.args.print_aliases();
+            self.args.aliases.print();
             is_interactive = false;
         }
 
@@ -298,15 +298,15 @@ impl Cli {
             return Ok(true);
         }
         if text == "alias" {
-            self.args.print_aliases();
+            self.args.aliases.print();
             return Ok(true);
         }
         if let Some(rest) = text.strip_prefix("alias ") {
             let rest = rest.trim();
             if rest.is_empty() {
-                self.args.print_aliases();
+                self.args.aliases.print();
             } else {
-                self.args.update_alias(rest);
+                self.args.aliases.update(rest);
             }
             return Ok(true);
         }
