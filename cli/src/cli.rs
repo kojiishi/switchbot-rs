@@ -1,4 +1,4 @@
-use std::{future::Future, io::stdout, iter::zip};
+use std::{collections::HashMap, future::Future, io::stdout, iter::zip};
 
 use itertools::Itertools;
 use switchbot_api::{CommandRequest, Device, DeviceList, Help, SwitchBot};
@@ -133,9 +133,7 @@ impl Cli {
         }
 
         if self.current_device_indexes.len() >= 2 {
-            for (i, device) in self.current_devices_with_index() {
-                println!("{}: {device}", i + 1);
-            }
+            self.print_devices_with_index(self.current_devices_with_index());
             return;
         }
 
@@ -144,8 +142,35 @@ impl Cli {
     }
 
     fn print_all_devices(&self) {
-        for (i, device) in self.devices().iter().enumerate() {
-            println!("{}: {device}", i + 1);
+        self.print_devices_with_index(self.devices().iter().enumerate());
+    }
+
+    fn print_devices_with_index<'a>(&self, iter: impl IntoIterator<Item = (usize, &'a Device)>) {
+        let reverse_aliases = self.args.aliases.reverse_map();
+        for (i, device) in iter {
+            self.print_device(device, i, &reverse_aliases);
+        }
+    }
+
+    fn print_device(
+        &self,
+        device: &Device,
+        index: usize,
+        reverse_aliases: &HashMap<&str, Vec<&str>>,
+    ) {
+        let index = index + 1;
+        let mut aliases: Vec<&str> = Vec::new();
+        if let Some(list) = reverse_aliases.get(index.to_string().as_str()) {
+            aliases.extend(list);
+        }
+        if let Some(list) = reverse_aliases.get(device.device_id()) {
+            aliases.extend(list);
+        }
+        if !aliases.is_empty() {
+            aliases.sort();
+            println!("{index}: {}={device}", aliases.iter().join("="));
+        } else {
+            println!("{index}: {device}");
         }
     }
 

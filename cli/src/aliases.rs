@@ -57,6 +57,14 @@ impl Aliases {
         self.0.remove(k)
     }
 
+    pub fn reverse_map(&self) -> HashMap<&str, Vec<&str>> {
+        let mut map: HashMap<&str, Vec<&str>> = HashMap::new();
+        for (alias, value) in self.iter() {
+            map.entry(value.as_str()).or_default().push(alias.as_str());
+        }
+        map
+    }
+
     pub fn print(&self) {
         for (alias, to) in self.iter().sorted() {
             println!("{alias}={to}");
