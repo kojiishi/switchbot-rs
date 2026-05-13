@@ -54,7 +54,7 @@ impl Display for CommandHelp {
 pub struct Help {
     commands: HashMap<String, Vec<CommandHelp>>,
     commands_ir: HashMap<String, Vec<CommandHelp>>,
-    device_name_by_type: HashMap<String, String>,
+    device_type_aliases: HashMap<String, Vec<String>>,
 }
 
 impl Debug for Help {
@@ -64,8 +64,8 @@ impl Debug for Help {
         writeln!(f, "commands (IR):")?;
         self.fmt_commands(&self.commands_ir, f)?;
         writeln!(f, "aliases:")?;
-        for (device_type, device_name) in &self.device_name_by_type {
-            writeln!(f, "- {device_type} -> {device_name}")?;
+        for (device_type, aliases) in &self.device_type_aliases {
+            writeln!(f, "- {device_type} -> {aliases:?}")?;
         }
         Ok(())
     }
@@ -79,6 +79,14 @@ impl Help {
         let mut loader = HelpLoader::default();
         loader.load().await?;
         Ok(loader.help)
+    }
+
+    /// Adds a device type alias.
+    fn add_device_type_alias(&mut self, device_type: String, device_name: String) {
+        let aliases = self.device_type_aliases.entry(device_type).or_default();
+        if !aliases.contains(&device_name) {
+            aliases.push(device_name);
+        }
     }
 
     /// Get a list of [`CommandHelp`] for a [`Device`].
@@ -107,10 +115,12 @@ impl Help {
         if let Some(commands) = self.commands.get(device_type) {
             return commands;
         }
-        if let Some(alias) = self.device_name_by_type.get(device_type)
-            && let Some(commands) = self.commands.get(alias)
-        {
-            return commands;
+        if let Some(aliases) = self.device_type_aliases.get(device_type) {
+            for alias in aliases {
+                if let Some(commands) = self.commands.get(alias) {
+                    return commands;
+                }
+            }
         }
         CommandHelp::empty_vec()
     }
@@ -306,8 +316,7 @@ impl HelpLoader {
             return;
         }
         self.help
-            .device_name_by_type
-            .insert(device_type.into(), self.device_name.clone());
+            .add_device_type_alias(device_type.into(), self.device_name.clone());
     }
 
     fn flush_command_help(&mut self) {
@@ -360,5 +369,21 @@ mod tests {
         assert_eq!(section, Section::Initial);
         assert!(section.update("## Devices"));
         assert_eq!(section, Section::Devices);
+    }
+
+    #[test]
+    fn multiple_aliases() {
+        let mut help = Help::default();
+        help.commands.insert(
+            "TargetDevice".into(),
+            vec![CommandHelp {
+                command: CommandRequest::default(),
+                description: Markdown::new("test"),
+            }],
+        );
+        help.add_device_type_alias("AliasType".into(), "NonExistentDevice".into());
+        help.add_device_type_alias("AliasType".into(), "TargetDevice".into());
+        let helps = help.command_helps_by_device_type("AliasType");
+        assert_eq!(helps.len(), 1);
     }
 }
