@@ -139,6 +139,8 @@ impl Help {
     }
 
     fn finalize(&mut self) {
+        self.add_device_type_alias("Standing Fan".into(), "Standing Circulator Fan".into());
+
         const OTHER_KEY: &str = "Others";
         if let Some(mut others) = self.commands_ir.remove(OTHER_KEY) {
             for help in &mut others {
