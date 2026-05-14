@@ -1,5 +1,8 @@
 use itertools::Itertools;
-use std::collections::{HashMap, hash_map};
+use std::{
+    borrow::Cow,
+    collections::{HashMap, hash_map},
+};
 
 #[derive(Debug, Default, Clone, serde::Deserialize, serde::Serialize, PartialEq, Eq)]
 #[serde(transparent)]
@@ -63,6 +66,18 @@ impl Aliases {
             map.entry(value.as_str()).or_default().push(alias.as_str());
         }
         map
+    }
+
+    pub fn expand<'a>(&self, text: &'a str) -> Cow<'a, str> {
+        if let Some(alias) = self.get(text) {
+            return Cow::Owned(alias.clone());
+        }
+        if let Some(pos) = text.find([' ', ':'])
+            && let Some(alias) = self.get(&text[..pos])
+        {
+            return Cow::Owned([alias, &text[pos..]].concat());
+        }
+        Cow::Borrowed(text)
     }
 
     pub fn print(&self) {
@@ -152,5 +167,27 @@ mod tests {
         assert_eq!(aliases.len(), 2);
         assert_eq!(aliases.get("key1").unwrap(), "value1");
         assert_eq!(aliases.get("key2").unwrap(), "value2");
+    }
+
+    #[test]
+    fn expand() {
+        let mut aliases = Aliases::default();
+        aliases.insert("a".into(), "x".into());
+        assert_eq!(aliases.expand("a"), "x");
+        assert_eq!(aliases.expand("z"), "z");
+
+        // Expands the first word.
+        assert_eq!(aliases.expand("a b"), "x b");
+        assert_eq!(aliases.expand("a:b"), "x:b");
+
+        // The rests are retained, even if they are aliases.
+        assert_eq!(aliases.expand("a a"), "x a");
+        assert_eq!(aliases.expand("a:a"), "x:a");
+
+        // Even if they have separators.
+        assert_eq!(aliases.expand("a  b"), "x  b");
+        assert_eq!(aliases.expand("a :b"), "x :b");
+        assert_eq!(aliases.expand("a: b"), "x: b");
+        assert_eq!(aliases.expand("a::b"), "x::b");
     }
 }

@@ -1566,7 +1566,7 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
 name = "switchbot-api"
-version = "0.1.15"
+version = "0.1.16"
 dependencies = [
  "anyhow",
  "base64",
@@ -1583,7 +1583,7 @@ dependencies = [
 
 [[package]]
 name = "switchbot-cli"
-version = "0.1.15"
+version = "0.1.16"
 dependencies = [
  "anyhow",
  "async-scoped",
