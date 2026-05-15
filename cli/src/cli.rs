@@ -210,16 +210,9 @@ impl Cli {
         Ok(())
     }
 
-    async fn execute(&mut self, text: &str) -> anyhow::Result<bool> {
-        if let Some(alias) = self.args.aliases.get(text) {
-            log::debug!(r#"alias: "{text}" -> "{alias}""#);
-            return self.execute_no_alias(&alias.clone()).await;
-        }
-        self.execute_no_alias(text).await
-    }
-
     /// Returns `true` if the current devices are changed.
-    async fn execute_no_alias(&mut self, text: &str) -> anyhow::Result<bool> {
+    async fn execute(&mut self, text: &str) -> anyhow::Result<bool> {
+        let text = &self.args.aliases.expand(text);
         let set_device_result = self.set_current_devices(text);
         if set_device_result.is_ok() {
             return Ok(true);
