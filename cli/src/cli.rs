@@ -10,6 +10,7 @@ pub struct Cli {
     args: Args,
     switch_bot: SwitchBot,
     current_device_indexes: Vec<usize>,
+    is_current_deivces_changed: bool,
     help: Option<Help>,
 }
 
@@ -117,8 +118,12 @@ impl Cli {
                     break;
                 }
                 _ => match self.execute(input_text).await {
-                    Ok(true) => self.print_devices(),
-                    Ok(false) => {}
+                    Ok(_) => {
+                        if self.is_current_deivces_changed {
+                            self.is_current_deivces_changed = false;
+                            self.print_devices();
+                        }
+                    }
                     Err(error) => log::error!("{error}"),
                 },
             }
@@ -211,24 +216,24 @@ impl Cli {
     }
 
     /// Returns `true` if the current devices are changed.
-    async fn execute(&mut self, text: &str) -> anyhow::Result<bool> {
+    async fn execute(&mut self, text: &str) -> anyhow::Result<()> {
         let text = &self.args.aliases.expand(text);
         let Err(set_device_err) = self.set_current_devices(text) else {
-            return Ok(true);
+            return Ok(());
         };
         if self.execute_global_builtin_command(text)? {
-            return Ok(false);
+            return Ok(());
         }
         if self.has_current_device() {
             if self.execute_if_expr(text).await? {
-                return Ok(false);
+                return Ok(());
             }
             if text == "help" {
                 self.print_help().await?;
-                return Ok(false);
+                return Ok(());
             }
             self.execute_command(text).await?;
-            return Ok(false);
+            return Ok(());
         }
         Err(set_device_err)
     }
@@ -236,6 +241,7 @@ impl Cli {
     fn set_current_devices(&mut self, text: &str) -> anyhow::Result<()> {
         self.current_device_indexes = self.parse_device_indexes(text)?;
         log::debug!("current_device_indexes={:?}", self.current_device_indexes);
+        self.is_current_deivces_changed = true;
         Ok(())
     }
 
