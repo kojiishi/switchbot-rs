@@ -213,10 +213,9 @@ impl Cli {
     /// Returns `true` if the current devices are changed.
     async fn execute(&mut self, text: &str) -> anyhow::Result<bool> {
         let text = &self.args.aliases.expand(text);
-        let set_device_result = self.set_current_devices(text);
-        if set_device_result.is_ok() {
+        let Err(set_device_err) = self.set_current_devices(text) else {
             return Ok(true);
-        }
+        };
         if self.execute_global_builtin_command(text)? {
             return Ok(false);
         }
@@ -231,7 +230,7 @@ impl Cli {
             self.execute_command(text).await?;
             return Ok(false);
         }
-        Err(set_device_result.unwrap_err())
+        Err(set_device_err)
     }
 
     fn set_current_devices(&mut self, text: &str) -> anyhow::Result<()> {
