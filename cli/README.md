@@ -307,11 +307,11 @@ switchbot -a t=if/power=on/off/on 4 t 2 t
 [aliases]: #aliases
 
 Some commands have aliases for convenience.
-
 By default, following aliases are defined.
 * `on` for `turnOn`.
 * `off` for `turnOff`.
 * `d` for `devices`.
+* `h` for `help`.
 
 With these aliases,
 the following example sends the `turnOn` command to the device 2.
@@ -324,9 +324,12 @@ Both commands and devices can be aliased.
 ```
 Device> alias fan=777888999
 Device> alias hot=fanSpeed:100
-Device> fan hot
+Device> fan
+Command> hot
+Command>
 Device> alias lights=2,5,6
-Device> lights on
+Device> lights
+Command> on
 ```
 To remove existing aliases, please omit the value.
 ```
