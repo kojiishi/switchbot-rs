@@ -326,12 +326,9 @@ Both commands and devices can be aliased.
 ```
 Device> alias fan=777888999
 Device> alias hot=fanSpeed:100
-Device> fan
-Command> hot
-Command>
-Device> alias lights=2,5,6
-Device> lights
-Command> on
+Device> fan hot
+Command> alias lights=2,5,6
+Command> lights on
 ```
 To remove existing aliases, please omit the value.
 ```
