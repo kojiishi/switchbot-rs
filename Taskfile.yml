@@ -5,21 +5,41 @@ version: '3'
 tasks:
   default:
     deps: [check]
+
   check:
-    - task: test
-    - task: lint
-    - task: fmt
-    - git diff --exit-code
-  fix: cargo clippy --fix {{.CLIPPY}} {{.CLI_ARGS}}
+    - task: tests
+    - task: lints
+    - task: fmtcheck
+
+  fix: cargo clippy --fix {{.TARGET}} {{.FEATURE}} {{.CLIPPY}} {{.CLI_ARGS}}
   fmt: cargo fmt {{.FMT}} {{.CLI_ARGS}}
-  lint: cargo clippy {{.CLIPPY}} {{.CLI_ARGS}}
+  fmtcheck: cargo fmt --check {{.FMT}} {{.CLI_ARGS}}
+  lint: cargo clippy {{.TARGET}} {{.FEATURE}} {{.CLIPPY}} {{.CLI_ARGS}}
   test:
     cmds:
-      - cargo test {{.TEST}} {{.CLI_ARGS}}
+      - cargo test {{.TARGET}} {{.FEATURE}} {{.TEST}} {{.CLI_ARGS}}
     env:
       RUST_BACKTRACE: 1
 
+  lints:
+    cmds:
+      - task: run
+        vars: { TASK: lint }
+  tests:
+    cmds:
+      - task: run
+        vars: { TASK: test }
+  run:
+    cmds:
+      - for: { var: FEATURES }
+        task: '{{.TASK}}'
+        vars:
+          FEATURE: '{{.ITEM}}'
+
 vars:
-  CLIPPY: '--all-targets --all-features -- -Dwarnings'
+  CLIPPY: '-- -Dwarnings'
+  FEATURE: ''
+  FEATURES: ['']
   FMT: '--all'
+  TARGET: '--all-targets'
   TEST: ''
