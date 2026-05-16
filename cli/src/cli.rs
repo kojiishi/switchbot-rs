@@ -217,13 +217,25 @@ impl Cli {
 
     /// Returns `true` if the current devices are changed.
     async fn execute(&mut self, text: &str) -> anyhow::Result<()> {
-        let text = &self.args.aliases.expand(text);
+        let expanded = self.args.aliases.expand(text);
+        let mut text = expanded.as_ref();
         let Err(set_device_err) = self.set_current_devices(text) else {
             return Ok(());
         };
         if self.execute_global_builtin_command(text)? {
             return Ok(());
         }
+
+        // If the first word is devices, set current devices and execute the rests.
+        let rests_expanded;
+        if let Some(pos) = text.find(' ')
+            && self.set_current_devices(&text[..pos]).is_ok()
+        {
+            text = text[pos + 1..].trim_start();
+            rests_expanded = self.args.aliases.expand(text);
+            text = rests_expanded.as_ref();
+        }
+
         if self.has_current_device() {
             if self.execute_if_expr(text).await? {
                 return Ok(());
