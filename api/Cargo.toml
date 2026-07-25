@@ -13,7 +13,7 @@ license.workspace = true
 
 [dependencies]
 anyhow = { version = "1.0.102", features = ["backtrace"] }
-base64 = "0.22.1"
+base64 = "0.23.0"
 hmac = "0.13.0"
 log = "0.4.32"
 regex = "1.12.3"
