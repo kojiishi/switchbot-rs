@@ -1,0 +1,12 @@
+[project]
+name = "switchbot-help-generator"
+version = "0.1.0"
+description = "Generate SwitchBotAPI help JSON from Markdown files."
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "pyrefly",
+]

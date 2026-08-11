@@ -1,0 +1,2908 @@
+{
+  "commands": {
+    "Video Doorbell": [
+      {
+        "command": {
+          "command": "enableMotionDetection",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set to enabled state"
+      },
+      {
+        "command": {
+          "command": "disableMotionDetection",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set to disabled state"
+      }
+    ],
+    "Air Purifier PM2.5": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "{\"mode\": mode_int, \"fanGear\": fan_level_int}",
+          "commandType": "command"
+        },
+        "description": "set the mode. `mode_int`, `1`, normal or fan mode; `2`, auto mode; `3`, sleep mode; `4`, pet mode; `fan_level_int`, the fan level can only be set if `mode_int` is set to `1`, `1~3`"
+      },
+      {
+        "command": {
+          "command": "setChildLock",
+          "parameter": "`0` or `1`",
+          "commandType": "command"
+        },
+        "description": "enable or disable child lock. `1`, enable; `0`, disable"
+      }
+    ],
+    "Air Purifier Table PM2.5": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "{\"mode\": mode_int, \"fanGear\": fan_level_int}",
+          "commandType": "command"
+        },
+        "description": "set the mode. `mode_int`, `1`, normal or fan mode; `2`, auto mode; `3`, sleep mode; `4`, pet mode; `fan_level_int`, the fan level can only be set if `mode_int` is set to `1`, `1~3`"
+      },
+      {
+        "command": {
+          "command": "setChildLock",
+          "parameter": "`0` or `1`",
+          "commandType": "command"
+        },
+        "description": "enable or disable child lock. `1`, enable; `0`, disable"
+      }
+    ],
+    "Air Purifier Table VOC": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "{\"mode\": mode_int, \"fanGear\": fan_level_int}",
+          "commandType": "command"
+        },
+        "description": "set the mode. `mode_int`, `1`, normal or fan mode; `2`, auto mode; `3`, sleep mode; `4`, pet mode; `fan_level_int`, the fan level can only be set if `mode_int` is set to `1`, `1~3`"
+      },
+      {
+        "command": {
+          "command": "setChildLock",
+          "parameter": "`0` or `1`",
+          "commandType": "command"
+        },
+        "description": "enable or disable child lock. `1`, enable; `0`, disable"
+      }
+    ],
+    "Air Purifier VOC": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "{\"mode\": mode_int, \"fanGear\": fan_level_int}",
+          "commandType": "command"
+        },
+        "description": "set the mode. `mode_int`, `1`, normal or fan mode; `2`, auto mode; `3`, sleep mode; `4`, pet mode; `fan_level_int`, the fan level can only be set if `mode_int` is set to `1`, `1~3`"
+      },
+      {
+        "command": {
+          "command": "setChildLock",
+          "parameter": "`0` or `1`",
+          "commandType": "command"
+        },
+        "description": "enable or disable child lock. `1`, enable; `0`, disable"
+      }
+    ],
+    "Battery Circulator Fan 2 Pro": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "setNightLightMode",
+          "parameter": "`off`, `0`, or `1`",
+          "commandType": "command"
+        },
+        "description": "`off`, turn off; `0`, bright; `1`, soft"
+      },
+      {
+        "command": {
+          "command": "setWindMode",
+          "parameter": "`direct`, `natural`, `sleep`, or `hurricane`",
+          "commandType": "command"
+        },
+        "description": "set fan mode"
+      },
+      {
+        "command": {
+          "command": "setWindSpeed",
+          "parameter": "`{1-100}`, e.g. `10`",
+          "commandType": "command"
+        },
+        "description": "set fan speed"
+      }
+    ],
+    "Battery Circulator Fan": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set to ON state"
+      },
+      {
+        "command": {
+          "command": "setNightLightMode",
+          "parameter": "`off`, `1`, or `2`",
+          "commandType": "command"
+        },
+        "description": "`off`, turn off nightlight,<br />`1`, bright <br />`2`, dim"
+      },
+      {
+        "command": {
+          "command": "setWindMode",
+          "parameter": "`direct`, `natural`, `sleep`, or `baby`",
+          "commandType": "command"
+        },
+        "description": "Set fan mode. `direct`: direct mode. `natural`: natural mode. `sleep`: sleep mode. `baby`: ultra quiet mode"
+      },
+      {
+        "command": {
+          "command": "setWindSpeed",
+          "parameter": "`{1-100}` e.g. `10`",
+          "commandType": "command"
+        },
+        "description": "Set fan speed.1~100"
+      }
+    ],
+    "Battery Circulator Fann": [
+      {
+        "command": {
+          "command": "closeDelay",
+          "parameter": "`{1-36000}` e.g. `10`",
+          "commandType": "command"
+        },
+        "description": "Set fan close time"
+      }
+    ],
+    "Circulator Fan": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set to ON state"
+      },
+      {
+        "command": {
+          "command": "setNightLightMode",
+          "parameter": "`off`, `1`, or `2`",
+          "commandType": "command"
+        },
+        "description": "`off`, turn off nightlight,<br />`1`, bright <br />`2`, dim"
+      },
+      {
+        "command": {
+          "command": "setWindMode",
+          "parameter": "`direct`, `natural`, `sleep`, or `baby`",
+          "commandType": "command"
+        },
+        "description": "Set fan mode. `direct`: direct mode. `natural`: natural mode. `sleep`: sleep mode. `baby`: ultra quiet mode"
+      },
+      {
+        "command": {
+          "command": "setWindSpeed",
+          "parameter": "`{1-100}` e.g. `10`",
+          "commandType": "command"
+        },
+        "description": "Set fan speed.1~100"
+      }
+    ],
+    "Circulator Fann": [
+      {
+        "command": {
+          "command": "closeDelay",
+          "parameter": "`{1-36000}` e.g. `10`",
+          "commandType": "command"
+        },
+        "description": "Set fan close time"
+      }
+    ],
+    "Humidifier2": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "{\"mode\": mode_int, \"targetHumidify\": humidity_int}",
+          "commandType": "command"
+        },
+        "description": "set the mode. `mode_int`, `1`, level 4; `2`, level 3; `3`, level 2; `4`, level 1; `5`, humidity mode; `6`, sleep mode; `7`, auto mode; `8`, drying mode; `targetHumidify`, the target humidity level in percentage, `0~100`."
+      },
+      {
+        "command": {
+          "command": "setChildLock",
+          "parameter": "`true` or `false`",
+          "commandType": "command"
+        },
+        "description": "enable or disable child lock. `true`, enable; `false`, disable"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "{\"mode\": mode_int, \"targetHumidify\": humidity_int}",
+          "commandType": "command"
+        },
+        "description": "set the mode. `mode_int`, `1`, level 4; `2`, level 3; `3`, level 2; `4`, level 1; `5`, humidity mode; `6`, sleep mode; `7`, auto mode; `8`, drying mode; `targetHumidify`, the target humidity level in percentage, `0~100`."
+      },
+      {
+        "command": {
+          "command": "setChildLock",
+          "parameter": "`true` or `false`",
+          "commandType": "command"
+        },
+        "description": "enable or disable child lock. `true`, enable; `false`, disable"
+      }
+    ],
+    "Humidifier": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "`auto` or `101` or<br /> `102` or `103` or `{0~100}`",
+          "commandType": "command"
+        },
+        "description": "auto, set to Auto Mode,<br />101, set atomization efficiency to 34%,<br />102, set atomization efficiency to 67%,<br />103, set atomization efficiency to 100%"
+      }
+    ],
+    "Smart Radiator Thermostat": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "`0~5`",
+          "commandType": "command"
+        },
+        "description": "set the switch mode. `0`,`0`, schedule mode; `1`,manual mode; `2`, power off mode; `3`, energy saving mode; `4`, comfort mode;`5`, quick heating mode"
+      },
+      {
+        "command": {
+          "command": "setManualModeTemperature",
+          "parameter": "`4~35`",
+          "commandType": "command"
+        },
+        "description": "set the radiator thermostat temperature. Temperature range: 4–35 °C (inclusive)"
+      }
+    ],
+    "Standing Circulator Fan": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set to ON state"
+      },
+      {
+        "command": {
+          "command": "setNightLightMode",
+          "parameter": "`off`, `1`, or `2`",
+          "commandType": "command"
+        },
+        "description": "`off`, turn off nightlight,<br />`1`, bright <br />`2`, dim"
+      },
+      {
+        "command": {
+          "command": "setWindMode",
+          "parameter": "`direct`, `natural`, `sleep`, or `baby`",
+          "commandType": "command"
+        },
+        "description": "Set fan mode. `direct`: direct mode. `natural`: natural mode. `sleep`: sleep mode. `baby`: ultra quiet mode"
+      },
+      {
+        "command": {
+          "command": "setWindSpeed",
+          "parameter": "`{1-100}` e.g. `10`",
+          "commandType": "command"
+        },
+        "description": "Set fan speed.1~100"
+      }
+    ],
+    "Standing Circulator Fann": [
+      {
+        "command": {
+          "command": "closeDelay",
+          "parameter": "`{1-36000}` e.g. `10`",
+          "commandType": "command"
+        },
+        "description": "Set fan close time"
+      }
+    ],
+    "Blind Tilt": [
+      {
+        "command": {
+          "command": "setPosition",
+          "parameter": "direction;position<br />e.g. `up;60`",
+          "commandType": "command"
+        },
+        "description": "direction: up/down<br />position: 0~100 (0 means closed, 100 means open, it MUST be set to a multiple of 2. e.g. `up;48` or `up; 36`)"
+      },
+      {
+        "command": {
+          "command": "fullyOpen",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set the position of Blind Tilt to open, equivalent to setting the position to `up;100` or `down;100`"
+      },
+      {
+        "command": {
+          "command": "closeUp",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set the position of Blind Tilt to closed up, equivalent to setting the position to `up;0`"
+      },
+      {
+        "command": {
+          "command": "closeDown",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Set the position of Blind Tilt to closed down, equivalent to setting the position to `down;0`"
+      }
+    ],
+    "Curtain 3": [
+      {
+        "command": {
+          "command": "setPosition",
+          "parameter": "index0,mode0,position0<br />e.g. `0,ff,80`",
+          "commandType": "command"
+        },
+        "description": "mode: 0 (Performance Mode), 1 (Silent Mode), ff (default mode) <br />position: 0~100 (0 means open, 100 means closed)"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "equivalent to set position to 100"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "equivalent to set position to 0"
+      },
+      {
+        "command": {
+          "command": "pause",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to PAUSE state"
+      }
+    ],
+    "Curtain": [
+      {
+        "command": {
+          "command": "setPosition",
+          "parameter": "index0,mode0,position0<br />e.g. `0,ff,80`",
+          "commandType": "command"
+        },
+        "description": "mode: 0 (Performance Mode), 1 (Silent Mode), ff (default mode) <br />position: 0~100 (0 means open, 100 means closed)"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "equivalent to set position to 100"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "equivalent to set position to 0"
+      },
+      {
+        "command": {
+          "command": "pause",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to PAUSE state"
+      }
+    ],
+    "Roller Shade": [
+      {
+        "command": {
+          "command": "setPosition",
+          "parameter": "`0~100`",
+          "commandType": "command"
+        },
+        "description": "`0`, open; `100`, closed"
+      }
+    ],
+    "Candle Warmer Lamp": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{0-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      }
+    ],
+    "Ceiling Light Pro": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{1-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColorTemperature",
+          "parameter": "`{2700-6500}`",
+          "commandType": "command"
+        },
+        "description": "set the color temperature"
+      }
+    ],
+    "Ceiling Light": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{1-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColorTemperature",
+          "parameter": "`{2700-6500}`",
+          "commandType": "command"
+        },
+        "description": "set the color temperature"
+      }
+    ],
+    "Color Bulb": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{1-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColor",
+          "parameter": "`\"{0-255}:{0-255}:{0-255}\"`",
+          "commandType": "command"
+        },
+        "description": "set RGB color value"
+      },
+      {
+        "command": {
+          "command": "setColorTemperature",
+          "parameter": "`{2700-6500}`",
+          "commandType": "command"
+        },
+        "description": "set color temperature"
+      }
+    ],
+    "Floor Lamp": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{0-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColor",
+          "parameter": "`\"{0-255}:{0-255}:{0-255}\"`",
+          "commandType": "command"
+        },
+        "description": "set RGB color value"
+      },
+      {
+        "command": {
+          "command": "setColorTemperature",
+          "parameter": "`{2700-6500}`",
+          "commandType": "command"
+        },
+        "description": "set color temperature"
+      }
+    ],
+    "Permanent Outdoor Lights": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{0-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColorTemperature",
+          "parameter": "`{2700-6500}`",
+          "commandType": "command"
+        },
+        "description": "set color temperature"
+      },
+      {
+        "command": {
+          "command": "setColor",
+          "parameter": "`\"{0-255}:{0-255}:{0-255}\"`",
+          "commandType": "command"
+        },
+        "description": "set RGB color value"
+      }
+    ],
+    "RGBIC Neon Rope Light": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{0-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColor",
+          "parameter": "`\"{0-255}:{0-255}:{0-255}\"`",
+          "commandType": "command"
+        },
+        "description": "set RGB color value"
+      }
+    ],
+    "RGBIC Neon Wire Rope Light": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{0-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColor",
+          "parameter": "`\"{0-255}:{0-255}:{0-255}\"`",
+          "commandType": "command"
+        },
+        "description": "set RGB color value"
+      }
+    ],
+    "RGBICWW Ceiling Light": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "turn on all lights"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "turn off all lights"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle all lights"
+      },
+      {
+        "command": {
+          "command": "turnOnMainLight",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "turn on main light"
+      },
+      {
+        "command": {
+          "command": "turnOffMainLight",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "turn off main light"
+      },
+      {
+        "command": {
+          "command": "turnOnColorLight",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "turn on color light"
+      },
+      {
+        "command": {
+          "command": "turnOffColorLight",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "turn off color light"
+      },
+      {
+        "command": {
+          "command": "setMainLightBrightness",
+          "parameter": "`{1-100}`",
+          "commandType": "command"
+        },
+        "description": "set main light brightness"
+      },
+      {
+        "command": {
+          "command": "setMainLightColorTemp",
+          "parameter": "`{2700-6500}`",
+          "commandType": "command"
+        },
+        "description": "set main light color temp"
+      },
+      {
+        "command": {
+          "command": "setColorLightBrightness",
+          "parameter": "`{1-100}`",
+          "commandType": "command"
+        },
+        "description": "set color light brightness"
+      },
+      {
+        "command": {
+          "command": "setColorLightRGB",
+          "parameter": "`\"{0-255}:{0-255}:{0-255}\"`",
+          "commandType": "command"
+        },
+        "description": "set color light RGB value"
+      }
+    ],
+    "RGBICWW Floor Lamp": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{0-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColorTemperature",
+          "parameter": "`{2700-6500}`",
+          "commandType": "command"
+        },
+        "description": "set color temperature"
+      },
+      {
+        "command": {
+          "command": "setColor",
+          "parameter": "`\"{0-255}:{0-255}:{0-255}\"`",
+          "commandType": "command"
+        },
+        "description": "set RGB color value"
+      }
+    ],
+    "RGBICWW Strip Light": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{0-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColorTemperature",
+          "parameter": "`{2700-6500}`",
+          "commandType": "command"
+        },
+        "description": "set color temperature"
+      },
+      {
+        "command": {
+          "command": "setColor",
+          "parameter": "`\"{0-255}:{0-255}:{0-255}\"`",
+          "commandType": "command"
+        },
+        "description": "set RGB color value"
+      }
+    ],
+    "Strip Light 3": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{0-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColor",
+          "parameter": "`\"{0-255}:{0-255}:{0-255}\"`",
+          "commandType": "command"
+        },
+        "description": "set RGB color value"
+      },
+      {
+        "command": {
+          "command": "setColorTemperature",
+          "parameter": "`{2700-6500}`",
+          "commandType": "command"
+        },
+        "description": "set color temperature"
+      }
+    ],
+    "Strip Light": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setBrightness",
+          "parameter": "`{1-100}`",
+          "commandType": "command"
+        },
+        "description": "set brightness"
+      },
+      {
+        "command": {
+          "command": "setColor",
+          "parameter": "`\"{0-255}:{0-255}:{0-255}\"`",
+          "commandType": "command"
+        },
+        "description": "set RGB color value"
+      }
+    ],
+    "Keypad Touch": [
+      {
+        "command": {
+          "command": "createKey",
+          "parameter": "{ \"name\": passcode \\_name_str, \"type\": passcode_type_str, \"password\": passcode_str, \"startTime\": valid_from_long, \"endTime\": valid_to_long }",
+          "commandType": "command"
+        },
+        "description": "create a new passcode"
+      },
+      {
+        "command": {
+          "command": "deleteKey",
+          "parameter": "{ \"id\": passcode_id_int }",
+          "commandType": "command"
+        },
+        "description": "delete an existing passcode"
+      }
+    ],
+    "Keypad Vision Pro": [
+      {
+        "command": {
+          "command": "createKey",
+          "parameter": "{ \"name\": passcode \\_name_str, \"type\": passcode_type_str, \"password\": passcode_str, \"startTime\": valid_from_long, \"endTime\": valid_to_long }",
+          "commandType": "command"
+        },
+        "description": "create a new passcode"
+      },
+      {
+        "command": {
+          "command": "deleteKey",
+          "parameter": "{ \"id\": passcode_id_int }",
+          "commandType": "command"
+        },
+        "description": "delete an existing passcode"
+      }
+    ],
+    "Keypad Vision": [
+      {
+        "command": {
+          "command": "createKey",
+          "parameter": "{ \"name\": passcode \\_name_str, \"type\": passcode_type_str, \"password\": passcode_str, \"startTime\": valid_from_long, \"endTime\": valid_to_long }",
+          "commandType": "command"
+        },
+        "description": "create a new passcode"
+      },
+      {
+        "command": {
+          "command": "deleteKey",
+          "parameter": "{ \"id\": passcode_id_int }",
+          "commandType": "command"
+        },
+        "description": "delete an existing passcode"
+      }
+    ],
+    "Keypad": [
+      {
+        "command": {
+          "command": "createKey",
+          "parameter": "{ \"name\": passcode \\_name_str, \"type\": passcode_type_str, \"password\": passcode_str, \"startTime\": valid_from_long, \"endTime\": valid_to_long }",
+          "commandType": "command"
+        },
+        "description": "create a new passcode"
+      },
+      {
+        "command": {
+          "command": "deleteKey",
+          "parameter": "{ \"id\": passcode_id_int }",
+          "commandType": "command"
+        },
+        "description": "delete an existing passcode"
+      }
+    ],
+    "Lock Lite": [
+      {
+        "command": {
+          "command": "lock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to locked position"
+      },
+      {
+        "command": {
+          "command": "unlock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to unlocked position"
+      }
+    ],
+    "Smart Lock Pro Wifi": [
+      {
+        "command": {
+          "command": "lock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to locked position"
+      },
+      {
+        "command": {
+          "command": "unlock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to unlocked position"
+      },
+      {
+        "command": {
+          "command": "nightLatchUnlock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "unlock night latch (EU)"
+      },
+      {
+        "command": {
+          "command": "deadbolt",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "disengage deadbolt or latch"
+      }
+    ],
+    "Lock Pro": [
+      {
+        "command": {
+          "command": "lock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to locked position"
+      },
+      {
+        "command": {
+          "command": "unlock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to unlocked position"
+      },
+      {
+        "command": {
+          "command": "deadbolt",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "disengage deadbolt or latch"
+      }
+    ],
+    "Lock Ultra": [
+      {
+        "command": {
+          "command": "lock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to locked position"
+      },
+      {
+        "command": {
+          "command": "unlock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to unlocked position"
+      },
+      {
+        "command": {
+          "command": "deadbolt",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "disengage deadbolt or latch"
+      }
+    ],
+    "Lock Vision Pro": [
+      {
+        "command": {
+          "command": "lock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to locked position"
+      },
+      {
+        "command": {
+          "command": "unlock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to unlocked position"
+      },
+      {
+        "command": {
+          "command": "deleteKey",
+          "parameter": "`{\"id\": \"\"}`",
+          "commandType": "command"
+        },
+        "description": "delete a passcode by id"
+      },
+      {
+        "command": {
+          "command": "createKey",
+          "parameter": "`{\"name\":\"\",\"type\":\"\",\"password\":\"\",\"startTime\":0,\"endTime\":0}`",
+          "commandType": "command"
+        },
+        "description": "create a passcode"
+      }
+    ],
+    "Lock Vision": [
+      {
+        "command": {
+          "command": "lock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to locked position"
+      },
+      {
+        "command": {
+          "command": "unlock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to unlocked position"
+      },
+      {
+        "command": {
+          "command": "deleteKey",
+          "parameter": "`{\"id\": \"\"}`",
+          "commandType": "command"
+        },
+        "description": "delete a passcode by id"
+      },
+      {
+        "command": {
+          "command": "createKey",
+          "parameter": "`{\"name\":\"\",\"type\":\"\",\"password\":\"\",\"startTime\":0,\"endTime\":0}`",
+          "commandType": "command"
+        },
+        "description": "create a passcode"
+      }
+    ],
+    "Lock": [
+      {
+        "command": {
+          "command": "lock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to locked position"
+      },
+      {
+        "command": {
+          "command": "unlock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rotate to unlocked position"
+      },
+      {
+        "command": {
+          "command": "deadbolt",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "disengage deadbolt or latch"
+      }
+    ],
+    "AI Art Frame": [
+      {
+        "command": {
+          "command": "next",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Switch to the next image"
+      },
+      {
+        "command": {
+          "command": "previous",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Switch to the previous image"
+      },
+      {
+        "command": {
+          "command": "uploadImage",
+          "parameter": "`{\"imageUrl\":\"https://...\"}` OR `{\"imageBase64\":\"data:image/jpeg;base64,...\"}`",
+          "commandType": "command"
+        },
+        "description": "Upload an image (choose one of imageUrl / imageBase64)"
+      }
+    ],
+    "Bot": [
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "press",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "trigger press"
+      }
+    ],
+    "Kata Friends": [
+      {
+        "command": {
+          "command": "mode",
+          "parameter": "`Normal`, `Standby`, or `Sleep`",
+          "commandType": "command"
+        },
+        "description": "set mode"
+      },
+      {
+        "command": {
+          "command": "childLock",
+          "parameter": "`on` or `off`",
+          "commandType": "command"
+        },
+        "description": "set child lock state"
+      },
+      {
+        "command": {
+          "command": "backHome",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "return home"
+      },
+      {
+        "command": {
+          "command": "pictureTaking",
+          "parameter": "`on` or `off`",
+          "commandType": "command"
+        },
+        "description": "set album photo-taking switch"
+      },
+      {
+        "command": {
+          "command": "snapshots",
+          "parameter": "`on` or `off`",
+          "commandType": "command"
+        },
+        "description": "set random snapshot switch"
+      },
+      {
+        "command": {
+          "command": "talk",
+          "parameter": "`on` or `off`",
+          "commandType": "command"
+        },
+        "description": "set talk feature switch"
+      }
+    ],
+    "Weather Station": [
+      {
+        "command": {
+          "command": "customQuote",
+          "parameter": "custom text, e.g. `\"Oh sea, you have so much water!\"`",
+          "commandType": "command"
+        },
+        "description": "Set a custom quote"
+      },
+      {
+        "command": {
+          "command": "cancelCustom",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "Cancel the custom quote and revert to default"
+      },
+      {
+        "command": {
+          "command": "customPage",
+          "parameter": "custom text, e.g. `\"Oh, the ocean is so huge!\"`",
+          "commandType": "command"
+        },
+        "description": "Set a custom page text"
+      }
+    ],
+    "Garage Door Opener": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      }
+    ],
+    "Plug Mini (EU)": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      }
+    ],
+    "Plug Mini (JP)": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      }
+    ],
+    "Plug Mini (US)": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      }
+    ],
+    "Plug": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      }
+    ],
+    "Relay Switch 1": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "`0~3`",
+          "commandType": "command"
+        },
+        "description": "set the switch mode. `0`, toggle mode; `1`, edge switch mode; `2`, detached switch mode; `3`, momentary switch mode"
+      }
+    ],
+    "Relay Switch 1PM": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to ON state"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set to OFF state"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "toggle state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "`0~3`",
+          "commandType": "command"
+        },
+        "description": "set the switch mode. `0`, toggle mode; `1`, edge switch mode; `2`, detached switch mode; `3`, momentary switch mode"
+      }
+    ],
+    "Relay Switch 2PM": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "“1”or\"2\"",
+          "commandType": "command"
+        },
+        "description": "set to ON state 1 represents channel 1 2 represents channel 2"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "“1”or\"2\"",
+          "commandType": "command"
+        },
+        "description": "set to OFF state 1 represents channel 1 2 represents channel 2"
+      },
+      {
+        "command": {
+          "command": "toggle",
+          "parameter": "“1”or\"2\"",
+          "commandType": "command"
+        },
+        "description": "toggle 1 represents channel 1 2 represents channel 2state"
+      },
+      {
+        "command": {
+          "command": "setMode",
+          "parameter": "channel;mode<br>e.g `1;0`",
+          "commandType": "command"
+        },
+        "description": "The first item represents the switching of channel number, 1 represents channel number 1 and 2 represents channel number 2. The second item represents set the switch mode. `0`, toggle mode; `1`, edge switch mode; `2`, detached switch mode; `3`, momentary switch mode"
+      },
+      {
+        "command": {
+          "command": "setPosition",
+          "parameter": "`0~100`",
+          "commandType": "command"
+        },
+        "description": "Set roller blind opening and closing percentage. `0`, Open All; `100`, Close All"
+      }
+    ],
+    "Floor Cleaning Robot S10": [
+      {
+        "command": {
+          "command": "startClean",
+          "parameter": "{\"action\": clean_mode_str, \"param\": {\"fanLevel\": fan_level_int, \"waterLevel\": water_level_int, \"times\": clean_cycle_int}}",
+          "commandType": "command"
+        },
+        "description": "start cleaning.<br />`action`, the cleaning mode, _sweep_ or _sweep_mop_.<br />`fanLevel`, the vacuum level, `1-4`.<br />`waterLevel`, the mop moisture level, `1-2`.<br />`times`, the number of cycles, `1-2639999`, in theory."
+      },
+      {
+        "command": {
+          "command": "addWaterForHumi",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "refill the mind blowing Evaporative Humidifier (Auto-refill)."
+      },
+      {
+        "command": {
+          "command": "pause",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "pause."
+      },
+      {
+        "command": {
+          "command": "dock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "return to Auto-empty Station and charge."
+      },
+      {
+        "command": {
+          "command": "setVolume",
+          "parameter": "`0-100`",
+          "commandType": "command"
+        },
+        "description": "set volume, `1-100`"
+      },
+      {
+        "command": {
+          "command": "selfClean",
+          "parameter": "`1` or `2` or `3`",
+          "commandType": "command"
+        },
+        "description": "mode `1`, wash the mop.<br />mode `2`, dry itself.<br /> mode `3`, terminate."
+      },
+      {
+        "command": {
+          "command": "changeParam",
+          "parameter": "{\"fanLevel\": fan_level_int, \"waterLevel\": water_level_int, \"times\": clean_cycle_int}",
+          "commandType": "command"
+        },
+        "description": "`fanLevel`, the vacuum level, `1-4`.<br />`waterLevel`, the mop moisture level, `1-2`.<br />`times`, the number of cycles, `1-2639999`, in theory."
+      }
+    ],
+    "S20": [
+      {
+        "command": {
+          "command": "startClean",
+          "parameter": "{\"action\": clean_mode_str, \"param\": {\"fanLevel\": fan_level_int, \"waterLevel\": water_level_int, \"times\": clean_cycle_int}}",
+          "commandType": "command"
+        },
+        "description": "start cleaning.<br />`action`, the cleaning mode, _sweep_ or _sweep_mop_.<br />`fanLevel`, the vacuum level, `1-4`.<br />`waterLevel`, the mop moisture level, `1-2`.<br />`times`, the number of cycles, `1-2639999`, in theory."
+      },
+      {
+        "command": {
+          "command": "addWaterForHumi",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "refill the mind blowing Evaporative Humidifier (Auto-refill)."
+      },
+      {
+        "command": {
+          "command": "pause",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "pause."
+      },
+      {
+        "command": {
+          "command": "dock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "return to Auto-empty Station and charge."
+      },
+      {
+        "command": {
+          "command": "setVolume",
+          "parameter": "`0-100`",
+          "commandType": "command"
+        },
+        "description": "set volume, `1-100`"
+      },
+      {
+        "command": {
+          "command": "selfClean",
+          "parameter": "`1` or `2` or `3`",
+          "commandType": "command"
+        },
+        "description": "mode `1`, wash the mop.<br />mode `2`, dry itself.<br /> mode `3`, terminate."
+      },
+      {
+        "command": {
+          "command": "changeParam",
+          "parameter": "{\"fanLevel\": fan_level_int, \"waterLevel\": water_level_int, \"times\": clean_cycle_int}",
+          "commandType": "command"
+        },
+        "description": "`fanLevel`, the vacuum level, `1-4`.<br />`waterLevel`, the mop moisture level, `1-2`.<br />`times`, the number of cycles, `1-2639999`, in theory."
+      }
+    ],
+    "Robot Vacuum Cleaner K10+ Pro Combo": [
+      {
+        "command": {
+          "command": "startClean",
+          "parameter": "{\"action\": action_str, \"param\": {\"fanLevel\": fan_level_int, \"times\": clean_cycle_int}}",
+          "commandType": "command"
+        },
+        "description": "start cleaning. <br />`action_str`, the cleaning mode, _sweep_ or _mop_.<br />`fanLevel`, the vacuum level, `1-4`.<br />`times`, the number of cycles, `1-2639999`, in theory."
+      },
+      {
+        "command": {
+          "command": "pause",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "pause cleaning"
+      },
+      {
+        "command": {
+          "command": "dock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "return to charging dock"
+      },
+      {
+        "command": {
+          "command": "setVolume",
+          "parameter": "`{0-100}`",
+          "commandType": "command"
+        },
+        "description": "set the robot volume"
+      },
+      {
+        "command": {
+          "command": "changeParam",
+          "parameter": "{\"fanLevel\": fan_level_int, \"times\": clean_cycle_int}",
+          "commandType": "command"
+        },
+        "description": "change clean parameters. `fan_level_int`, the vacuum level, `1-4`; `times`, the number of cycles, `1-2639999`, in theory."
+      }
+    ],
+    "K20+ Pro": [
+      {
+        "command": {
+          "command": "startClean",
+          "parameter": "{\"action\": action_str, \"param\": {\"fanLevel\": fan_level_int, \"times\": clean_cycle_int}}",
+          "commandType": "command"
+        },
+        "description": "start cleaning. <br />`action_str`, the cleaning mode, _sweep_ or _mop_.<br />`fanLevel`, the vacuum level, `1-4`.<br />`times`, the number of cycles, `1-2639999`, in theory."
+      },
+      {
+        "command": {
+          "command": "pause",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "pause cleaning"
+      },
+      {
+        "command": {
+          "command": "dock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "return to charging dock"
+      },
+      {
+        "command": {
+          "command": "setVolume",
+          "parameter": "`{0-100}`",
+          "commandType": "command"
+        },
+        "description": "set the robot volume"
+      },
+      {
+        "command": {
+          "command": "changeParam",
+          "parameter": "{\"fanLevel\": fan_level_int, \"waterLevel\": water_level_int, \"times\": clean_cycle_int}",
+          "commandType": "command"
+        },
+        "description": "change clean parameters. `fan_level_int`, the vacuum level, `1-4`; `water_level_int`, the mop moisture level, `1-2`; `times`, the number of cycles, `1-2639999`, in theory."
+      }
+    ],
+    "K10+ Pro": [
+      {
+        "command": {
+          "command": "start",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "start vacuuming"
+      },
+      {
+        "command": {
+          "command": "stop",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "stop vacuuming"
+      },
+      {
+        "command": {
+          "command": "dock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "return to charging dock"
+      },
+      {
+        "command": {
+          "command": "PowLevel",
+          "parameter": "`{0-3}`",
+          "commandType": "command"
+        },
+        "description": "set suction power level: 0 (Quiet), 1 (Standard), 2 (Strong), 3 (MAX)"
+      }
+    ],
+    "K10+": [
+      {
+        "command": {
+          "command": "start",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "start vacuuming"
+      },
+      {
+        "command": {
+          "command": "stop",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "stop vacuuming"
+      },
+      {
+        "command": {
+          "command": "dock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "return to charging dock"
+      },
+      {
+        "command": {
+          "command": "PowLevel",
+          "parameter": "`{0-3}`",
+          "commandType": "command"
+        },
+        "description": "set suction power level: 0 (Quiet), 1 (Standard), 2 (Strong), 3 (MAX)"
+      }
+    ],
+    "Robot Vacuum Cleaner S1 Plus": [
+      {
+        "command": {
+          "command": "start",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "start vacuuming"
+      },
+      {
+        "command": {
+          "command": "stop",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "stop vacuuming"
+      },
+      {
+        "command": {
+          "command": "dock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "return to charging dock"
+      },
+      {
+        "command": {
+          "command": "PowLevel",
+          "parameter": "`{0-3}`",
+          "commandType": "command"
+        },
+        "description": "set suction power level: 0 (Quiet), 1 (Standard), 2 (Strong), 3 (MAX)"
+      }
+    ],
+    "Robot Vacuum Cleaner S1": [
+      {
+        "command": {
+          "command": "start",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "start vacuuming"
+      },
+      {
+        "command": {
+          "command": "stop",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "stop vacuuming"
+      },
+      {
+        "command": {
+          "command": "dock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "return to charging dock"
+      },
+      {
+        "command": {
+          "command": "PowLevel",
+          "parameter": "`{0-3}`",
+          "commandType": "command"
+        },
+        "description": "set suction power level: 0 (Quiet), 1 (Standard), 2 (Strong), 3 (MAX)"
+      }
+    ],
+    "K11+": [
+      {
+        "command": {
+          "command": "startClean",
+          "parameter": "{\"action\": action_str, \"param\": {\"fanLevel\": fan_level_int, \"times\": clean_cycle_int}}",
+          "commandType": "command"
+        },
+        "description": "start cleaning. <br />`action_str`, the cleaning mode, _sweep_ or _mop_.<br />`fanLevel`, the vacuum level, `1-4`.<br />`times`, the number of cycles, `1-2639999`, in theory."
+      },
+      {
+        "command": {
+          "command": "pause",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "pause."
+      },
+      {
+        "command": {
+          "command": "dock",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "return to Auto-empty Station and charge."
+      },
+      {
+        "command": {
+          "command": "setVolume",
+          "parameter": "`0-100`",
+          "commandType": "command"
+        },
+        "description": "set volume, `1-100`"
+      },
+      {
+        "command": {
+          "command": "changeParam",
+          "parameter": "{\"fanLevel\": fan_level_int, \"waterLevel\": water_level_int, \"times\": clean_cycle_int}",
+          "commandType": "command"
+        },
+        "description": "`fanLevel`, the vacuum level, `1-4`.<br />`waterLevel`, the mop moisture level, `1-2`.<br />`times`, the number of cycles, `1-2639999`, in theory."
+      }
+    ]
+  },
+  "commands_ir": {
+    "Air Conditioner": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned on by default"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned off by default"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      },
+      {
+        "command": {
+          "command": "setAll",
+          "parameter": "{temperature},{mode},{fan speed},{power state}<br />e.g. `26,1,3,on`",
+          "commandType": "command"
+        },
+        "description": "the unit of temperature is in celsius; <br />modes include 0/1 (auto), 2 (cool), 3 (dry), 4 (fan), 5 (heat); <br />fan speed includes 1 (auto), 2 (low), 3 (medium), 4 (high); <br />power state includes on and off"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      }
+    ],
+    "TV": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned on by default"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned off by default"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      },
+      {
+        "command": {
+          "command": "SetChannel",
+          "parameter": "{channel number}, e.g. 15",
+          "commandType": "command"
+        },
+        "description": "set the TV channel to switch to"
+      },
+      {
+        "command": {
+          "command": "volumeAdd",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "volume up"
+      },
+      {
+        "command": {
+          "command": "volumeSub",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "volume down"
+      },
+      {
+        "command": {
+          "command": "channelAdd",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "next channel"
+      },
+      {
+        "command": {
+          "command": "channelSub",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "previous channel"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      }
+    ],
+    "IPTV/Streamer": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned on by default"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned off by default"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      },
+      {
+        "command": {
+          "command": "SetChannel",
+          "parameter": "{channel number}, e.g. 15",
+          "commandType": "command"
+        },
+        "description": "set the TV channel to switch to"
+      },
+      {
+        "command": {
+          "command": "volumeAdd",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "volume up"
+      },
+      {
+        "command": {
+          "command": "volumeSub",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "volume down"
+      },
+      {
+        "command": {
+          "command": "channelAdd",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "next channel"
+      },
+      {
+        "command": {
+          "command": "channelSub",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "previous channel"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      }
+    ],
+    "Set Top Box": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned on by default"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned off by default"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      },
+      {
+        "command": {
+          "command": "SetChannel",
+          "parameter": "{channel number}, e.g. 15",
+          "commandType": "command"
+        },
+        "description": "set the TV channel to switch to"
+      },
+      {
+        "command": {
+          "command": "volumeAdd",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "volume up"
+      },
+      {
+        "command": {
+          "command": "volumeSub",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "volume down"
+      },
+      {
+        "command": {
+          "command": "channelAdd",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "next channel"
+      },
+      {
+        "command": {
+          "command": "channelSub",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "previous channel"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      }
+    ],
+    "DVD": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned on by default"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned off by default"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      },
+      {
+        "command": {
+          "command": "setMute",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "mute/unmute"
+      },
+      {
+        "command": {
+          "command": "FastForward",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "fast forward"
+      },
+      {
+        "command": {
+          "command": "Rewind",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rewind"
+      },
+      {
+        "command": {
+          "command": "Next",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "next track"
+      },
+      {
+        "command": {
+          "command": "Previous",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "last track"
+      },
+      {
+        "command": {
+          "command": "Pause",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "pause"
+      },
+      {
+        "command": {
+          "command": "Play",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "play/resume"
+      },
+      {
+        "command": {
+          "command": "Stop",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "stop"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      }
+    ],
+    "Speaker": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned on by default"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned off by default"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      },
+      {
+        "command": {
+          "command": "setMute",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "mute/unmute"
+      },
+      {
+        "command": {
+          "command": "FastForward",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "fast forward"
+      },
+      {
+        "command": {
+          "command": "Rewind",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "rewind"
+      },
+      {
+        "command": {
+          "command": "Next",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "next track"
+      },
+      {
+        "command": {
+          "command": "Previous",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "last track"
+      },
+      {
+        "command": {
+          "command": "Pause",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "pause"
+      },
+      {
+        "command": {
+          "command": "Play",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "play/resume"
+      },
+      {
+        "command": {
+          "command": "Stop",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "stop"
+      },
+      {
+        "command": {
+          "command": "volumeAdd",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "volume up"
+      },
+      {
+        "command": {
+          "command": "volumeSub",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "volume down"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      }
+    ],
+    "Fan": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned on by default"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned off by default"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      },
+      {
+        "command": {
+          "command": "swing",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "swing"
+      },
+      {
+        "command": {
+          "command": "timer",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set timer"
+      },
+      {
+        "command": {
+          "command": "lowSpeed",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set fan speed to low"
+      },
+      {
+        "command": {
+          "command": "middleSpeed",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set fan speed to medium"
+      },
+      {
+        "command": {
+          "command": "highSpeed",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "set fan speed to high"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      }
+    ],
+    "Light": [
+      {
+        "command": {
+          "command": "turnOn",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned on by default"
+      },
+      {
+        "command": {
+          "command": "turnOff",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "every home appliance can be turned off by default"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      },
+      {
+        "command": {
+          "command": "brightnessUp",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "brightness up"
+      },
+      {
+        "command": {
+          "command": "brightnessDown",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "brightness down"
+      },
+      {
+        "command": {
+          "command": "{user-defined button name}",
+          "parameter": "default",
+          "commandType": "customize"
+        },
+        "description": "all user-defined buttons must be configured with commandType=customize"
+      }
+    ]
+  },
+  "device_type_aliases": {
+    "Humidifier2": [
+      "Evaporative Humidifier (Auto-refill)",
+      "Evaporative Humidifier"
+    ],
+    "Curtain3": [
+      "Curtain 3"
+    ],
+    "Hub": [
+      "Hub/Hub Plus/Hub Mini/Hub 2/Hub 3"
+    ],
+    "Hub Plus": [
+      "Hub/Hub Plus/Hub Mini/Hub 2/Hub 3"
+    ],
+    "Hub Mini": [
+      "Hub/Hub Plus/Hub Mini/Hub 2/Hub 3"
+    ],
+    "Hub 2": [
+      "Hub/Hub Plus/Hub Mini/Hub 2/Hub 3"
+    ],
+    "Hub 3": [
+      "Hub/Hub Plus/Hub Mini/Hub 2/Hub 3"
+    ],
+    "Smart Lock Pro Wifi": [
+      "Lock Pro Matter Enabled"
+    ],
+    "Smart Lock Pro": [
+      "Lock Pro"
+    ],
+    "Smart Lock Ultra": [
+      "Lock Ultra"
+    ],
+    "Smart Lock": [
+      "Lock"
+    ],
+    "WeatherStation": [
+      "Weather Station"
+    ],
+    "Robot Vacuum Cleaner S10": [
+      "Floor Cleaning Robot S10"
+    ],
+    "Robot Vacuum Cleaner S20": [
+      "Floor Cleaning Robot S20"
+    ],
+    "Robot Vacuum Cleaner K10+ Pro Combo": [
+      "K10+ Pro Combo"
+    ],
+    "Robot Vacuum Cleaner K20 Plus Pro": [
+      "K20+ Pro"
+    ],
+    "K10+ Pro": [
+      "Mini Robot Vacuum K10+ Pro"
+    ],
+    "K10+": [
+      "Mini Robot Vacuum K10+"
+    ],
+    "Robot Vacuum Cleaner K11+": [
+      "Robot Vacuum K11+"
+    ],
+    "MeterPlus": [
+      "Meter Plus"
+    ],
+    "MeterPro(CO2)": [
+      "Meter Pro CO2"
+    ],
+    "MeterPro": [
+      "Meter Pro"
+    ],
+    "WoIOSensor": [
+      "Outdoor Meter"
+    ],
+    "Water Detector": [
+      "Water Leak Detector"
+    ],
+    "Standing Fan": [
+      "Standing Circulator Fan"
+    ]
+  }
+}

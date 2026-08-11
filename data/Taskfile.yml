@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  default:
+    deps: [check]
+
+  check:
+    - task: test
+    - task: type
+    - task: lint
+    - task: fmtchk
+
+  fix: "{{.RUN}} ruff check --fix {{.CLI_ARGS}}"
+  fmt: "{{.RUN}} ruff format {{.CLI_ARGS}}"
+  fmtchk: "{{.RUN}} ruff format --check {{.CLI_ARGS}}"
+  lint: "{{.RUN}} ruff check {{.CLI_ARGS}}"
+  test: "{{.RUN}} python -m unittest test_generate.py {{.CLI_ARGS}}"
+  type: "{{.RUN}} pyrefly check {{.PYREFLY}} {{.CLI_ARGS}}"
+
+  gen: "{{.RUN}} generate.py \"{{.DEVICES_DIR}}\" -o \"{{.OUTPUT_JSON}}\""
+
+vars:
+  DEVICES_DIR: ''
+  OUTPUT_JSON: 'help_data.json'
+  PYREFLY: --summarize-errors
+  RUN: uv run
