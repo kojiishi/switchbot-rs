@@ -2,6 +2,11 @@
 
 version: '3'
 
+includes:
+  data:
+    taskfile: ./data
+    dir: ./data
+
 tasks:
   default:
     deps: [check]
@@ -35,6 +40,9 @@ tasks:
         task: '{{.TASK}}'
         vars:
           FEATURE: '{{.ITEM}}'
+
+  gen:
+    - task: data:gen
 
 vars:
   CLIPPY: '-- -Dwarnings'
