@@ -19,6 +19,18 @@ updates:
           - 'hmac'
           - 'sha2'
 
+  - package-ecosystem: "uv"
+    directory: "/data"
+    schedule:
+      interval: "weekly"
+    groups:
+      dependencies:
+        patterns:
+          - '*'
+        update-types:
+          - "minor"
+          - "patch"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
