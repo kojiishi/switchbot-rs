@@ -74,7 +74,7 @@ impl Help {
     ///
     /// [SwitchBot API]: https://github.com/OpenWonderLabs/SwitchBotAPI
     pub async fn load() -> anyhow::Result<Self> {
-        let json_str = include_str!("../../data/help_data.json");
+        let json_str = include_str!("help_data.json");
         let help: Self = serde_json::from_str(json_str)?;
         Ok(help)
     }
