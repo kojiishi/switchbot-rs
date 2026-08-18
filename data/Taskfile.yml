@@ -19,10 +19,10 @@ tasks:
   test: "{{.RUN}} python -m unittest test_generate.py {{.CLI_ARGS}}"
   type: "{{.RUN}} pyrefly check {{.PYREFLY}} {{.CLI_ARGS}}"
 
-  gen: "{{.RUN}} generate.py \"{{.DEVICES_DIR}}\" -o \"{{.OUTPUT_JSON}}\""
+  gen: "{{.RUN}} generate.py \"{{.MD}}\" -o \"{{.JSON}}\""
 
 vars:
-  DEVICES_DIR: ''
-  OUTPUT_JSON: 'help_data.json'
+  JSON: '../api/src/help_data.json'
+  MD: ''
   PYREFLY: --summarize-errors
   RUN: uv run
