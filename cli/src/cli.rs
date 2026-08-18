@@ -179,9 +179,8 @@ impl Cli {
         }
     }
 
-    const COMMAND_URL: &str =
-        "https://github.com/OpenWonderLabs/SwitchBotAPI#send-device-control-commands";
-    const COMMAND_IR_URL: &str = "https://github.com/OpenWonderLabs/SwitchBotAPI#command-set-for-virtual-infrared-remote-devices";
+    const COMMAND_URL: &str = "https://github.com/OpenWonderLabs/SwitchBotAPI#device-specifications-and-supported-features-list";
+    const COMMAND_IR_URL: &str = "https://github.com/OpenWonderLabs/SwitchBotAPI/blob/main/devices/others/virtual-infrared-remote-devices.md";
 
     async fn print_help(&mut self) -> anyhow::Result<()> {
         if self.help.is_none() {
