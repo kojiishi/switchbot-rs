@@ -1,9 +1,14 @@
-use std::{collections::HashMap, future::Future, io::stdout, iter::zip};
+use std::{
+    collections::HashMap,
+    future::Future,
+    io::{Write, stdout},
+    iter::zip,
+};
 
 use itertools::Itertools;
 use switchbot_api::{CommandRequest, Device, DeviceList, Help, SwitchBot};
 
-use crate::{Args, UserInput};
+use crate::{Args, MarkdownPrinter, UserInput};
 
 #[derive(Debug, Default)]
 pub struct Cli {
@@ -98,7 +103,7 @@ impl Cli {
 
     async fn run_interactive(&mut self) -> anyhow::Result<()> {
         let mut input = UserInput::new();
-        self.print_devices();
+        self.print_devices()?;
         loop {
             input.set_prompt(if self.has_current_device() {
                 "Command> "
@@ -112,7 +117,7 @@ impl Cli {
                 "" => {
                     if self.has_current_device() {
                         self.current_device_indexes.clear();
-                        self.print_devices();
+                        self.print_devices()?;
                         continue;
                     }
                     break;
@@ -121,7 +126,7 @@ impl Cli {
                     Ok(_) => {
                         if self.is_current_deivces_changed {
                             self.is_current_deivces_changed = false;
-                            self.print_devices();
+                            self.print_devices()?;
                         }
                     }
                     Err(error) => log::error!("{error}"),
@@ -131,30 +136,38 @@ impl Cli {
         Ok(())
     }
 
-    fn print_devices(&self) {
+    fn print_devices(&self) -> anyhow::Result<()> {
         if !self.has_current_device() {
-            self.print_all_devices();
-            return;
+            return self.print_all_devices();
         }
 
         if self.current_device_indexes.len() >= 2 {
-            self.print_devices_with_index(self.current_devices_with_index());
-            return;
+            return self.print_devices_with_index(self.current_devices_with_index());
         }
 
         let device = self.first_current_device();
         print!("{device:#}");
+        Ok(())
     }
 
-    fn print_all_devices(&self) {
-        self.print_devices_with_index(self.devices().iter().enumerate());
+    fn print_all_devices(&self) -> anyhow::Result<()> {
+        self.print_devices_with_index(self.devices().iter().enumerate())
     }
 
-    fn print_devices_with_index<'a>(&self, iter: impl IntoIterator<Item = (usize, &'a Device)>) {
+    fn print_devices_with_index<'a>(
+        &self,
+        iter: impl IntoIterator<Item = (usize, &'a Device)>,
+    ) -> anyhow::Result<()> {
         let reverse_aliases = self.args.aliases.reverse_map();
+        let mut out = MarkdownPrinter::new();
+        writeln!(&mut out, "|:-:|---")?;
+        writeln!(&mut out, "|#|Name|Alias|Type|ID|")?;
+        writeln!(&mut out, "|--:|---")?;
         for (i, device) in iter {
-            self.print_device(device, i, &reverse_aliases);
+            self.print_device(device, i, &reverse_aliases, &mut out)?;
         }
+        writeln!(&mut out, "|---|---")?;
+        Ok(())
     }
 
     fn print_device(
@@ -162,7 +175,8 @@ impl Cli {
         device: &Device,
         index: usize,
         reverse_aliases: &HashMap<&str, Vec<&str>>,
-    ) {
+        mut out: impl Write,
+    ) -> anyhow::Result<()> {
         let index = index + 1;
         let mut aliases: Vec<&str> = Vec::new();
         if let Some(list) = reverse_aliases.get(index.to_string().as_str()) {
@@ -173,10 +187,20 @@ impl Cli {
         }
         if !aliases.is_empty() {
             aliases.sort();
-            println!("{index}: {}={device}", aliases.iter().join("="));
-        } else {
-            println!("{index}: {device}");
         }
+        writeln!(
+            out,
+            "|{index}|{}|{}|{}|{}|",
+            device.device_name(),
+            aliases.iter().join(", "),
+            if device.is_remote() {
+                device.remote_type()
+            } else {
+                device.device_type()
+            },
+            device.device_id()
+        )?;
+        Ok(())
     }
 
     const COMMAND_URL: &str = "https://github.com/OpenWonderLabs/SwitchBotAPI#device-specifications-and-supported-features-list";
@@ -200,9 +224,18 @@ impl Cli {
                 help_url
             )
         }
-        for command_help in command_helps {
-            println!("{command_help}");
+        let mut out = MarkdownPrinter::new();
+        writeln!(&mut out, "|---|---")?;
+        for help in command_helps {
+            writeln!(
+                &mut out,
+                "|{}|{}|",
+                help.command(),
+                help.description().markdown()
+            )?;
         }
+        writeln!(&mut out, "|---|---")?;
+        out.flush()?;
         println!("Please see {help_url} for more information");
         Ok(())
     }
@@ -328,7 +361,7 @@ impl Cli {
 
     fn execute_global_builtin_command(&mut self, text: &str) -> anyhow::Result<bool> {
         if text == "devices" {
-            self.print_all_devices();
+            self.print_all_devices()?;
             return Ok(true);
         }
         if text == "alias" {
