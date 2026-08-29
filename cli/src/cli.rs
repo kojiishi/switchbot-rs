@@ -15,7 +15,7 @@ pub struct Cli {
     args: Args,
     switch_bot: SwitchBot,
     current_device_indexes: Vec<usize>,
-    is_current_deivces_changed: bool,
+    is_current_devices_changed: bool,
     help: Option<Help>,
 }
 
@@ -124,8 +124,8 @@ impl Cli {
                 }
                 _ => match self.execute(input_text).await {
                     Ok(_) => {
-                        if self.is_current_deivces_changed {
-                            self.is_current_deivces_changed = false;
+                        if self.is_current_devices_changed {
+                            self.is_current_devices_changed = false;
                             self.print_devices()?;
                         }
                     }
@@ -285,7 +285,7 @@ impl Cli {
     fn set_current_devices(&mut self, text: &str) -> anyhow::Result<()> {
         self.current_device_indexes = self.parse_device_indexes(text)?;
         log::debug!("current_device_indexes={:?}", self.current_device_indexes);
-        self.is_current_deivces_changed = true;
+        self.is_current_devices_changed = true;
         Ok(())
     }
 
