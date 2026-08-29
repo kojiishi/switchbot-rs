@@ -17,6 +17,8 @@ mod args;
 pub(crate) use args::Args;
 mod cli;
 pub use cli::Cli;
+mod cli_command;
+pub(crate) use cli_command::{CliCommand, CliCommandLine};
 mod markdown_printer;
 pub(crate) use markdown_printer::MarkdownPrinter;
 mod user_input;
