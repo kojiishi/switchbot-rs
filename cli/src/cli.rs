@@ -6,9 +6,9 @@ use std::{
 };
 
 use itertools::Itertools;
-use switchbot_api::{CommandRequest, Device, DeviceList, Help, SwitchBot};
+use switchbot_api::{Device, DeviceList, Help, SwitchBot};
 
-use crate::{Args, MarkdownPrinter, UserInput};
+use crate::{Args, CliCommand, CliCommandLine, MarkdownPrinter, UserInput};
 
 #[derive(Debug, Default)]
 pub struct Cli {
@@ -247,39 +247,75 @@ impl Cli {
         Ok(())
     }
 
-    /// Returns `true` if the current devices are changed.
     async fn execute(&mut self, text: &str) -> anyhow::Result<()> {
         let expanded = self.args.aliases.expand(text);
-        let mut text = expanded.as_ref();
-        let Err(set_device_err) = self.set_current_devices(text) else {
-            return Ok(());
-        };
-        if self.execute_global_builtin_command(text)? {
-            return Ok(());
+        let parsed = CliCommandLine::parse(
+            &expanded,
+            |s| self.parse_device_indexes(s).is_ok(),
+            |s| self.args.aliases.expand(s),
+        )?;
+
+        if let Some(ref selector) = parsed.device_selector {
+            self.set_current_devices(selector)?;
         }
 
-        // If the first word is devices, set current devices and execute the rests.
-        let rests_expanded;
-        if let Some(pos) = text.find(' ')
-            && self.set_current_devices(&text[..pos]).is_ok()
-        {
-            text = text[pos + 1..].trim_start();
-            rests_expanded = self.args.aliases.expand(text);
-            text = rests_expanded.as_ref();
-        }
-
-        if self.has_current_device() {
-            if self.execute_if_expr(text).await? {
-                return Ok(());
+        if let Some(cmd) = parsed.command {
+            if cmd.requires_current_device() && !self.has_current_device() {
+                return Err(self.set_current_devices(&expanded).unwrap_err());
             }
-            if text == "help" {
+            self.execute_ast(cmd).await?;
+        }
+        Ok(())
+    }
+
+    async fn execute_ast(&mut self, cmd: CliCommand) -> anyhow::Result<()> {
+        match cmd {
+            CliCommand::Devices => {
+                self.print_all_devices()?;
+            }
+            CliCommand::AliasList => {
+                self.args.aliases.print();
+            }
+            CliCommand::AliasSet { name, value } => {
+                if let Some(val) = value {
+                    self.args.aliases.insert(name, val);
+                } else {
+                    self.args.aliases.remove(&name);
+                }
+            }
+            CliCommand::Help => {
+                assert!(self.has_current_device());
                 self.print_help().await?;
-                return Ok(());
             }
-            self.execute_command(text).await?;
-            return Ok(());
+            CliCommand::Status { key } => {
+                assert!(self.has_current_device());
+                self.update_status(key.as_deref().unwrap_or("")).await?;
+            }
+            CliCommand::DeviceCommand(command) => {
+                assert!(self.has_current_device());
+                self.for_each_selected_device(|device| device.command(&command), |_| Ok(()))
+                    .await?;
+            }
+            CliCommand::If {
+                separator: _,
+                condition,
+                then_command,
+                else_command,
+            } => {
+                assert!(self.has_current_device());
+                let (device, expr) = self.device_expr(&condition);
+                device.update_status().await?;
+                let eval_result = device.eval_condition(expr)?;
+                let command = if eval_result {
+                    then_command
+                } else {
+                    else_command
+                };
+                log::debug!("if: {condition} is {eval_result}, execute {command}");
+                Box::pin(self.execute(&command)).await?;
+            }
         }
-        Err(set_device_err)
+        Ok(())
     }
 
     fn set_current_devices(&mut self, text: &str) -> anyhow::Result<()> {
@@ -315,41 +351,6 @@ impl Cli {
             .ok_or_else(|| anyhow::anyhow!("Not a valid device: \"{value}\""))
     }
 
-    async fn execute_if_expr(&mut self, expr: &str) -> anyhow::Result<bool> {
-        assert!(self.has_current_device());
-        if let Some((condition, then_command, else_command)) = Self::parse_if_expr(expr) {
-            let (device, expr) = self.device_expr(condition);
-            device.update_status().await?;
-            let eval_result = device.eval_condition(expr)?;
-            let command = if eval_result {
-                then_command
-            } else {
-                else_command
-            };
-            log::debug!("if: {condition} is {eval_result}, execute {command}");
-            Box::pin(self.execute(command)).await?;
-            return Ok(true);
-        }
-        Ok(false)
-    }
-
-    fn parse_if_expr(text: &str) -> Option<(&str, &str, &str)> {
-        if let Some(text) = text.strip_prefix("if")
-            && let Some(sep) = text.chars().nth(0)
-        {
-            if sep.is_alphanumeric() {
-                return None;
-            }
-            let fields: Vec<&str> = text[1..].split_terminator(sep).collect();
-            match fields.len() {
-                2 => return Some((fields[0], fields[1], "")),
-                3 => return Some((fields[0], fields[1], fields[2])),
-                _ => {}
-            }
-        }
-        None
-    }
-
     fn device_expr<'a>(&'a self, expr: &'a str) -> (&'a Device, &'a str) {
         if let Some((device, expr)) = expr.split_once('.')
             && let Ok(device_indexes) = self.parse_device_indexes(device)
@@ -357,54 +358,6 @@ impl Cli {
             return (&self.devices()[device_indexes[0]], expr);
         }
         (self.first_current_device(), expr)
-    }
-
-    fn execute_global_builtin_command(&mut self, text: &str) -> anyhow::Result<bool> {
-        if text == "devices" {
-            self.print_all_devices()?;
-            return Ok(true);
-        }
-        if text == "alias" {
-            self.args.aliases.print();
-            return Ok(true);
-        }
-        if let Some(rest) = text.strip_prefix("alias ") {
-            let rest = rest.trim();
-            if rest.is_empty() {
-                self.args.aliases.print();
-            } else {
-                self.args.aliases.update(rest);
-            }
-            return Ok(true);
-        }
-        Ok(false)
-    }
-
-    async fn execute_device_builtin_command(&self, text: &str) -> anyhow::Result<bool> {
-        assert!(self.has_current_device());
-        if text == "status" {
-            self.update_status("").await?;
-            return Ok(true);
-        }
-        if let Some(key) = text.strip_prefix("status.") {
-            self.update_status(key).await?;
-            return Ok(true);
-        }
-        Ok(false)
-    }
-
-    async fn execute_command(&self, text: &str) -> anyhow::Result<()> {
-        assert!(self.has_current_device());
-        if text.is_empty() {
-            return Ok(());
-        }
-        if self.execute_device_builtin_command(text).await? {
-            return Ok(());
-        }
-        let command = CommandRequest::from(text);
-        self.for_each_selected_device(|device| device.command(&command), |_| Ok(()))
-            .await?;
-        Ok(())
     }
 
     async fn update_status(&self, key: &str) -> anyhow::Result<()> {
@@ -506,52 +459,36 @@ mod tests {
         assert_eq!(cli.parse_device_indexes("1,j,5").unwrap(), vec![0, 1, 2, 4]);
     }
 
-    #[test]
-    fn parse_if_expr() {
-        assert_eq!(Cli::parse_if_expr(""), None);
-        assert_eq!(Cli::parse_if_expr("a"), None);
-        assert_eq!(Cli::parse_if_expr("if"), None);
-        assert_eq!(Cli::parse_if_expr("if/a"), None);
-        assert_eq!(Cli::parse_if_expr("if/a/b"), Some(("a", "b", "")));
-        assert_eq!(Cli::parse_if_expr("if/a/b/c"), Some(("a", "b", "c")));
-        assert_eq!(Cli::parse_if_expr("if/a//c"), Some(("a", "", "c")));
-        // The separator can be any characters as long as they're consistent.
-        assert_eq!(Cli::parse_if_expr("if;a;b;c"), Some(("a", "b", "c")));
-        assert_eq!(Cli::parse_if_expr("if.a.b.c"), Some(("a", "b", "c")));
-        // But non-alphanumeric.
-        assert_eq!(Cli::parse_if_expr("ifXaXbXc"), None);
-    }
-
-    #[test]
-    fn command_alias() {
+    #[tokio::test]
+    async fn command_alias() {
         let mut cli = Cli::new_for_test(10);
         assert_eq!(cli.args.aliases.len(), 0);
 
         // Add alias
-        assert!(cli.execute_global_builtin_command("alias a=b").unwrap());
+        cli.execute("alias a=b").await.unwrap();
         assert_eq!(cli.args.aliases.len(), 1);
         assert_eq!(cli.args.aliases.get("a").unwrap(), "b");
 
         // Update alias
-        assert!(cli.execute_global_builtin_command("alias a=c").unwrap());
+        cli.execute("alias a=c").await.unwrap();
         assert_eq!(cli.args.aliases.len(), 1);
         assert_eq!(cli.args.aliases.get("a").unwrap(), "c");
 
         // Remove alias
-        assert!(cli.execute_global_builtin_command("alias a=").unwrap());
+        cli.execute("alias a=").await.unwrap();
         assert_eq!(cli.args.aliases.len(), 0);
 
-        // Print aliases (should return true but not change aliases)
-        assert!(cli.execute_global_builtin_command("alias").unwrap());
+        // Print aliases (should return Ok but not change aliases)
+        cli.execute("alias").await.unwrap();
         assert_eq!(cli.args.aliases.len(), 0);
 
         // Remove non-existent alias
-        assert!(cli.execute_global_builtin_command("alias a=").unwrap());
+        cli.execute("alias a=").await.unwrap();
         assert_eq!(cli.args.aliases.len(), 0);
 
         // Alias without '=' removes it (consistent with Args::update_alias)
         cli.args.aliases.insert("a".into(), "b".into());
-        assert!(cli.execute_global_builtin_command("alias a").unwrap());
+        cli.execute("alias a").await.unwrap();
         assert_eq!(cli.args.aliases.len(), 0);
     }
 }
