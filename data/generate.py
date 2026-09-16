@@ -64,13 +64,7 @@ class HelpData:
                         self.commands_ir.setdefault(name, []).append(cmd)
 
         # Post-processing / Finalization
-        # 1. Add "Standing Fan" -> "Standing Circulator Fan" alias
-        # This is due to an inconsistency in the official SwitchBot API documentation
-        # where webhook events report the type as "Standing Fan" but control commands
-        # are under "Standing Circulator Fan".
-        self.add_device_type_alias("Standing Fan", "Standing Circulator Fan")
-
-        # 2. commands_ir finalization (Others and All home appliance types except Others)
+        # 1. commands_ir finalization (Others and All home appliance types except Others)
         other_key = "Others"
         if other_key in self.commands_ir:
             others = self.commands_ir.pop(other_key)
