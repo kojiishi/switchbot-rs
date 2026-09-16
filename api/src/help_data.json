@@ -236,9 +236,7 @@
           "commandType": "command"
         },
         "description": "Set fan speed.1~100"
-      }
-    ],
-    "Battery Circulator Fann": [
+      },
       {
         "command": {
           "command": "closeDelay",
@@ -288,9 +286,7 @@
           "commandType": "command"
         },
         "description": "Set fan speed.1~100"
-      }
-    ],
-    "Circulator Fann": [
+      },
       {
         "command": {
           "command": "closeDelay",
@@ -426,7 +422,7 @@
         "description": "set the radiator thermostat temperature. Temperature range: 4–35 °C (inclusive)"
       }
     ],
-    "Standing Circulator Fan": [
+    "Standing Fan": [
       {
         "command": {
           "command": "turnOff",
@@ -466,9 +462,7 @@
           "commandType": "command"
         },
         "description": "Set fan speed.1~100"
-      }
-    ],
-    "Standing Circulator Fann": [
+      },
       {
         "command": {
           "command": "closeDelay",
@@ -1312,6 +1306,14 @@
           "commandType": "command"
         },
         "description": "rotate to unlocked position"
+      },
+      {
+        "command": {
+          "command": "deadbolt",
+          "parameter": "default",
+          "commandType": "command"
+        },
+        "description": "disengage deadbolt or latch"
       }
     ],
     "Smart Lock Pro Wifi": [
@@ -2832,6 +2834,9 @@
       "Evaporative Humidifier (Auto-refill)",
       "Evaporative Humidifier"
     ],
+    "Standing Fan": [
+      "Standing Circulator Fan"
+    ],
     "Curtain3": [
       "Curtain 3"
     ],
@@ -2900,9 +2905,6 @@
     ],
     "Water Detector": [
       "Water Leak Detector"
-    ],
-    "Standing Fan": [
-      "Standing Circulator Fan"
     ]
   }
 }
