@@ -1,0 +1,51 @@
+name: Python CI
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: data
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14', '3.15']
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v7
+
+      # https://docs.astral.sh/uv/guides/integration/github/
+      - name: Install uv and set up Python ${{ matrix.python-version }}
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          working-directory: data
+
+      # https://taskfile.dev/docs/installation#github-actions
+      - name: Install Task
+        uses: go-task/setup-task@v2
+
+      - name: Install Dependencies
+        run: uv sync
+
+      - name: Tests
+        run: task test
+
+      - name: Type
+        run: task type
+
+      - name: Lint
+        run: task lint
+
+      - name: Format check
+        run: task fmtchk
