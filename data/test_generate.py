@@ -160,7 +160,7 @@ Here is some text before the table that should not break parsing.
 
 | Key        | Value Type | Description |
 | ---------- | ---------- | ----------- |
-| deviceType | String     | device type. _Standing Circulator Fan_ |
+| deviceType | String     | device type. _Standing Fan_ |
 """
         with tempfile.TemporaryDirectory() as tmpdir:
             ir_file = Path(tmpdir) / "virtual-infrared-remote-devices.md"
